@@ -873,6 +873,371 @@ remove_column :accounts, :institution_domain      # Bank domain
 
 ---
 
+## 8. Testing Strategy
+
+All new features must be developed via **red/green TDD**: write a failing test first, then implement the minimum code to make it pass, then refactor. Integration tests cover end-to-end flows.
+
+### 8.1 Current Test Infrastructure
+
+| Component | Details |
+|-----------|---------|
+| Framework | Minitest (305 test files) |
+| RSpec | 12 spec files — rswag/OpenAPI docs only, NOT behavioral |
+| Mocking | Mocha (`stubs`, `expects`, `mock`) |
+| HTTP stubbing | WebMock (all external HTTP blocked by default) |
+| HTTP recording | VCR cassettes in `test/vcr_cassettes/` |
+| Fixtures | Global (`fixtures :all`), YAML in `test/fixtures/` |
+| Parallelization | `parallelize(workers: :number_of_processors)` |
+| CI | GitHub Actions: `bin/rails test` + `test:system` + `rubocop` + `brakeman` |
+
+### 8.2 Test Helpers to Keep & Adapt
+
+These helpers in `test/support/` are directly reusable for Vana features:
+
+| Helper | File | Reuse For |
+|--------|------|-----------|
+| `create_security(ticker, prices:)` | `securities_test_helper.rb` | Create VANA/USDC.e security fixtures |
+| `create_trade(security, account:, qty:, ...)` | `entries_test_helper.rb` | Test staking events as trades |
+| `create_valuation(account:, amount:, ...)` | `entries_test_helper.rb` | Test wallet value snapshots |
+| `create_balance(account:, date:, ...)` | `balance_test_helper.rb` | Test daily balance snapshots |
+| `create_balance_with_flows(...)` | `balance_test_helper.rb` | Test balance changes with flows |
+| `create_account_with_ledger(...)` | `ledger_testing_helper.rb` | Full account setup with entries |
+| `provider_success_response(data)` | `provider_test_helper.rb` | Stub VanaRPC responses |
+| `provider_error_response(error)` | `provider_test_helper.rb` | Test VanaRPC error handling |
+
+**Interface tests** (in `test/interfaces/`) to keep and adapt:
+
+| Interface | File | Reuse For |
+|-----------|------|-----------|
+| `SyncableInterfaceTest` | `syncable_interface_test.rb` | Wallet sync testing |
+| `AccountableResourceInterfaceTest` | `accountable_resource_interface_test.rb` | Crypto controller tests |
+
+**New test helper** to create:
+
+```ruby
+# test/support/vana_test_helper.rb
+module VanaTestHelper
+  VANA_RPC_URL = "https://rpc.vana.org"
+  STAKING_CONTRACT = "0x641C18E2F286c86f96CE95C8ec1EB9fC0415Ca0e"
+
+  # Stub a successful eth_getBalance response
+  def stub_vana_balance(address, balance_wei)
+    hex_balance = "0x" + balance_wei.to_s(16)
+    stub_request(:post, VANA_RPC_URL)
+      .with(body: hash_including("method" => "eth_getBalance"))
+      .to_return(
+        status: 200,
+        body: { jsonrpc: "2.0", id: 1, result: hex_balance }.to_json,
+        headers: { "Content-Type" => "application/json" }
+      )
+  end
+
+  # Stub a successful eth_call response (ERC-20 balanceOf, staking shares, etc.)
+  def stub_vana_contract_call(contract_address, result_hex)
+    stub_request(:post, VANA_RPC_URL)
+      .with(body: hash_including(
+        "method" => "eth_call",
+        "params" => [hash_including("to" => contract_address), "latest"]
+      ))
+      .to_return(
+        status: 200,
+        body: { jsonrpc: "2.0", id: 1, result: result_hex }.to_json,
+        headers: { "Content-Type" => "application/json" }
+      )
+  end
+
+  # Stub an RPC error response
+  def stub_vana_rpc_error(code: -32000, message: "execution reverted")
+    stub_request(:post, VANA_RPC_URL)
+      .to_return(
+        status: 200,
+        body: { jsonrpc: "2.0", id: 1, error: { code: code, message: message } }.to_json,
+        headers: { "Content-Type" => "application/json" }
+      )
+  end
+
+  # Create a wallet account for testing
+  def create_wallet_account(family: nil, address: "0x" + "a" * 40, balance: 0)
+    family ||= families(:empty)
+    family.accounts.create!(
+      name: "Vana Wallet",
+      balance: balance,
+      cash_balance: 0,
+      currency: "USD",
+      wallet_address: address,
+      chain: "vana",
+      accountable: Crypto.new
+    )
+  end
+end
+```
+
+### 8.3 Tests to Delete (Matching Removed Features)
+
+All test files for removed features should be deleted in Phase 1. Approximate counts:
+
+| Category | Test Files | Directory |
+|----------|-----------|-----------|
+| Banking providers (Plaid, SimpleFIN, etc.) | ~60 | `test/models/plaid_*`, `simplefin_*`, `lunchflow_*`, etc. |
+| Removed account types | ~10 | `test/controllers/depositories_*`, `properties_*`, `vehicles_*`, etc. |
+| Budgets, categories, merchants, rules | ~15 | `test/controllers/budget*`, `categories_*`, `rules_*`, `family_merchants_*` |
+| AI assistant | ~10 | `test/models/assistant/`, `test/controllers/chats_*`, `messages_*` |
+| Imports/exports | ~10 | `test/controllers/import/`, `test/models/import/` |
+| Transactions (full system) | ~15 | `test/controllers/transactions/`, `test/models/transaction/` |
+| Transfers, recurring | ~8 | `test/models/transfer/`, `test/models/recurring_transaction/` |
+| Provider adapters (all 9) | ~18 | `test/models/provider/` (keep base, registry) |
+| VCR cassettes (banking) | ~20 | `test/vcr_cassettes/plaid/`, `stripe/`, `openai/` |
+
+**Total**: ~170 test files to delete
+
+### 8.4 New Test Categories
+
+Each new feature requires tests written **before** implementation (red/green TDD).
+
+#### Unit Tests
+
+**Provider: VanaRPC** (`test/models/provider/vana_rpc_test.rb`)
+```ruby
+class Provider::VanaRpcTest < ActiveSupport::TestCase
+  include ProviderTestHelper, VanaTestHelper
+
+  # Test: fetches VANA balance correctly
+  # Test: fetches USDC.e balance via ERC-20 balanceOf
+  # Test: fetches staking shares from VanaPoolStaking contract
+  # Test: handles RPC errors gracefully
+  # Test: handles network timeouts
+  # Test: converts wei to VANA (18 decimals)
+  # Test: converts USDC.e raw to human (6 decimals)
+end
+```
+
+**Provider: Vanascan** (`test/models/provider/vanascan_test.rb`)
+```ruby
+class Provider::VanascanTest < ActiveSupport::TestCase
+  include ProviderTestHelper, VanaTestHelper
+
+  # Test: fetches transaction list for address
+  # Test: fetches token transfers for address
+  # Test: handles API rate limiting
+  # Test: paginates results correctly
+end
+```
+
+**Provider: VanaPrice** (`test/models/provider/vana_price_test.rb`)
+```ruby
+class Provider::VanaPriceTest < ActiveSupport::TestCase
+  include ProviderTestHelper
+
+  # Test: fetches VANA/USD price from CoinGecko
+  # Test: handles missing price data
+  # Test: caches price responses
+end
+```
+
+**Model: StakingPosition** (`test/models/staking_position_test.rb`)
+```ruby
+class StakingPositionTest < ActiveSupport::TestCase
+  include VanaTestHelper
+
+  # Test: calculates VANA value from shares
+  # Test: tracks rewards earned over time
+  # Test: status transitions (active → unstaking → withdrawn)
+  # Test: APY calculation from snapshots
+  # Test: belongs_to account association
+  # Test: validates required fields
+end
+```
+
+**Model: StakingSnapshot** (`test/models/staking_snapshot_test.rb`)
+```ruby
+class StakingSnapshotTest < ActiveSupport::TestCase
+  # Test: creates daily snapshot for staking position
+  # Test: enforces unique constraint on [staking_position_id, date]
+  # Test: tracks cumulative rewards
+  # Test: records APY at snapshot time
+end
+```
+
+**Account extensions** (`test/models/account/wallet_test.rb`)
+```ruby
+class Account::WalletTest < ActiveSupport::TestCase
+  include VanaTestHelper
+
+  # Test: validates wallet_address format (0x + 40 hex chars)
+  # Test: enforces unique wallet_address per family
+  # Test: defaults chain to "vana"
+  # Test: creates crypto accountable automatically
+end
+```
+
+#### Controller Tests
+
+**WalletsController** (`test/controllers/wallets_controller_test.rb`)
+```ruby
+class WalletsControllerTest < ActionDispatch::IntegrationTest
+  include VanaTestHelper
+
+  # Test: GET /wallets/new renders wallet input form
+  # Test: POST /wallets creates account with wallet address
+  # Test: POST /wallets rejects invalid address format
+  # Test: POST /wallets rejects duplicate address in family
+  # Test: GET /wallets/:id shows wallet detail with balances
+  # Test: DELETE /wallets/:id removes wallet
+  # Test: requires authentication
+end
+```
+
+**StakingController** (`test/controllers/staking_controller_test.rb`)
+```ruby
+class StakingControllerTest < ActionDispatch::IntegrationTest
+  include VanaTestHelper
+
+  # Test: GET /staking shows staking dashboard
+  # Test: GET /staking/:id shows position detail with history
+  # Test: requires authentication
+end
+```
+
+#### Job Tests
+
+**WalletSyncJob** (`test/jobs/wallet_sync_job_test.rb`)
+```ruby
+class WalletSyncJobTest < ActiveJob::TestCase
+  include VanaTestHelper
+
+  # Test: fetches and updates VANA balance
+  # Test: fetches and updates USDC.e balance
+  # Test: fetches and updates staking positions
+  # Test: creates balance snapshot after sync
+  # Test: updates holdings for VANA and USDC.e
+  # Test: handles RPC errors without crashing
+  # Test: handles partial failures (balance OK, staking fails)
+  # Test: detects new staking events
+end
+```
+
+### 8.5 Integration Tests
+
+End-to-end flows that test multiple components working together.
+
+**Wallet Sync Flow** (`test/integration/wallet_sync_flow_test.rb`)
+```ruby
+class WalletSyncFlowTest < ActionDispatch::IntegrationTest
+  include VanaTestHelper, SecuritiesTestHelper
+
+  # Test: full flow — add wallet → sync → see balances on dashboard
+  # 1. Sign in
+  # 2. POST /wallets with address
+  # 3. Stub VanaRPC responses (VANA balance, USDC.e balance, staking)
+  # 4. Run WalletSyncJob.perform_now
+  # 5. Assert holdings created (VANA, USDC.e)
+  # 6. Assert balance snapshot created
+  # 7. Assert staking position created
+  # 8. GET dashboard — verify portfolio value displayed
+end
+```
+
+**Staking Lifecycle** (`test/integration/staking_lifecycle_test.rb`)
+```ruby
+class StakingLifecycleTest < ActionDispatch::IntegrationTest
+  include VanaTestHelper
+
+  # Test: full staking lifecycle
+  # 1. Create wallet with no staking
+  # 2. Sync — detect new staking position (shares appear)
+  # 3. Sync again — rewards accrued (VANA value increased, shares same)
+  # 4. Sync again — partial unstake (shares decreased)
+  # 5. Assert staking snapshots created for each day
+  # 6. Assert reward calculation is correct
+  # 7. Assert APY trend is trackable
+end
+```
+
+**Portfolio Valuation** (`test/integration/portfolio_valuation_test.rb`)
+```ruby
+class PortfolioValuationTest < ActionDispatch::IntegrationTest
+  include VanaTestHelper, SecuritiesTestHelper
+
+  # Test: portfolio value correctly sums VANA + USDC.e + staked VANA
+  # Test: portfolio value updates when VANA price changes
+  # Test: multi-wallet portfolio aggregation
+  # Test: net worth chart data points match balance snapshots
+end
+```
+
+### 8.6 WebMock & VCR Strategy
+
+**WebMock** (preferred for unit tests):
+- All Vana RPC calls stubbed via `VanaTestHelper` methods
+- Deterministic: same inputs always produce same outputs
+- Fast: no network I/O
+
+**VCR** (for integration tests that hit Vanascan API):
+```ruby
+# test/vcr_cassettes/vanascan/
+# - account_transactions.yml
+# - token_transfers.yml
+# - contract_events.yml
+```
+
+VCR configuration addition for `test/test_helper.rb`:
+```ruby
+VCR.configure do |config|
+  config.filter_sensitive_data("<VANASCAN_API_KEY>") { ENV["VANASCAN_API_KEY"] }
+end
+```
+
+### 8.7 Fixture Strategy
+
+**Keep existing fixtures**: `families`, `users`, `sessions` (auth tests)
+
+**New fixtures to create**:
+
+```yaml
+# test/fixtures/securities.yml (add)
+vana_token:
+  ticker: VANA
+  name: Vana
+  exchange_mic: CRYPTO
+
+usdc_e_token:
+  ticker: USDC.e
+  name: Stargate Bridged USDC
+  exchange_mic: CRYPTO
+
+# test/fixtures/security/prices.yml (add)
+vana_price_today:
+  security: vana_token
+  date: <%= Date.current %>
+  price: 8.50
+  currency: USD
+
+usdc_e_price_today:
+  security: usdc_e_token
+  date: <%= Date.current %>
+  price: 1.00
+  currency: USD
+```
+
+### 8.8 CI Pipeline Updates
+
+Update `.github/workflows/ci.yml` to:
+1. Remove `PLAID_*` env vars
+2. Add `VANA_RPC_URL=https://rpc.vana.org` (tests will use WebMock, not real RPC)
+3. Keep all existing test commands (`bin/rails test`, `test:system`, `rubocop`, `brakeman`)
+
+### 8.9 TDD Workflow per Task
+
+Every implementation task in the [Implementation Guide](./implementation-guide.md) follows this workflow:
+
+1. **Red**: Write the failing test first — it defines the expected behavior
+2. **Green**: Write the minimum code to make the test pass
+3. **Refactor**: Clean up without changing behavior, ensure tests still pass
+4. **Verify**: Run `bin/rails test` to confirm no regressions
+5. **Commit**: Atomic commit with both test and implementation
+
+---
+
 ## Appendix: File Count Summary
 
 | Action | Estimated Files |
