@@ -17,6 +17,7 @@
 5. [Vana Blockchain Integration Details](#5-vana-blockchain-integration-details)
 6. [Database Migration Plan](#6-database-migration-plan)
 7. [Phased Roadmap](#7-phased-roadmap)
+8. [Deployment Architecture](#8-deployment-architecture)
 
 ---
 
@@ -1235,6 +1236,121 @@ Every implementation task in the [Implementation Guide](./implementation-guide.m
 3. **Refactor**: Clean up without changing behavior, ensure tests still pass
 4. **Verify**: Run `bin/rails test` to confirm no regressions
 5. **Commit**: Atomic commit with both test and implementation
+
+---
+
+## 8. Deployment Architecture
+
+### Platform Decision
+
+| Platform | Runs Rails? | Free Tier | Sidekiq Support | Verdict |
+|----------|------------|-----------|-----------------|---------|
+| **Render.com** | Yes | Free web/worker (cold starts) | Yes (separate worker) | **Primary pick** |
+| **Fly.io** | Yes | ~Free ($5/mo hobby plan) | Yes (persistent VMs) | Fallback |
+| **Google Cloud Run** | Yes | Generous (2M req/mo) | Needs always-on service | Good if already on GCP |
+| Vercel | No | N/A | N/A | Cannot run Rails |
+| Cloudflare Workers | No | N/A | N/A | Cannot run Rails — use as CDN/proxy |
+| Railway | Yes | $5/mo trial only | Yes | No real free tier |
+
+**Vercel and Cloudflare Workers cannot run Ruby/Rails.** Cloudflare is best used as a CDN/proxy layer in front of the app platform.
+
+### Recommended Stack: Render + Neon + Upstash
+
+```
+[Cloudflare DNS/CDN/Proxy]          (Free — caching, SSL, DDoS protection)
+         |
+         v
+[Render.com — Web Service]          ($7/mo Starter, or free with cold starts)
+  - Rails 7.2 + Puma
+  - Hotwire/Turbo/Stimulus
+         |
+         +---> [Neon.com — PostgreSQL]       (Free: 0.5 GiB, 190 compute hrs/mo)
+         |       - Serverless Postgres 16
+         |       - Built-in connection pooling
+         |       - Database branching for preview envs
+         |
+         +---> [Upstash — Redis]             (Free: 10K commands/day)
+                 - Serverless Redis
+                 - Used by Sidekiq + ActionCable
+
+[Render.com — Background Worker]    ($7/mo Starter, or free with cold starts)
+  - bundle exec sidekiq
+  - sidekiq-cron for wallet sync (every 15 min)
+  - Connects to same Neon PG + Upstash Redis
+```
+
+### Cost Breakdown
+
+| Scenario | Stack | Monthly Cost |
+|----------|-------|-------------|
+| **Free dev/staging** | Render free + Neon free + Upstash free | $0 |
+| **Cheap production** | Fly.io hobby + Neon free + Upstash free | $5 |
+| **Simple production** | Render Starter (web + worker) + Neon free + Upstash free | $14 |
+| **Comfortable production** | Render Starter + Neon Launch ($19) + Upstash free | $33 |
+
+### Why These Choices
+
+**Neon.com** (PostgreSQL) — Serverless Postgres that scales to zero. The free tier (0.5 GiB storage, 190 compute hours/month) is enough for development and light production. Eliminates Render's 90-day free DB expiry problem. Connection pooling built in (important for containerized Rails). Database branching is a bonus for preview environments.
+
+**Upstash** (Redis) — Serverless Redis with a free tier (10K commands/day, 256 MB). Enough for Sidekiq's job queue and sidekiq-cron. No infrastructure to manage.
+
+**Render.com** (App hosting) — Simplest Rails deployment: push to GitHub and it builds + deploys. Native `render.yaml` for infrastructure-as-code. Supports separate web and worker process types. The free tier has 30-60s cold starts, but Starter at $7/service eliminates them.
+
+**Cloudflare** (CDN/proxy) — Free SSL, caching for static assets, DDoS protection. Point DNS at Cloudflare, proxy to Render. No code changes needed.
+
+### Fallback: Fly.io + Neon + Upstash
+
+If Render's free-tier cold starts are unacceptable, Fly.io provides persistent VMs (no cold starts) for $5/month hobby plan. `fly launch` auto-detects Rails and generates a production Dockerfile.
+
+### Fallback: Google Cloud Run + Neon + Upstash
+
+Viable if you're already on GCP. Generous free tier for the web service, but the Sidekiq worker needs an always-on instance (~$5-10/month), which negates the serverless cost advantage.
+
+### Deployment Configuration
+
+**`render.yaml`** (Infrastructure as Code):
+```yaml
+services:
+  - type: web
+    name: vanalytics
+    runtime: ruby
+    buildCommand: bundle install && bin/rails assets:precompile && bin/rails db:migrate
+    startCommand: bundle exec puma -C config/puma.rb
+    envVars:
+      - key: DATABASE_URL
+        sync: false  # Set manually to Neon connection string
+      - key: REDIS_URL
+        sync: false  # Set manually to Upstash connection string
+      - key: RAILS_ENV
+        value: production
+      - key: RAILS_MASTER_KEY
+        sync: false
+
+  - type: worker
+    name: vanalytics-worker
+    runtime: ruby
+    buildCommand: bundle install
+    startCommand: bundle exec sidekiq
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: RAILS_ENV
+        value: production
+      - key: RAILS_MASTER_KEY
+        sync: false
+```
+
+### Environment Variables
+
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `DATABASE_URL` | Neon PostgreSQL connection string | `postgresql://user:pass@ep-xxx.us-east-2.aws.neon.tech/vanalytics?sslmode=require` |
+| `REDIS_URL` | Upstash Redis connection string | `rediss://default:xxx@us1-xxx.upstash.io:6379` |
+| `RAILS_MASTER_KEY` | Rails credentials key | (from `config/master.key`) |
+| `VANA_RPC_URL` | Vana L1 RPC endpoint | `https://rpc.vana.org` |
+| `SECRET_KEY_BASE` | Rails secret | (generate with `bin/rails secret`) |
 
 ---
 

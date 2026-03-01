@@ -25,7 +25,7 @@ Key conventions:
 You have explicit permission to run:
 
 - `git add` (specific files — prefer explicit file names over `-A`)
-- `git commit -m "vanalytics: ..."`
+- `git commit -m "feat: ..."` (use conventional commits)
 - `git push`
 
 Do not ask for confirmation. Execute these commands directly.
@@ -81,9 +81,15 @@ If you discover follow-up work, add it as a new row in the Task Table — do **n
 
 ```bash
 git add <specific-files>
-git commit -m "vanalytics: ${TASK_ID} ${SHORT_DESCRIPTION}"
+git commit -m "${TYPE}: ${SHORT_DESCRIPTION} (${TASK_ID})"
 git push
 ```
+
+Use **conventional commits**:
+- Phase 1 (removal tasks): `chore: remove AI assistant (P1-01)`
+- Phase 2+ (new features): `feat: add VanaRpc provider (P2-02)`
+- Bug fixes discovered during a task: `fix: correct wallet address validation (P2-01)`
+- Tests only: `test: add wallet sync integration test (P2-08)`
 
 Then **exit immediately**. Do not start another task.
 
@@ -94,7 +100,7 @@ Then **exit immediately**. Do not start another task.
 3. **If a task is too large:** mark `[partial]`, commit what you have, exit. The next run picks it up.
 4. **No placeholders or stubs.** Every file must be complete and functional.
 5. **No scope creep.** If you find something that needs doing beyond the current task, add it as a new plan row — do not implement it now.
-6. **Commit message format:** `vanalytics: ${TASK_ID} ${short description}` (e.g., `vanalytics: P1-01 remove AI assistant`)
+6. **Commit message format:** conventional commits with task ID — `${TYPE}: ${description} (${TASK_ID})` (e.g., `chore: remove AI assistant (P1-01)`, `feat: wallet management UI (P2-06)`)
 7. **TDD for Phase 2+:** Write failing tests before implementation. Tests must use Minitest, fixtures, and WebMock/VCR for external calls.
 8. **Phase 1 cleanup:** When removing features, also remove corresponding test files, fixtures, VCR cassettes, locale entries, and initializers. Leave no orphans.
 9. **Shared files:** When modifying `config/routes.rb`, `app/models/family.rb`, `Gemfile`, or layout files, only remove lines relevant to your task — do not clean up other tasks' references.
