@@ -7,7 +7,9 @@
   ]
 else
   [
-    { name: t(".nav.home"), path: root_path, icon: "pie-chart", icon_custom: false, active: page_active?(root_path) }
+    { name: t(".nav.home"), path: root_path, icon: "layout-dashboard", icon_custom: false, active: page_active?(root_path) },
+    { name: t(".nav.wallets"), path: accounts_path, icon: "wallet", icon_custom: false, active: page_active?(accounts_path) },
+    { name: t(".nav.staking"), path: root_path, icon: "landmark", icon_custom: false, active: false }
   ]
 end %>
 
@@ -34,8 +36,7 @@ end %>
       <%= render(
         "accounts/account_sidebar_tabs",
         family: Current.family,
-        active_tab: @account_group_tab,
-        mobile: true
+                mobile: true
       ) %>
     </div>
 
@@ -94,7 +95,7 @@ end %>
       <% else %>
         <div class="h-full flex flex-col">
           <div class="overflow-y-auto grow">
-            <%= render "accounts/account_sidebar_tabs", family: Current.family, active_tab: @account_group_tab %>
+            <%= render "accounts/account_sidebar_tabs", family: Current.family %>
           </div>
         </div>
       <% end %>

@@ -49,7 +49,6 @@ Rails.application.routes.draw do
     resource :security, only: :show
     resource :api_key, only: [ :show, :new, :create, :destroy ]
     resource :guides, only: :show
-    resource :bank_sync, only: :show, controller: "bank_sync"
     resource :providers, only: %i[show update]
   end
 
@@ -92,9 +91,6 @@ Rails.application.routes.draw do
       post :sync
       get :sparkline
       patch :toggle_active
-      get :select_provider
-      get :confirm_unlink
-      delete :unlink
     end
 
     collection do

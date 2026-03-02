@@ -41,18 +41,6 @@ class AccountsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to account_url(@account)
   end
 
-  test "redirects when confirming unlink for unlinked account" do
-    get confirm_unlink_account_url(@account)
-    assert_redirected_to account_url(@account)
-    assert_equal "Account is not linked to a provider", flash[:alert]
-  end
-
-  test "redirects when unlinking unlinked account" do
-    delete unlink_account_url(@account)
-    assert_redirected_to account_url(@account)
-    assert_equal "Account is not linked to a provider", flash[:alert]
-  end
-
   test "disabling an account keeps it visible on index" do
     @account.disable!
 
@@ -73,11 +61,6 @@ class AccountsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to accounts_path
     @account.reload
     assert @account.active?
-  end
-
-  test "select_provider shows available providers" do
-    get select_provider_account_url(@account)
-    assert_response :success
   end
 
 end

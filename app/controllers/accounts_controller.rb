@@ -1,5 +1,5 @@
 class AccountsController < ApplicationController
-  before_action :set_account, only: %i[sync sparkline toggle_active show destroy unlink confirm_unlink select_provider]
+  before_action :set_account, only: %i[sync sparkline toggle_active show destroy]
   include Periodable
 
   def index
@@ -79,70 +79,6 @@ class AccountsController < ApplicationController
     else
       @account.destroy_later
       redirect_to accounts_path, notice: t("accounts.destroy.success", type: @account.accountable_type)
-    end
-  end
-
-  def confirm_unlink
-    unless @account.linked?
-      redirect_to account_path(@account), alert: t("accounts.unlink.not_linked")
-    end
-  end
-
-  def unlink
-    unless @account.linked?
-      redirect_to account_path(@account), alert: t("accounts.unlink.not_linked")
-      return
-    end
-
-    begin
-      Account.transaction do
-        # Detach holdings from provider links before destroying them
-        provider_link_ids = @account.account_providers.pluck(:id)
-        if provider_link_ids.any?
-          Holding.where(account_provider_id: provider_link_ids).update_all(account_provider_id: nil)
-        end
-
-        # Remove provider links (account_providers join table)
-        @account.account_providers.destroy_all
-      end
-
-      redirect_to accounts_path, notice: t("accounts.unlink.success")
-    rescue ActiveRecord::RecordInvalid => e
-      redirect_to account_path(@account), alert: t("accounts.unlink.error", error: e.message)
-    rescue StandardError => e
-      Rails.logger.error "Failed to unlink account #{@account.id}: #{e.message}"
-      redirect_to account_path(@account), alert: t("accounts.unlink.error", error: t("accounts.unlink.generic_error"))
-    end
-  end
-
-  def select_provider
-    if @account.linked?
-      redirect_to account_path(@account), alert: t("accounts.select_provider.already_linked")
-      return
-    end
-
-    account_type_name = @account.accountable_type
-
-    # Get all available provider configs dynamically for this account type
-    provider_configs = Provider::Factory.connection_configs_for_account_type(
-      account_type: account_type_name,
-      family: family
-    )
-
-    # Build available providers list with paths resolved for this specific account
-    # Filter out providers that don't support linking to existing accounts
-    @available_providers = provider_configs.filter_map do |config|
-      next unless config[:existing_account_path].present?
-      {
-        name: config[:name],
-        key: config[:key],
-        description: config[:description],
-        path: config[:existing_account_path].call(@account.id)
-      }
-    end
-
-    if @available_providers.empty?
-      redirect_to account_path(@account), alert: t("accounts.select_provider.no_providers")
     end
   end
 

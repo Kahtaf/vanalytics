@@ -6,24 +6,9 @@ ca:
         success: Èxit
   accounts:
     account:
-      link_lunchflow: Enllaça amb Lunch Flow
-      link_provider: Enllaça amb proveïdor
       troubleshoot: Resolució de problemes
-      unlink_provider: Desenllaça del proveïdor
     chart:
       data_not_available: Dades no disponibles per al període seleccionat
-    confirm_unlink:
-      confirm_button: Confirma i desenllaça
-      description_html: Estàs a punt de desenllaçar <strong>%{account_name}</strong> de
-        <strong>%{provider_name}</strong>. Això el convertirà en un compte manual.
-      title: Vols desenllaçar el compte del proveïdor?
-      warning_can_delete: Després de desenllaçar-lo, podràs eliminar el compte
-        si és necessari
-      warning_manual_updates: Hauràs d'afegir transaccions i actualitzar saldos
-        manualment
-      warning_no_sync: El compte ja no sincronitzarà automàticament amb el teu proveïdor
-      warning_title: Això significa
-      warning_transactions_kept: Totes les transaccions i saldos existents es conservaran
     create:
       success: Compte %{type} creat
     destroy:
@@ -62,11 +47,6 @@ ca:
         manual_entry: Introdueix el saldo del compte
         title: Com vols afegir-lo?
       title: Què vols afegir?
-    select_provider:
-      already_linked: Aquest compte ja està enllaçat a un proveïdor
-      description: Tria quin proveïdor vols utilitzar per enllaçar %{account_name}
-      no_providers: Actualment no hi ha cap proveïdor configurat
-      title: Selecciona un proveïdor per enllaçar
     show:
       activity:
         amount: Import
@@ -126,11 +106,6 @@ ca:
       other_liability: Altra passiu
       property: Propietat
       vehicle: Vehicle
-    unlink:
-      error: "No s'ha pogut desenllaçar el compte: %{error}"
-      generic_error: S'ha produït un error inesperat. Si us plau, torna-ho a intentar.
-      not_linked: El compte no està enllaçat a cap proveïdor
-      success: El compte s'ha desenllaçat correctament. Ara és un compte manual.
     update:
       success: Compte %{type} actualitzat
   email_confirmations:

@@ -97,7 +97,6 @@ ca:
       ai_prompts_label: Prompts d'IA
       api_key_label: Clau API
       api_keys_label: Clau API
-      bank_sync_label: Sincronització bancària
       categories_label: Categories
       feedback_label: Feedback
       general_section_title: General

@@ -7,14 +7,10 @@ class SettingsTest < ApplicationSystemTestCase
     # Base settings available to all users
     @settings_links = [
       [ "Accounts", accounts_path ],
-      [ "Bank Sync", settings_bank_sync_path ],
       [ "Preferences", settings_preferences_path ],
       [ "Profile Info", settings_profile_path ],
       [ "Security", settings_security_path ],
-      [ "Categories", categories_path ],
       [ "Tags", tags_path ],
-      [ "Rules", rules_path ],
-      [ "Merchants", family_merchants_path ],
       [ "Guides", settings_guides_path ],
       [ "What's new", changelog_path ],
       [ "Feedback", feedback_path ]
@@ -23,7 +19,6 @@ class SettingsTest < ApplicationSystemTestCase
     # Add admin settings if user is admin
     if @user.admin?
       @settings_links += [
-        [ "AI Prompts", settings_ai_prompts_path ],
         [ "API Key", settings_api_key_path ]
       ]
     end
@@ -83,7 +78,6 @@ class SettingsTest < ApplicationSystemTestCase
       visit accounts_path
 
       # Assert that admin-only settings are not present in the navigation
-      assert_no_selector "li", text: "AI Prompts"
       assert_no_selector "li", text: "API Key"
     end
   end

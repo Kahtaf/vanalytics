@@ -2,9 +2,6 @@
 fr:
   accounts:
     account:
-      link_lunchflow: Lier avec Lunch Flow
-      link_provider: Lier avec un fournisseur
-      unlink_provider: Délier du fournisseur
       troubleshoot: Dépannage
     chart:
       data_not_available: Données non disponibles pour la période sélectionnée
@@ -99,25 +96,6 @@ fr:
       credit_card: Carte de crédit
       loan: Prêt
       other_liability: Autre passif
-    confirm_unlink:
-      title: Délier le compte du fournisseur ?
-      description_html: "Vous êtes sur le point de délier <strong>%{account_name}</strong> de <strong>%{provider_name}</strong>. Cela le convertira en compte manuel."
-      warning_title: Ce que cela signifie
-      warning_no_sync: Le compte ne se synchronisera plus automatiquement avec votre fournisseur
-      warning_manual_updates: Vous devrez ajouter des transactions et mettre à jour les soldes manuellement
-      warning_transactions_kept: Toutes les transactions et soldes existants seront conservés
-      warning_can_delete: Après la déliaison, vous pourrez supprimer le compte si nécessaire
-      confirm_button: Confirmer et délier
-    unlink:
-      success: "Compte délié avec succès. C'est maintenant un compte manuel."
-      not_linked: "Le compte n'est pas lié à un fournisseur"
-      error: "Échec de la déliaison du compte : %{error}"
-      generic_error: "Une erreur inattendue s'est produite. Veuillez réessayer."
-    select_provider:
-      title: Sélectionner un fournisseur à lier
-      description: "Choisissez le fournisseur que vous souhaitez utiliser pour lier %{account_name}"
-      already_linked: "Le compte est déjà lié à un fournisseur"
-      no_providers: "Aucun fournisseur n'est actuellement configuré"
 
   email_confirmations:
     new:

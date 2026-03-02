@@ -6,22 +6,9 @@ zh-CN:
         success: 删除成功
   accounts:
     account:
-      link_lunchflow: 关联 Lunch Flow 账户
-      link_provider: 关联服务提供商
       troubleshoot: 故障排查
-      unlink_provider: 解除提供商关联
     chart:
       data_not_available: 所选时间段内无可用数据
-    confirm_unlink:
-      confirm_button: 确认并解除关联
-      description_html: 您即将解除 <strong>%{account_name}</strong> 与 <strong>%{provider_name}</strong>
-        的关联。这将转换为手动账户。
-      title: 确认解除账户关联？
-      warning_can_delete: 解除关联后，您可以在需要时删除账户
-      warning_manual_updates: 您需要手动添加交易和更新余额
-      warning_no_sync: 账户将不再与您的银行自动同步
-      warning_title: 这意味着
-      warning_transactions_kept: 所有现有交易和余额将被保留
     create:
       success: "%{type} 账户已创建"
     destroy:
@@ -51,11 +38,6 @@ zh-CN:
         manual_entry: 手动输入账户余额
         title: 请选择添加方式
       title: 您希望添加什么类型的账户？
-    select_provider:
-      already_linked: 账户已关联到服务提供商
-      description: 请选择用于关联 %{account_name} 的服务提供商
-      no_providers: 当前未配置任何服务提供商
-      title: 选择关联的服务提供商
     show:
       activity:
         amount: 金额
@@ -105,11 +87,6 @@ zh-CN:
       other_liability: 其他负债账户
       property: 房产账户
       vehicle: 车辆账户
-    unlink:
-      error: 解除账户关联失败：%{error}
-      generic_error: 发生意外错误，请重试。
-      not_linked: 账户未关联到任何服务提供商
-      success: 账户已成功解除关联，现已成为手动账户。
     update:
       success: "%{type} 账户已更新"
   email_confirmations:

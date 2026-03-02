@@ -99,7 +99,6 @@ zh-TW:
       transactions_section_title: 交易
       whats_new_label: 最新動態
       api_keys_label: API 金鑰
-      bank_sync_label: 銀行同步
     settings_nav_link_large:
       next: 下一步
       previous: 返回

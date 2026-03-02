@@ -100,7 +100,6 @@ es:
       transactions_section_title: Transacciones
       whats_new_label: Novedades
       api_keys_label: Clave API
-      bank_sync_label: Sincronización Bancaria
     settings_nav_link_large:
       next: Siguiente
       previous: Atrás
