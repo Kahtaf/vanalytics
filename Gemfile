@@ -52,7 +52,6 @@ gem "image_processing", ">= 1.2"
 # Other
 gem "ostruct"
 gem "bcrypt", "~> 3.1"
-gem "jwt"
 gem "jbuilder"
 gem "countries"
 
@@ -61,27 +60,18 @@ gem "rack-cors"
 gem "pundit"
 gem "faraday"
 gem "faraday-retry"
-gem "faraday-multipart"
 gem "inline_svg"
 gem "octokit"
 gem "pagy", "~> 9.3"
 gem "rails-settings-cached"
 gem "tzinfo-data", platforms: %i[windows jruby]
-gem "csv"
-gem "rchardet" # Character encoding detection
 gem "redcarpet"
 gem "httparty"
 gem "rotp", "~> 6.3"
 gem "rqrcode", "~> 3.0"
-gem "activerecord-import"
-gem "rubyzip", "~> 2.3"
-gem "pdf-reader", "~> 2.12"
-
 
 # State machines
 gem "aasm"
-gem "after_commit_everywhere", "~> 1.0"
-
 
 group :development, :test do
   gem "debug", platforms: %i[mri windows]
