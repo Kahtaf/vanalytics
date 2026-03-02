@@ -3,7 +3,7 @@ require "test_helper"
 class AccountsControllerTest < ActionDispatch::IntegrationTest
   setup do
     sign_in @user = users(:family_admin)
-    @account = accounts(:depository)
+    @account = accounts(:crypto)
   end
 
   test "should get index" do
@@ -30,7 +30,7 @@ class AccountsControllerTest < ActionDispatch::IntegrationTest
     delete account_url(@account)
     assert_redirected_to accounts_path
     assert_enqueued_with job: DestroyJob
-    assert_equal "Depository account scheduled for deletion", flash[:notice]
+    assert_equal "Crypto account scheduled for deletion", flash[:notice]
   end
 
   test "syncing unlinked account calls account sync_later" do

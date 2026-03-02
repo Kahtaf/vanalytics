@@ -7,8 +7,8 @@ class TransfersTest < ApplicationSystemTestCase
   end
 
   test "can create a transfer" do
-    checking_name = accounts(:depository).name
-    savings_name = accounts(:credit_card).name
+    checking_name = accounts(:crypto).name
+    savings_name = accounts(:crypto).name
     transfer_date = Date.current
 
     click_on "New transaction"

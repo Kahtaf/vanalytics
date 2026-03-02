@@ -170,30 +170,12 @@ class Account < ApplicationRecord
     accountable_class.long_subtype_label_for(subtype) || accountable_class.display_name
   end
 
-  # Determines if this account supports manual trade entry
-  # Investment accounts always support trades; Crypto only if subtype is "exchange"
   def supports_trades?
-    return true if investment?
     return accountable.supports_trades? if crypto? && accountable.respond_to?(:supports_trades?)
     false
   end
 
-  # The balance type determines which "component" of balance is being tracked.
-  # This is primarily used for balance related calculations and updates.
-  #
-  # "Cash" = "Liquid"
-  # "Non-cash" = "Illiquid"
-  # "Investment" = A mix of both, including brokerage cash (liquid) and holdings (illiquid)
   def balance_type
-    case accountable_type
-    when "Depository", "CreditCard"
-      :cash
-    when "Property", "Vehicle", "OtherAsset", "Loan", "OtherLiability"
-      :non_cash
-    when "Investment", "Crypto"
-      :investment
-    else
-      raise "Unknown account type: #{accountable_type}"
-    end
+    :investment
   end
 end

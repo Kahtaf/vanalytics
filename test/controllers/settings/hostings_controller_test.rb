@@ -115,7 +115,7 @@ class Settings::HostingsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "can clear data cache when self hosting is enabled" do
-    account = accounts(:investment)
+    account = accounts(:crypto)
     holding = account.holdings.first
     exchange_rate = exchange_rates(:one)
     security_price = holding.security.prices.first

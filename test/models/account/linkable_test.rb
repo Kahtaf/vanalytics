@@ -3,7 +3,7 @@ require "test_helper"
 class Account::LinkableTest < ActiveSupport::TestCase
   setup do
     @family = families(:dylan_family)
-    @account = accounts(:depository)
+    @account = accounts(:crypto)
   end
 
   test "linked? returns false when account has no providers" do

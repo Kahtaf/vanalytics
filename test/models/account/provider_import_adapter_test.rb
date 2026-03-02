@@ -2,7 +2,7 @@ require "test_helper"
 
 class Account::ProviderImportAdapterTest < ActiveSupport::TestCase
   setup do
-    @account = accounts(:depository)
+    @account = accounts(:crypto)
     @adapter = Account::ProviderImportAdapter.new(@account)
     @family = families(:dylan_family)
   end
@@ -215,7 +215,7 @@ class Account::ProviderImportAdapterTest < ActiveSupport::TestCase
   end
 
   test "imports holding with all parameters" do
-    investment_account = accounts(:investment)
+    investment_account = accounts(:crypto)
     adapter = Account::ProviderImportAdapter.new(investment_account)
     security = securities(:aapl)
 
@@ -257,7 +257,7 @@ class Account::ProviderImportAdapterTest < ActiveSupport::TestCase
   end
 
   test "imports trade with all parameters" do
-    investment_account = accounts(:investment)
+    investment_account = accounts(:crypto)
     adapter = Account::ProviderImportAdapter.new(investment_account)
     security = securities(:aapl)
 
@@ -297,7 +297,7 @@ class Account::ProviderImportAdapterTest < ActiveSupport::TestCase
   end
 
   test "stores account_provider_id when importing holding" do
-    investment_account = accounts(:investment)
+    investment_account = accounts(:crypto)
     adapter = Account::ProviderImportAdapter.new(investment_account)
     security = securities(:aapl)
     account_provider = AccountProvider.create!(
@@ -320,7 +320,7 @@ class Account::ProviderImportAdapterTest < ActiveSupport::TestCase
   end
 
   test "does not delete future holdings when can_delete_holdings? returns false" do
-    investment_account = accounts(:investment)
+    investment_account = accounts(:crypto)
     adapter = Account::ProviderImportAdapter.new(investment_account)
     security = securities(:aapl)
 
@@ -354,7 +354,7 @@ class Account::ProviderImportAdapterTest < ActiveSupport::TestCase
   end
 
   test "deletes all future holdings when account_provider_id is not provided and can_delete_holdings? returns true" do
-    investment_account = accounts(:investment)
+    investment_account = accounts(:crypto)
     adapter = Account::ProviderImportAdapter.new(investment_account)
     security = securities(:aapl)
 
@@ -398,7 +398,7 @@ class Account::ProviderImportAdapterTest < ActiveSupport::TestCase
   end
 
   test "updates existing trade attributes instead of keeping stale data" do
-    investment_account = accounts(:investment)
+    investment_account = accounts(:crypto)
     adapter = Account::ProviderImportAdapter.new(investment_account)
     aapl = securities(:aapl)
     msft = securities(:msft)
@@ -440,7 +440,7 @@ class Account::ProviderImportAdapterTest < ActiveSupport::TestCase
   end
 
   test "raises error when external_id collision occurs across different entryable types for transaction" do
-    investment_account = accounts(:investment)
+    investment_account = accounts(:crypto)
     adapter = Account::ProviderImportAdapter.new(investment_account)
     security = securities(:aapl)
 
@@ -472,7 +472,7 @@ class Account::ProviderImportAdapterTest < ActiveSupport::TestCase
   end
 
   test "raises error when external_id collision occurs across different entryable types for trade" do
-    investment_account = accounts(:investment)
+    investment_account = accounts(:crypto)
     adapter = Account::ProviderImportAdapter.new(investment_account)
     security = securities(:aapl)
 

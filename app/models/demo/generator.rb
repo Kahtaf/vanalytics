@@ -246,46 +246,8 @@ class Demo::Generator
     end
 
     def create_realistic_accounts!(family)
-      # Checking accounts (USD)
-      @chase_checking = family.accounts.create!(accountable: Depository.new, name: "Chase Premier Checking", balance: 0, currency: "USD")
-      @ally_checking = family.accounts.create!(accountable: Depository.new, name: "Ally Online Checking", balance: 0, currency: "USD")
-
-      # Savings account (USD)
-      @marcus_savings = family.accounts.create!(accountable: Depository.new, name: "Marcus High-Yield Savings", balance: 0, currency: "USD")
-
-      # EUR checking (EUR)
-      @eu_checking = family.accounts.create!(accountable: Depository.new, name: "Deutsche Bank EUR Account", balance: 0, currency: "EUR")
-
-      # Credit cards (USD)
-      @amex_gold = family.accounts.create!(accountable: CreditCard.new, name: "Amex Gold Card", balance: 0, currency: "USD")
-      @chase_sapphire = family.accounts.create!(accountable: CreditCard.new, name: "Chase Sapphire Reserve", balance: 0, currency: "USD")
-
-      # Investment accounts (USD + GBP)
-      @vanguard_401k     = family.accounts.create!(accountable: Investment.new, name: "Vanguard 401(k)", balance: 0, currency: "USD")
-      @schwab_brokerage  = family.accounts.create!(accountable: Investment.new, name: "Charles Schwab Brokerage", balance: 0, currency: "USD")
-      @fidelity_roth_ira = family.accounts.create!(accountable: Investment.new, name: "Fidelity Roth IRA", balance: 0, currency: "USD")
-      @hsa_investment    = family.accounts.create!(accountable: Investment.new, name: "Fidelity HSA Investment", balance: 0, currency: "USD")
-      @uk_isa           = family.accounts.create!(accountable: Investment.new, name: "Vanguard UK ISA", balance: 0, currency: "GBP")
-
-      # Property (USD)
-      @home = family.accounts.create!(accountable: Property.new, name: "Primary Residence", balance: 0, currency: "USD")
-
-      # Vehicles (USD)
-      @honda_accord = family.accounts.create!(accountable: Vehicle.new, name: "2016 Honda Accord", balance: 0, currency: "USD")
-      @tesla_model3 = family.accounts.create!(accountable: Vehicle.new, name: "2021 Tesla Model 3", balance: 0, currency: "USD")
-
       # Crypto (USD)
       @coinbase_usdc = family.accounts.create!(accountable: Crypto.new, name: "Coinbase USDC", balance: 0, currency: "USD")
-
-      # Loans / Liabilities (USD)
-      @mortgage      = family.accounts.create!(accountable: Loan.new, name: "Home Mortgage", balance: 0, currency: "USD")
-      @car_loan      = family.accounts.create!(accountable: Loan.new, name: "Car Loan", balance: 0, currency: "USD")
-      @student_loan  = family.accounts.create!(accountable: Loan.new, name: "Student Loan", balance: 0, currency: "USD")
-
-      @personal_loc  = family.accounts.create!(accountable: OtherLiability.new, name: "Personal Line of Credit", balance: 0, currency: "USD")
-
-      # Other asset (USD)
-      @jewelry = family.accounts.create!(accountable: OtherAsset.new, name: "Jewelry Collection", balance: 0, currency: "USD")
     end
 
     def create_realistic_transactions!(family)

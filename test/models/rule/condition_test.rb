@@ -6,7 +6,7 @@ class Rule::ConditionTest < ActiveSupport::TestCase
   setup do
     @family = families(:empty)
     @transaction_rule = rules(:one)
-    @account = @family.accounts.create!(name: "Rule test", balance: 1000, currency: "USD", accountable: Depository.new)
+    @account = @family.accounts.create!(name: "Rule test", balance: 1000, currency: "USD", accountable: Crypto.new)
 
     @grocery_category = @family.categories.create!(name: "Grocery")
     @whole_foods_merchant = @family.merchants.create!(name: "Whole Foods", type: "FamilyMerchant")

@@ -5,9 +5,9 @@ class Family::AutoTransferMatchableTest < ActiveSupport::TestCase
 
   setup do
     @family = families(:dylan_family)
-    @depository = accounts(:depository)
-    @credit_card = accounts(:credit_card)
-    @loan = accounts(:loan)
+    @depository = accounts(:crypto)
+    @credit_card = accounts(:crypto)
+    @loan = accounts(:crypto)
   end
 
   test "auto-matches transfers" do
@@ -110,7 +110,7 @@ class Family::AutoTransferMatchableTest < ActiveSupport::TestCase
   end
 
   test "auto-matched cash to investment assigns investment contribution category" do
-    investment = accounts(:investment)
+    investment = accounts(:crypto)
     outflow_entry = create_transaction(date: Date.current, account: @depository, amount: 500)
     inflow_entry = create_transaction(date: Date.current, account: investment, amount: -500)
 

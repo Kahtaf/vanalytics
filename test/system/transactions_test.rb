@@ -183,7 +183,7 @@ class TransactionsTest < ApplicationSystemTestCase
 
 
   test "can create deposit transaction for investment account" do
-    investment_account = accounts(:investment)
+    investment_account = accounts(:crypto)
     investment_account.entries.create!(name: "Investment account", date: Date.current, amount: 1000, currency: "USD", entryable: Transaction.new)
     transfer_date = Date.current
     visit account_url(investment_account, tab: "activity")
@@ -202,8 +202,8 @@ class TransactionsTest < ApplicationSystemTestCase
 
   test "transfers should always sum to zero" do
     # Use two accounts that result in funds_movement kind (not investment/crypto which become investment_contribution)
-    asset_account = accounts(:other_asset)
-    depository_account = accounts(:depository)
+    asset_account = accounts(:crypto)
+    depository_account = accounts(:crypto)
     outflow_entry = create_transaction("outflow", Date.current, 500, account: asset_account)
     inflow_entry = create_transaction("inflow", 1.day.ago.to_date, -500, account: depository_account)
     @user.family.auto_match_transfers!
@@ -217,7 +217,7 @@ class TransactionsTest < ApplicationSystemTestCase
   private
 
     def create_transaction(name, date, amount, category: nil, merchant: nil, tags: [], account: nil)
-      account ||= accounts(:depository)
+      account ||= accounts(:crypto)
 
       account.entries.create! \
         name: name,

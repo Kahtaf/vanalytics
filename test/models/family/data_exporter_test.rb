@@ -9,7 +9,7 @@ class Family::DataExporterTest < ActiveSupport::TestCase
     # Create some test data for the family
     @account = @family.accounts.create!(
       name: "Test Account",
-      accountable: Depository.new,
+      accountable: Crypto.new,
       balance: 1000,
       currency: "USD"
     )
@@ -103,7 +103,7 @@ class Family::DataExporterTest < ActiveSupport::TestCase
     # Create data for another family that should NOT be exported
     other_account = @other_family.accounts.create!(
       name: "Other Family Account",
-      accountable: Depository.new,
+      accountable: Crypto.new,
       balance: 5000,
       currency: "USD"
     )

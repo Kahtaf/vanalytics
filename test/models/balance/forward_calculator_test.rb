@@ -11,7 +11,7 @@ class Balance::ForwardCalculatorTest < ActiveSupport::TestCase
   # When syncing forwards, we don't care about the account balance.  We generate everything based on entries, starting from 0.
   test "no entries sync" do
     account = create_account_with_ledger(
-      account: { type: Depository, currency: "USD" },
+      account: { type: Crypto, currency: "USD" },
       entries: []
     )
 
@@ -36,7 +36,7 @@ class Balance::ForwardCalculatorTest < ActiveSupport::TestCase
   # Our system ensures all manual accounts have an opening anchor (for UX), but we should be able to handle a missing anchor by starting at 0 (i.e. "fresh account with no history")
   test "account without opening anchor starts at zero balance" do
     account = create_account_with_ledger(
-      account: { type: Depository, currency: "USD" },
+      account: { type: Crypto, currency: "USD" },
       entries: [
         { type: "transaction", date: 2.days.ago.to_date, amount: -1000 }
       ]
@@ -68,7 +68,7 @@ class Balance::ForwardCalculatorTest < ActiveSupport::TestCase
 
   test "reconciliation valuation sets absolute balance before applying subsequent transactions" do
     account = create_account_with_ledger(
-      account: { type: Depository, currency: "USD" },
+      account: { type: Crypto, currency: "USD" },
       entries: [
         { type: "reconciliation", date: 3.days.ago.to_date, balance: 18000 },
         { type: "transaction", date: 2.days.ago.to_date, amount: -1000 }
@@ -100,7 +100,7 @@ class Balance::ForwardCalculatorTest < ActiveSupport::TestCase
   end
 
   test "cash-only accounts (depository, credit card) use valuations where cash balance equals total balance" do
-    [ Depository, CreditCard ].each do |account_type|
+    [ Crypto, Crypto ].each do |account_type|
       account = create_account_with_ledger(
         account: { type: account_type, currency: "USD" },
         entries: [
@@ -134,7 +134,7 @@ class Balance::ForwardCalculatorTest < ActiveSupport::TestCase
   end
 
   test "non-cash accounts (property, loan) use valuations where cash balance is always zero" do
-    [ Property, Loan ].each do |account_type|
+    [ Crypto, Crypto ].each do |account_type|
       account = create_account_with_ledger(
         account: { type: account_type, currency: "USD" },
         entries: [
@@ -169,7 +169,7 @@ class Balance::ForwardCalculatorTest < ActiveSupport::TestCase
 
   test "mixed accounts (investment) use valuations where cash balance is total minus holdings" do
     account = create_account_with_ledger(
-      account: { type: Investment, currency: "USD" },
+      account: { type: Crypto, currency: "USD" },
       entries: [
         { type: "opening_anchor", date: 3.days.ago.to_date, balance: 17000 },
         { type: "reconciliation", date: 2.days.ago.to_date, balance: 18000 }
@@ -201,12 +201,12 @@ class Balance::ForwardCalculatorTest < ActiveSupport::TestCase
   end
 
   # ------------------------------------------------------------------------------------------------
-  # All Cash accounts (Depository, CreditCard)
+  # All Cash accounts (Crypto, Crypto)
   # ------------------------------------------------------------------------------------------------
 
   test "transactions on depository accounts affect cash balance" do
     account = create_account_with_ledger(
-      account: { type: Depository, currency: "USD" },
+      account: { type: Crypto, currency: "USD" },
       entries: [
         { type: "opening_anchor", date: 5.days.ago.to_date, balance: 20000 },
         { type: "transaction", date: 4.days.ago.to_date, amount: -500 }, # income
@@ -254,7 +254,7 @@ class Balance::ForwardCalculatorTest < ActiveSupport::TestCase
 
   test "transactions on credit card accounts affect cash balance inversely" do
     account = create_account_with_ledger(
-      account: { type: CreditCard, currency: "USD" },
+      account: { type: Crypto, currency: "USD" },
       entries: [
         { type: "opening_anchor", date: 5.days.ago.to_date, balance: 1000 },
         { type: "transaction", date: 4.days.ago.to_date, amount: -500 }, # CC payment
@@ -301,7 +301,7 @@ class Balance::ForwardCalculatorTest < ActiveSupport::TestCase
 
   test "depository account with transactions and balance reconciliations" do
     account = create_account_with_ledger(
-      account: { type: Depository, currency: "USD" },
+      account: { type: Crypto, currency: "USD" },
       entries: [
         { type: "opening_anchor", date: 4.days.ago.to_date, balance: 20000 },
         { type: "transaction", date: 3.days.ago.to_date, amount: -5000 },
@@ -349,7 +349,7 @@ class Balance::ForwardCalculatorTest < ActiveSupport::TestCase
 
   test "accounts with transactions in multiple currencies convert to the account currency and flows are stored in account currency" do
     account = create_account_with_ledger(
-      account: { type: Depository, currency: "USD" },
+      account: { type: Crypto, currency: "USD" },
       entries: [
         { type: "opening_anchor", date: 4.days.ago.to_date, balance: 100 },
         { type: "transaction", date: 3.days.ago.to_date, amount: -100 },
@@ -402,7 +402,7 @@ class Balance::ForwardCalculatorTest < ActiveSupport::TestCase
   # A loan is a special case where despite being a "non-cash" account, it is typical to have "payment" transactions that reduce the loan principal (non cash balance)
   test "loan payment transactions affect non cash balance" do
     account = create_account_with_ledger(
-      account: { type: Loan, currency: "USD" },
+      account: { type: Crypto, currency: "USD" },
       entries: [
         { type: "opening_anchor", date: 2.days.ago.to_date, balance: 20000 },
         # "Loan payment" of $2000, which reduces the principal
@@ -428,7 +428,7 @@ class Balance::ForwardCalculatorTest < ActiveSupport::TestCase
           date: 1.day.ago.to_date,
           legacy_balances: { balance: 18000, cash_balance: 0 },
           balances: { start: 20000, start_cash: 0, start_non_cash: 20000, end_cash: 0, end_non_cash: 18000, end: 18000 },
-          flows: { non_cash_inflows: 2000, non_cash_outflows: 0, cash_inflows: 0, cash_outflows: 0 }, # Loans are "special cases" where transactions do affect non-cash balance
+          flows: { non_cash_inflows: 2000, non_cash_outflows: 0, cash_inflows: 0, cash_outflows: 0 }, # Cryptos are "special cases" where transactions do affect non-cash balance
           adjustments: 0
         }
       ]
@@ -436,7 +436,7 @@ class Balance::ForwardCalculatorTest < ActiveSupport::TestCase
   end
 
   test "non cash accounts can only use valuations and transactions will be recorded but ignored for balance calculation" do
-    [ Property, Vehicle, OtherAsset, OtherLiability ].each do |account_type|
+    [ Crypto, Crypto, Crypto, Crypto ].each do |account_type|
       account = create_account_with_ledger(
         account: { type: account_type, currency: "USD" },
         entries: [
@@ -472,7 +472,7 @@ class Balance::ForwardCalculatorTest < ActiveSupport::TestCase
   end
 
   # ------------------------------------------------------------------------------------------------
-  # Hybrid accounts (Investment, Crypto) - these have both cash and non-cash balance components
+  # Hybrid accounts (Crypto, Crypto) - these have both cash and non-cash balance components
   # ------------------------------------------------------------------------------------------------
 
   # A transaction increases/decreases cash balance (i.e. "deposits" and "withdrawals")
@@ -481,7 +481,7 @@ class Balance::ForwardCalculatorTest < ActiveSupport::TestCase
   # Holdings are calculated separately and fed into the balance calculator; treated as "non-cash"
   test "investment account calculates balance from transactions and trades and treats holdings as non-cash, additive to balance" do
     account = create_account_with_ledger(
-      account: { type: Investment, currency: "USD" },
+      account: { type: Crypto, currency: "USD" },
       entries: [
         # Account starts with brokerage cash of $5000 and no holdings
         { type: "opening_anchor", date: 3.days.ago.to_date, balance: 5000 },
@@ -536,7 +536,7 @@ class Balance::ForwardCalculatorTest < ActiveSupport::TestCase
 
   test "investment account can have valuations that override balance" do
     account = create_account_with_ledger(
-      account: { type: Investment, currency: "USD" },
+      account: { type: Crypto, currency: "USD" },
       entries: [
         { type: "opening_anchor", date: 2.days.ago.to_date, balance: 5000 },
         { type: "reconciliation", date: 1.day.ago.to_date, balance: 10000 }

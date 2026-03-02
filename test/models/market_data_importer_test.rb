@@ -27,7 +27,7 @@ class MarketDataImporterTest < ActiveSupport::TestCase
     family.accounts.create!(name: "Chequing",
                             currency: "CAD",
                             balance: 100,
-                            accountable: Depository.new)
+                            accountable: Crypto.new)
 
     # Seed stale rate so only the next missing day is fetched
     ExchangeRate.create!(from_currency: "CAD",

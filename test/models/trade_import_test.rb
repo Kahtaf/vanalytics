@@ -37,7 +37,7 @@ class TradeImportTest < ActiveSupport::TestCase
     CSV
 
     @import.update!(
-      account: accounts(:depository),
+      account: accounts(:crypto),
       raw_file_str: import,
       date_col_label: "date",
       ticker_col_label: "ticker",
@@ -69,7 +69,7 @@ class TradeImportTest < ActiveSupport::TestCase
     aapl_resolver.stubs(:resolve).returns(aapl)
     Security::Resolver.stubs(:new).returns(aapl_resolver)
 
-    account = accounts(:depository)
+    account = accounts(:crypto)
 
     import = <<~CSV
       date,ticker,qty,price,currency,name

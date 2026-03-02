@@ -51,7 +51,7 @@ class EntryTest < ActiveSupport::TestCase
 
   test "can search entries" do
     family = families(:empty)
-    account = family.accounts.create! name: "Test", balance: 0, currency: "USD", accountable: Depository.new
+    account = family.accounts.create! name: "Test", balance: 0, currency: "USD", accountable: Crypto.new
     category = family.categories.first
     merchant = family.merchants.first
 
@@ -69,11 +69,11 @@ class EntryTest < ActiveSupport::TestCase
 
   test "visible scope only returns entries from visible accounts" do
     # Create transactions for all account types
-    visible_transaction = create_transaction(account: accounts(:depository), name: "Visible transaction")
-    invisible_transaction = create_transaction(account: accounts(:credit_card), name: "Invisible transaction")
+    visible_transaction = create_transaction(account: accounts(:crypto), name: "Visible transaction")
+    invisible_transaction = create_transaction(account: accounts(:crypto), name: "Invisible transaction")
 
     # Update account statuses
-    accounts(:credit_card).disable!
+    accounts(:crypto).disable!
 
     # Test the scope
     visible_entries = Entry.visible

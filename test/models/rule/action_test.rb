@@ -6,7 +6,7 @@ class Rule::ActionTest < ActiveSupport::TestCase
   setup do
     @family = families(:dylan_family)
     @transaction_rule = rules(:one)
-    @account = @family.accounts.create!(name: "Rule test", balance: 1000, currency: "USD", accountable: Depository.new)
+    @account = @family.accounts.create!(name: "Rule test", balance: 1000, currency: "USD", accountable: Crypto.new)
 
     @grocery_category = @family.categories.create!(name: "Grocery")
     @whole_foods_merchant = @family.merchants.create!(name: "Whole Foods", type: "FamilyMerchant")
@@ -166,7 +166,7 @@ class Rule::ActionTest < ActiveSupport::TestCase
   end
 
   test "set_as_transfer_or_payment assigns investment_contribution kind and category for investment destination" do
-    investment = accounts(:investment)
+    investment = accounts(:crypto)
 
     action = Rule::Action.new(
       rule: @transaction_rule,

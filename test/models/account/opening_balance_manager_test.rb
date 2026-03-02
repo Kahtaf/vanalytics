@@ -2,8 +2,8 @@ require "test_helper"
 
 class Account::OpeningBalanceManagerTest < ActiveSupport::TestCase
   setup do
-    @depository_account = accounts(:depository)
-    @investment_account = accounts(:investment)
+    @depository_account = accounts(:crypto)
+    @investment_account = accounts(:crypto)
   end
 
   test "when no existing anchor, creates new anchor" do
@@ -81,7 +81,7 @@ class Account::OpeningBalanceManagerTest < ActiveSupport::TestCase
     assert_equal 2.years.ago.to_date, opening_anchor.entry.date
 
     # Test with old entry (more than 2 years ago)
-    loan_account = accounts(:loan)
+    loan_account = accounts(:crypto)
     loan_account.entries.create!(
       date: 3.years.ago.to_date,
       name: "Old transaction",
@@ -103,7 +103,7 @@ class Account::OpeningBalanceManagerTest < ActiveSupport::TestCase
     assert_equal (3.years.ago.to_date - 1.day), loan_anchor.entry.date
 
     # Test with account that has no entries
-    property_account = accounts(:property)
+    property_account = accounts(:crypto)
     manager_no_entries = Account::OpeningBalanceManager.new(property_account)
 
     assert_difference -> { property_account.valuations.count } => 1 do

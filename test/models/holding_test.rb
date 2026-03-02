@@ -6,7 +6,7 @@ class HoldingTest < ActiveSupport::TestCase
   include EntriesTestHelper, SecuritiesTestHelper
 
   setup do
-    @account = families(:empty).accounts.create!(name: "Test Brokerage", balance: 20000, cash_balance: 0, currency: "USD", accountable: Investment.new)
+    @account = families(:empty).accounts.create!(name: "Test Brokerage", balance: 20000, cash_balance: 0, currency: "USD", accountable: Crypto.new)
 
     # Current day holding instances
     @amzn, @nvda = load_holdings

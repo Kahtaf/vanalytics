@@ -27,9 +27,7 @@ class UI::AccountPage < ApplicationComponent
   end
 
   def subtitle
-    return nil unless account.property?
-
-    account.property.address
+    nil
   end
 
   def active_tab
@@ -37,14 +35,7 @@ class UI::AccountPage < ApplicationComponent
   end
 
   def tabs
-    case account.accountable_type
-    when "Investment", "Crypto"
-      [ :activity, :holdings ]
-    when "Property", "Vehicle", "Loan"
-      [ :activity, :overview ]
-    else
-      [ :activity ]
-    end
+    [ :activity, :holdings ]
   end
 
   def tab_content_for(tab)

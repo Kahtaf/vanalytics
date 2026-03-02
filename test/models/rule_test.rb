@@ -5,7 +5,7 @@ class RuleTest < ActiveSupport::TestCase
 
   setup do
     @family = families(:empty)
-    @account = @family.accounts.create!(name: "Rule test", balance: 1000, currency: "USD", accountable: Depository.new)
+    @account = @family.accounts.create!(name: "Rule test", balance: 1000, currency: "USD", accountable: Crypto.new)
     @whole_foods_merchant = @family.merchants.create!(name: "Whole Foods", type: "FamilyMerchant")
     @groceries_category = @family.categories.create!(name: "Groceries")
   end

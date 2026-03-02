@@ -5,9 +5,9 @@ class Account::ActivityFeedDataTest < ActiveSupport::TestCase
 
   setup do
     @family = families(:empty)
-    @checking = @family.accounts.create!(name: "Test Checking", accountable: Depository.new, currency: "USD", balance: 0)
-    @savings = @family.accounts.create!(name: "Test Savings", accountable: Depository.new, currency: "USD", balance: 0)
-    @investment = @family.accounts.create!(name: "Test Investment", accountable: Investment.new, currency: "USD", balance: 0)
+    @checking = @family.accounts.create!(name: "Test Checking", accountable: Crypto.new, currency: "USD", balance: 0)
+    @savings = @family.accounts.create!(name: "Test Savings", accountable: Crypto.new, currency: "USD", balance: 0)
+    @investment = @family.accounts.create!(name: "Test Investment", accountable: Crypto.new, currency: "USD", balance: 0)
 
     @test_period_start = Date.current - 4.days
 
@@ -105,7 +105,7 @@ class Account::ActivityFeedDataTest < ActiveSupport::TestCase
 
   test "handles valuations correctly with new balance schema" do
     # Create account with known balances
-    account = @family.accounts.create!(name: "Test Investment", accountable: Investment.new, currency: "USD", balance: 0)
+    account = @family.accounts.create!(name: "Test Investment", accountable: Crypto.new, currency: "USD", balance: 0)
 
     # Day 1: Starting balance
     account.balances.create!(

@@ -10,9 +10,9 @@ class IncomeStatementTest < ActiveSupport::TestCase
     @food_category = @family.categories.create! name: "Food", classification: "expense"
     @groceries_category = @family.categories.create! name: "Groceries", classification: "expense", parent: @food_category
 
-    @checking_account = @family.accounts.create! name: "Checking", currency: @family.currency, balance: 5000, accountable: Depository.new
-    @credit_card_account = @family.accounts.create! name: "Credit Card", currency: @family.currency, balance: 1000, accountable: CreditCard.new
-    @loan_account = @family.accounts.create! name: "Mortgage", currency: @family.currency, balance: 50000, accountable: Loan.new
+    @checking_account = @family.accounts.create! name: "Checking", currency: @family.currency, balance: 5000, accountable: Crypto.new
+    @credit_card_account = @family.accounts.create! name: "Credit Card", currency: @family.currency, balance: 1000, accountable: Crypto.new
+    @loan_account = @family.accounts.create! name: "Mortgage", currency: @family.currency, balance: 50000, accountable: Crypto.new
 
     create_transaction(account: @checking_account, amount: -1000, category: @income_category)
     create_transaction(account: @checking_account, amount: 200, category: @groceries_category)
@@ -313,7 +313,7 @@ class IncomeStatementTest < ActiveSupport::TestCase
       name: "401k",
       currency: @family.currency,
       balance: 10000,
-      accountable: Investment.new
+      accountable: Crypto.new
     )
 
     # Provider-imported contribution shows as inflow (negative amount) to the investment account
@@ -341,7 +341,7 @@ class IncomeStatementTest < ActiveSupport::TestCase
       name: "Roth IRA",
       currency: @family.currency,
       balance: 50000,
-      accountable: Investment.new(subtype: "roth_ira")
+      accountable: Crypto.new(subtype: "roth_ira")
     )
 
     # Create a dividend transaction in the Roth IRA
@@ -363,7 +363,7 @@ class IncomeStatementTest < ActiveSupport::TestCase
       name: "Company 401k",
       currency: @family.currency,
       balance: 100000,
-      accountable: Investment.new(subtype: "401k")
+      accountable: Crypto.new(subtype: "401k")
     )
 
     # Create a dividend transaction in the 401k
@@ -385,7 +385,7 @@ class IncomeStatementTest < ActiveSupport::TestCase
       name: "Brokerage",
       currency: @family.currency,
       balance: 25000,
-      accountable: Investment.new(subtype: "brokerage")
+      accountable: Crypto.new(subtype: "brokerage")
     )
 
     # Create a dividend transaction in the taxable account
@@ -447,21 +447,21 @@ class IncomeStatementTest < ActiveSupport::TestCase
       name: "Roth IRA",
       currency: @family.currency,
       balance: 50000,
-      accountable: Investment.new(subtype: "roth_ira")
+      accountable: Crypto.new(subtype: "roth_ira")
     )
 
     traditional_ira = @family.accounts.create!(
       name: "Traditional IRA",
       currency: @family.currency,
       balance: 30000,
-      accountable: Investment.new(subtype: "ira")
+      accountable: Crypto.new(subtype: "ira")
     )
 
     brokerage = @family.accounts.create!(
       name: "Brokerage",
       currency: @family.currency,
       balance: 25000,
-      accountable: Investment.new(subtype: "brokerage")
+      accountable: Crypto.new(subtype: "brokerage")
     )
 
     crypto_taxable = @family.accounts.create!(
@@ -511,7 +511,7 @@ class IncomeStatementTest < ActiveSupport::TestCase
       name: "401k",
       currency: "USD",
       balance: 100000,
-      accountable: Investment.new(subtype: "401k")
+      accountable: Crypto.new(subtype: "401k")
     )
 
     # Create a Roth IRA account (tax-exempt)
@@ -519,7 +519,7 @@ class IncomeStatementTest < ActiveSupport::TestCase
       name: "Roth IRA",
       currency: "USD",
       balance: 50000,
-      accountable: Investment.new(subtype: "roth_ira")
+      accountable: Crypto.new(subtype: "roth_ira")
     )
 
     # Add transactions to these accounts (would normally be contributions/trades)

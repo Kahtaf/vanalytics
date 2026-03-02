@@ -2,7 +2,7 @@ require "test_helper"
 
 class EnrichableTest < ActiveSupport::TestCase
   setup do
-    @enrichable = accounts(:depository)
+    @enrichable = accounts(:crypto)
   end
 
   test "can enrich multiple attributes" do

@@ -11,7 +11,7 @@ class Holding::PortfolioCacheTest < ActiveSupport::TestCase
       name: "Test Brokerage",
       balance: 10000,
       currency: "USD",
-      accountable: Investment.new
+      accountable: Crypto.new
     )
 
     @security = Security.create!(name: "Test Security", ticker: "TEST", exchange_operating_mic: "TEST")

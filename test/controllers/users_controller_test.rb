@@ -33,7 +33,7 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "admin can reset family data" do
-    account = accounts(:investment)
+    account = accounts(:crypto)
     category = categories(:income)
     tag = tags(:one)
     merchant = merchants(:netflix)
@@ -56,7 +56,7 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "admin can reset family data and load sample data" do
-    account = accounts(:investment)
+    account = accounts(:crypto)
     category = categories(:income)
     tag = tags(:one)
     merchant = merchants(:netflix)

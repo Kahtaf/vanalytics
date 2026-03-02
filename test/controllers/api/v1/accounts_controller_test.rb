@@ -80,7 +80,7 @@ end
 
   test "should only return active accounts" do
     # Make one account inactive
-    inactive_account = accounts(:depository)
+    inactive_account = accounts(:crypto)
     inactive_account.disable!
 
     access_token = Doorkeeper::AccessToken.create!(

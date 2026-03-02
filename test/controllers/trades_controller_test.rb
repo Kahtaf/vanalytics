@@ -34,7 +34,7 @@ class TradesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "creates deposit entry" do
-    from_account = accounts(:depository) # Account the deposit is coming from
+    from_account = accounts(:crypto) # Account the deposit is coming from
 
     assert_difference -> { Entry.count } => 2,
                       -> { Transaction.count } => 2,
@@ -54,7 +54,7 @@ class TradesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "creates withdrawal entry" do
-    to_account = accounts(:depository) # Account the withdrawal is going to
+    to_account = accounts(:crypto) # Account the withdrawal is going to
 
     assert_difference -> { Entry.count } => 2,
                       -> { Transaction.count } => 2,

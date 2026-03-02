@@ -25,7 +25,7 @@ class AccountImportTest < ActiveSupport::TestCase
     @import.generate_rows_from_csv
 
     # Create mappings for account types
-    @import.mappings.create! key: "depository", value: "Depository", type: "Import::AccountTypeMapping"
+    @import.mappings.create! key: "depository", value: "Crypto", type: "Import::AccountTypeMapping"
 
     @import.reload
 
@@ -83,7 +83,7 @@ class AccountImportTest < ActiveSupport::TestCase
     @import.generate_rows_from_csv
 
     # Create mappings for account types
-    @import.mappings.create! key: "depository", value: "Depository", type: "Import::AccountTypeMapping"
+    @import.mappings.create! key: "depository", value: "Crypto", type: "Import::AccountTypeMapping"
 
     @import.reload
 
@@ -127,7 +127,7 @@ class AccountImportTest < ActiveSupport::TestCase
     @import.generate_rows_from_csv
 
     # Create mappings for account types
-    @import.mappings.create! key: "depository", value: "Depository", type: "Import::AccountTypeMapping"
+    @import.mappings.create! key: "depository", value: "Crypto", type: "Import::AccountTypeMapping"
 
     @import.reload
 

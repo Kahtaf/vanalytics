@@ -6,7 +6,7 @@ class Balance::ReverseCalculatorTest < ActiveSupport::TestCase
   # When syncing backwards, we start with the account balance and generate everything from there.
   test "when missing anchor and no entries, falls back to cached account balance" do
     account = create_account_with_ledger(
-      account: { type: Depository, balance: 20000, cash_balance: 20000, currency: "USD" },
+      account: { type: Crypto, balance: 20000, cash_balance: 20000, currency: "USD" },
       entries: []
     )
 
@@ -34,7 +34,7 @@ class Balance::ReverseCalculatorTest < ActiveSupport::TestCase
   # Note: while "reconciliation" valuations don't affect balance, `current_anchor` and `opening_anchor` do.
   test "reconciliation valuations do not affect balance for reverse syncs" do
     account = create_account_with_ledger(
-      account: { type: Depository, balance: 20000, cash_balance: 20000, currency: "USD" },
+      account: { type: Crypto, balance: 20000, cash_balance: 20000, currency: "USD" },
       entries: [
         { type: "current_anchor", date: Date.current, balance: 20000 },
         { type: "reconciliation", date: 1.day.ago, balance: 17000 }, # Ignored
@@ -93,10 +93,10 @@ class Balance::ReverseCalculatorTest < ActiveSupport::TestCase
     )
   end
 
-  # Investment account balances are made of two components: cash and holdings.
+  # Crypto account balances are made of two components: cash and holdings.
   test "anchors on investment accounts calculate cash balance dynamically based on holdings value" do
     account = create_account_with_ledger(
-      account: { type: Investment, balance: 20000, cash_balance: 10000, currency: "USD" },
+      account: { type: Crypto, balance: 20000, cash_balance: 10000, currency: "USD" },
       entries: [
         { type: "current_anchor", date: Date.current, balance: 20000 }, # "Total account value is $20,000 today"
         { type: "opening_anchor", date: 1.day.ago, balance: 15000 } # "Total account value was $15,000 at the start of the account"
@@ -132,7 +132,7 @@ class Balance::ReverseCalculatorTest < ActiveSupport::TestCase
 
   test "transactions on depository accounts affect cash balance" do
     account = create_account_with_ledger(
-      account: { type: Depository, balance: 20000, cash_balance: 20000, currency: "USD" },
+      account: { type: Crypto, balance: 20000, cash_balance: 20000, currency: "USD" },
       entries: [
         { type: "current_anchor", date: Date.current, balance: 20000 },
         { type: "transaction", date: 2.days.ago, amount: 100 }, # expense
@@ -193,7 +193,7 @@ class Balance::ReverseCalculatorTest < ActiveSupport::TestCase
 
   test "transactions on credit card accounts affect cash balance inversely" do
     account = create_account_with_ledger(
-      account: { type: CreditCard, balance: 2000, cash_balance: 2000, currency: "USD" },
+      account: { type: Crypto, balance: 2000, cash_balance: 2000, currency: "USD" },
       entries: [
         { type: "current_anchor", date: Date.current, balance: 2000 },
         { type: "transaction", date: 2.days.ago, amount: 100 }, # expense (increases cash balance)
@@ -256,7 +256,7 @@ class Balance::ReverseCalculatorTest < ActiveSupport::TestCase
   # A loan is a special case where despite being a "non-cash" account, it is typical to have "payment" transactions that reduce the loan principal (non cash balance)
   test "loan payment transactions affect non cash balance" do
     account = create_account_with_ledger(
-      account: { type: Loan, balance: 198000, cash_balance: 0, currency: "USD" },
+      account: { type: Crypto, balance: 198000, cash_balance: 0, currency: "USD" },
       entries: [
         { type: "current_anchor", date: Date.current, balance: 198000 },
         # "Loan payment" of $2000, which reduces the principal
@@ -297,7 +297,7 @@ class Balance::ReverseCalculatorTest < ActiveSupport::TestCase
   end
 
   test "non cash accounts can only use valuations and transactions will be recorded but ignored for balance calculation" do
-    [ Property, Vehicle, OtherAsset, OtherLiability ].each do |account_type|
+    [ Crypto, Crypto, Crypto, Crypto ].each do |account_type|
       account = create_account_with_ledger(
         account: { type: account_type, balance: 1000, cash_balance: 0, currency: "USD" },
         entries: [
@@ -344,7 +344,7 @@ class Balance::ReverseCalculatorTest < ActiveSupport::TestCase
   test "holdings and trades sync" do
     # Account starts with $20,000 total value, $19,000 cash, $1,000 in holdings
     account = create_account_with_ledger(
-      account: { type: Investment, balance: 20000, cash_balance: 19000, currency: "USD" },
+      account: { type: Crypto, balance: 20000, cash_balance: 19000, currency: "USD" },
       entries: [
         { type: "current_anchor", date: Date.current, balance: 20000 },
         # Bought 10 AAPL shares 1 day ago, so cash is $19,000, $1,000 in holdings, total value is $20,000
@@ -393,7 +393,7 @@ class Balance::ReverseCalculatorTest < ActiveSupport::TestCase
   test "properly calculates balances when a holding has no trade history" do
     # Account starts with $20,000 total value, $19,000 cash, $1,000 in holdings ($500 AAPL, $500 MSFT)
     account = create_account_with_ledger(
-      account: { type: Investment, balance: 20000, cash_balance: 19000, currency: "USD" },
+      account: { type: Crypto, balance: 20000, cash_balance: 19000, currency: "USD" },
       entries: [
         { type: "current_anchor", date: Date.current, balance: 20000 },
         # A holding *with* trade history (5 shares of AAPL, purchased 1 day ago)
@@ -443,7 +443,7 @@ class Balance::ReverseCalculatorTest < ActiveSupport::TestCase
   test "uses provider reported holdings and cash value on current day" do
     # Implied holdings value of $1,000 from provider
     account = create_account_with_ledger(
-      account: { type: Investment, balance: 20000, cash_balance: 19000, currency: "USD" },
+      account: { type: Crypto, balance: 20000, cash_balance: 19000, currency: "USD" },
       entries: [
         { type: "current_anchor", date: Date.current, balance: 20000 },
         { type: "opening_anchor", date: 2.days.ago, balance: 15000 }

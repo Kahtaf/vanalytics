@@ -54,8 +54,8 @@ class TransactionImportTest < ActiveSupport::TestCase
     @import.mappings.create! key: "", create_when_empty: false, mappable: nil, type: "Import::TagMapping" # Leaves untagged
 
     @import.mappings.create! key: "TestAccount1", create_when_empty: true, type: "Import::AccountMapping"
-    @import.mappings.create! key: "TestAccount2", mappable: accounts(:depository), type: "Import::AccountMapping"
-    @import.mappings.create! key: "", mappable: accounts(:depository), type: "Import::AccountMapping"
+    @import.mappings.create! key: "TestAccount2", mappable: accounts(:crypto), type: "Import::AccountMapping"
+    @import.mappings.create! key: "", mappable: accounts(:crypto), type: "Import::AccountMapping"
 
     @import.reload
 
@@ -79,7 +79,7 @@ class TransactionImportTest < ActiveSupport::TestCase
     CSV
 
     @import.update!(
-      account: accounts(:depository),
+      account: accounts(:crypto),
       raw_file_str: import,
       date_col_label: "date",
       date_format: "%m/%d/%Y",
@@ -104,7 +104,7 @@ class TransactionImportTest < ActiveSupport::TestCase
   end
 
   test "does not create duplicate when matching transaction exists with same name" do
-    account = accounts(:depository)
+    account = accounts(:crypto)
 
     # Create an existing manual transaction
     existing_entry = account.entries.create!(
@@ -147,7 +147,7 @@ class TransactionImportTest < ActiveSupport::TestCase
   end
 
   test "creates new transaction when name differs even if date and amount match" do
-    account = accounts(:depository)
+    account = accounts(:crypto)
 
     # Create an existing manual transaction
     existing_entry = account.entries.create!(
@@ -189,7 +189,7 @@ class TransactionImportTest < ActiveSupport::TestCase
   end
 
   test "imports all identical transactions from CSV even when one exists in database" do
-    account = accounts(:depository)
+    account = accounts(:crypto)
 
     # Create an existing manual transaction
     existing_entry = account.entries.create!(
@@ -241,7 +241,7 @@ class TransactionImportTest < ActiveSupport::TestCase
   end
 
   test "imports all identical transactions from CSV when none exist in database" do
-    account = accounts(:depository)
+    account = accounts(:crypto)
 
     # Import CSV with 3 identical transactions (no existing entry in database)
     import_csv = <<~CSV
@@ -280,7 +280,7 @@ class TransactionImportTest < ActiveSupport::TestCase
   end
 
   test "uses family currency as fallback when account has no currency and no CSV currency column" do
-    account = accounts(:depository)
+    account = accounts(:crypto)
     family = account.family
 
     # Clear the account's currency to simulate an account without currency set
@@ -322,8 +322,8 @@ class TransactionImportTest < ActiveSupport::TestCase
       01/02/2024,Grocery Store,200,Credit Card
     CSV
 
-    checking = accounts(:depository)
-    credit_card = accounts(:credit_card)
+    checking = accounts(:crypto)
+    credit_card = accounts(:crypto)
 
     @import.update!(
       account: nil,
@@ -361,7 +361,7 @@ class TransactionImportTest < ActiveSupport::TestCase
   end
 
   test "skips specified number of rows" do
-    account = accounts(:depository)
+    account = accounts(:crypto)
     import_csv = <<~CSV
       Some Metadata provided by bank
       Generated on 2024-01-01

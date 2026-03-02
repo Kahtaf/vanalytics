@@ -398,14 +398,14 @@ end
       name: "Transfer From Account",
       balance: 1000,
       currency: "USD",
-      accountable: Depository.new
+      accountable: Crypto.new
     )
 
     to_account = @family.accounts.create!(
       name: "Transfer To Account",
       balance: 0,
       currency: "USD",
-      accountable: Depository.new
+      accountable: Crypto.new
     )
 
     transfer = Transfer::Creator.new(

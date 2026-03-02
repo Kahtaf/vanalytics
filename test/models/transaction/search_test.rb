@@ -5,9 +5,9 @@ class Transaction::SearchTest < ActiveSupport::TestCase
 
   setup do
     @family = families(:dylan_family)
-    @checking_account = accounts(:depository)
-    @credit_card_account = accounts(:credit_card)
-    @loan_account = accounts(:loan)
+    @checking_account = accounts(:crypto)
+    @credit_card_account = accounts(:crypto)
+    @loan_account = accounts(:crypto)
 
     # Clean up existing entries/transactions from fixtures to ensure test isolation
     @family.accounts.each { |account| account.entries.delete_all }

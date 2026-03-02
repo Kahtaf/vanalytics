@@ -4,7 +4,7 @@ class SyncTest < ActiveSupport::TestCase
   include ActiveJob::TestHelper
 
   test "does not run if not in a valid state" do
-    syncable = accounts(:depository)
+    syncable = accounts(:crypto)
     sync = Sync.create!(syncable: syncable, status: :completed)
 
     syncable.expects(:perform_sync).never
@@ -15,7 +15,7 @@ class SyncTest < ActiveSupport::TestCase
   end
 
   test "runs successful sync" do
-    syncable = accounts(:depository)
+    syncable = accounts(:crypto)
     sync = Sync.create!(syncable: syncable)
 
     syncable.expects(:perform_sync).with(sync).once
@@ -29,7 +29,7 @@ class SyncTest < ActiveSupport::TestCase
   end
 
   test "handles sync errors" do
-    syncable = accounts(:depository)
+    syncable = accounts(:crypto)
     sync = Sync.create!(syncable: syncable)
 
     syncable.expects(:perform_sync).with(sync).raises(StandardError.new("test sync error"))
@@ -45,13 +45,13 @@ class SyncTest < ActiveSupport::TestCase
 
   test "clean marks stale incomplete rows" do
     stale_pending = Sync.create!(
-      syncable: accounts(:depository),
+      syncable: accounts(:crypto),
       status: :pending,
       created_at: 25.hours.ago
     )
 
     stale_syncing = Sync.create!(
-      syncable: accounts(:depository),
+      syncable: accounts(:crypto),
       status: :syncing,
       created_at: 25.hours.ago,
       pending_at: 24.hours.ago,
@@ -69,7 +69,7 @@ class SyncTest < ActiveSupport::TestCase
     initial_end   = 1.day.ago.to_date
 
     sync = Sync.create!(
-      syncable: accounts(:depository),
+      syncable: accounts(:crypto),
       window_start_date: initial_start,
       window_end_date: initial_end
     )

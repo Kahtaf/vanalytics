@@ -8,8 +8,8 @@ class TransferMatchesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "matches existing transaction and creates transfer" do
-    inflow_transaction = create_transaction(amount: 100, account: accounts(:depository))
-    outflow_transaction = create_transaction(amount: -100, account: accounts(:investment))
+    inflow_transaction = create_transaction(amount: 100, account: accounts(:crypto))
+    outflow_transaction = create_transaction(amount: -100, account: accounts(:crypto))
 
     assert_difference "Transfer.count", 1 do
       post transaction_transfer_match_path(inflow_transaction), params: {
@@ -25,13 +25,13 @@ class TransferMatchesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "creates transfer for target account" do
-    inflow_transaction = create_transaction(amount: 100, account: accounts(:depository))
+    inflow_transaction = create_transaction(amount: 100, account: accounts(:crypto))
 
     assert_difference [ "Transfer.count", "Entry.count", "Transaction.count" ], 1 do
       post transaction_transfer_match_path(inflow_transaction), params: {
         transfer_match: {
           method: "new",
-          target_account_id: accounts(:investment).id
+          target_account_id: accounts(:crypto).id
         }
       }
     end
@@ -41,12 +41,12 @@ class TransferMatchesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "new transfer entry is protected from provider sync" do
-    outflow_entry = create_transaction(amount: 100, account: accounts(:depository))
+    outflow_entry = create_transaction(amount: 100, account: accounts(:crypto))
 
     post transaction_transfer_match_path(outflow_entry), params: {
       transfer_match: {
         method: "new",
-        target_account_id: accounts(:investment).id
+        target_account_id: accounts(:crypto).id
       }
     }
 
@@ -58,12 +58,12 @@ class TransferMatchesControllerTest < ActionDispatch::IntegrationTest
 
   test "assigns investment_contribution kind and category for investment destination" do
     # Outflow from depository (positive amount), target is investment
-    outflow_entry = create_transaction(amount: 100, account: accounts(:depository))
+    outflow_entry = create_transaction(amount: 100, account: accounts(:crypto))
 
     post transaction_transfer_match_path(outflow_entry), params: {
       transfer_match: {
         method: "new",
-        target_account_id: accounts(:investment).id
+        target_account_id: accounts(:crypto).id
       }
     }
 

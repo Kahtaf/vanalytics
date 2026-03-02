@@ -8,7 +8,7 @@ class TradesTest < ApplicationSystemTestCase
 
     @user.update!(show_sidebar: false)
 
-    @account = accounts(:investment)
+    @account = accounts(:crypto)
 
     visit_account_portfolio
 

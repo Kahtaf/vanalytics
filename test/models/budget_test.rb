@@ -14,7 +14,7 @@ class BudgetTest < ActiveSupport::TestCase
     # Create an entry 3 years ago
     old_account = Account.create!(
       family: @family,
-      accountable: Depository.new,
+      accountable: Crypto.new,
       name: "Old Account",
       status: "active",
       currency: "USD",
@@ -38,7 +38,7 @@ class BudgetTest < ActiveSupport::TestCase
     # Create an entry 1 year ago
     account = Account.create!(
       family: @family,
-      accountable: Depository.new,
+      accountable: Crypto.new,
       name: "Test Account",
       status: "active",
       currency: "USD",
@@ -90,7 +90,7 @@ class BudgetTest < ActiveSupport::TestCase
     budget_category = budget.budget_categories.find_by(category: healthcare)
     budget_category.update!(budgeted_spending: 200)
 
-    account = accounts(:depository)
+    account = accounts(:crypto)
 
     # Create a $500 expense
     Entry.create!(
@@ -137,7 +137,7 @@ class BudgetTest < ActiveSupport::TestCase
     budget_category = budget.budget_categories.find_by(category: category)
     budget_category.update!(budgeted_spending: 100)
 
-    account = accounts(:depository)
+    account = accounts(:crypto)
 
     # Only a refund, no expense
     Entry.create!(
@@ -160,7 +160,7 @@ class BudgetTest < ActiveSupport::TestCase
   test "actual_spending subtracts uncategorized refunds" do
     family = families(:dylan_family)
     budget = Budget.find_or_bootstrap(family, start_date: Date.current.beginning_of_month)
-    account = accounts(:depository)
+    account = accounts(:crypto)
 
     # Create an uncategorized expense
     Entry.create!(

@@ -4,7 +4,7 @@ class Api::V1::ImportsControllerTest < ActionDispatch::IntegrationTest
   setup do
     @family = families(:dylan_family)
     @user = users(:family_admin)
-    @account = accounts(:depository)
+    @account = accounts(:crypto)
     @import = imports(:transaction)
     @token = valid_token_for(@user)
   end
@@ -98,8 +98,8 @@ class Api::V1::ImportsControllerTest < ActionDispatch::IntegrationTest
 
   test "should not create import for account in another family" do
     other_family = Family.create!(name: "Other Family", currency: "USD", locale: "en")
-    other_depository = Depository.create!(subtype: "checking")
-    other_account = Account.create!(family: other_family, name: "Other Account", currency: "USD", classification: "asset", accountable: other_depository, balance: 0)
+    other_crypto = Crypto.create!
+    other_account = Account.create!(family: other_family, name: "Other Account", currency: "USD", classification: "asset", accountable: other_crypto, balance: 0)
 
     csv_content = "date,amount,name\n2023-01-01,-10.00,Test Transaction"
 

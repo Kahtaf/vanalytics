@@ -3,7 +3,7 @@ require "test_helper"
 class ImportEncodingTest < ActiveSupport::TestCase
   setup do
     @family = families(:dylan_family)
-    @account = accounts(:depository)
+    @account = accounts(:crypto)
   end
 
   test "successfully imports Windows-1250 encoded CSV" do

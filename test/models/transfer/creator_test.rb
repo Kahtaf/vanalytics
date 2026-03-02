@@ -3,8 +3,8 @@ require "test_helper"
 class Transfer::CreatorTest < ActiveSupport::TestCase
   setup do
     @family = families(:dylan_family)
-    @source_account = accounts(:depository)
-    @destination_account = accounts(:investment)
+    @source_account = accounts(:crypto)
+    @destination_account = accounts(:crypto)
     @date = Date.current
     @amount = 100
     # Ensure the Investment Contributions category exists for transfer tests
@@ -44,7 +44,7 @@ class Transfer::CreatorTest < ActiveSupport::TestCase
   end
 
   test "creates basic transfer between depository accounts" do
-    other_depository = @family.accounts.create!(name: "Savings", balance: 1000, currency: "USD", accountable: Depository.new)
+    other_depository = @family.accounts.create!(name: "Savings", balance: 1000, currency: "USD", accountable: Crypto.new)
 
     creator = Transfer::Creator.new(
       family: @family,
@@ -101,7 +101,7 @@ class Transfer::CreatorTest < ActiveSupport::TestCase
 
   test "creates funds_movement for investment to investment transfer (rollover)" do
     # Rollover case: investment → investment should stay as funds_movement
-    other_investment = @family.accounts.create!(name: "IRA", balance: 5000, currency: "USD", accountable: Investment.new)
+    other_investment = @family.accounts.create!(name: "IRA", balance: 5000, currency: "USD", accountable: Crypto.new)
 
     creator = Transfer::Creator.new(
       family: @family,
@@ -126,7 +126,7 @@ class Transfer::CreatorTest < ActiveSupport::TestCase
   end
 
   test "creates loan payment" do
-    loan_account = accounts(:loan)
+    loan_account = accounts(:crypto)
 
     creator = Transfer::Creator.new(
       family: @family,
@@ -154,7 +154,7 @@ class Transfer::CreatorTest < ActiveSupport::TestCase
   end
 
   test "creates credit card payment" do
-    credit_card_account = accounts(:credit_card)
+    credit_card_account = accounts(:crypto)
 
     creator = Transfer::Creator.new(
       family: @family,

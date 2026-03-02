@@ -4,7 +4,7 @@ class AccountTest < ActiveSupport::TestCase
   include SyncableInterfaceTest, EntriesTestHelper, ActiveJob::TestHelper
 
   setup do
-    @account = @syncable = accounts(:depository)
+    @account = @syncable = accounts(:crypto)
     @family = families(:dylan_family)
   end
 
@@ -22,7 +22,7 @@ class AccountTest < ActiveSupport::TestCase
       name: "Test Account",
       balance: 100,
       currency: "USD",
-      accountable_type: "Depository",
+      accountable_type: "Crypto",
       accountable_attributes: {}
     })
 
@@ -40,7 +40,7 @@ class AccountTest < ActiveSupport::TestCase
         name: "Linked Account",
         balance: 500,
         currency: "EUR",
-        accountable_type: "Depository",
+        accountable_type: "Crypto",
         accountable_attributes: {}
       },
       skip_initial_sync: true
@@ -60,7 +60,7 @@ class AccountTest < ActiveSupport::TestCase
         name: "Test Account",
         balance: 1000,
         currency: "GBP",
-        accountable_type: "Depository",
+        accountable_type: "Crypto",
         accountable_attributes: {}
       },
       skip_initial_sync: true
@@ -73,42 +73,42 @@ class AccountTest < ActiveSupport::TestCase
   end
 
   test "gets short/long subtype label" do
-    investment = Investment.new(subtype: "hsa")
+    crypto = Crypto.new(subtype: "wallet")
     account = @family.accounts.create!(
-      name: "Test Investment",
+      name: "Test Wallet",
       balance: 1000,
       currency: "USD",
-      accountable: investment
+      accountable: crypto
     )
 
-    assert_equal "HSA", account.short_subtype_label
-    assert_equal "Health Savings Account", account.long_subtype_label
+    assert_equal "Wallet", account.short_subtype_label
+    assert_equal "Crypto Wallet", account.long_subtype_label
 
     # Test with nil subtype
     account.accountable.update!(subtype: nil)
-    assert_equal "Investments", account.short_subtype_label
-    assert_equal "Investments", account.long_subtype_label
+    assert_equal "Crypto", account.short_subtype_label
+    assert_equal "Crypto", account.long_subtype_label
   end
 
   # Tax treatment tests (TaxTreatable concern)
 
-  test "tax_treatment delegates to accountable for Investment" do
-    investment = Investment.new(subtype: "401k")
+  test "tax_treatment delegates to accountable for Crypto" do
+    crypto = Crypto.new(tax_treatment: :tax_deferred)
     account = @family.accounts.create!(
-      name: "Test 401k",
-      balance: 1000,
+      name: "Test Tax Deferred Crypto",
+      balance: 500,
       currency: "USD",
-      accountable: investment
+      accountable: crypto
     )
 
     assert_equal :tax_deferred, account.tax_treatment
     assert_equal I18n.t("accounts.tax_treatments.tax_deferred"), account.tax_treatment_label
   end
 
-  test "tax_treatment delegates to accountable for Crypto" do
+  test "tax_treatment defaults to taxable for Crypto" do
     crypto = Crypto.new(tax_treatment: :taxable)
     account = @family.accounts.create!(
-      name: "Test Crypto",
+      name: "Test Taxable Crypto",
       balance: 500,
       currency: "USD",
       accountable: crypto
@@ -118,42 +118,30 @@ class AccountTest < ActiveSupport::TestCase
     assert_equal I18n.t("accounts.tax_treatments.taxable"), account.tax_treatment_label
   end
 
-  test "tax_treatment returns nil for non-investment accounts" do
-    # Depository accounts don't have tax_treatment
-    assert_nil @account.tax_treatment
-    assert_nil @account.tax_treatment_label
-  end
-
-  test "tax_advantaged? returns true for tax-advantaged accounts" do
-    investment = Investment.new(subtype: "401k")
+  test "tax_advantaged? returns true for tax-advantaged crypto accounts" do
+    crypto = Crypto.new(tax_treatment: :tax_exempt)
     account = @family.accounts.create!(
-      name: "Test 401k",
+      name: "Test Tax Exempt",
       balance: 1000,
       currency: "USD",
-      accountable: investment
+      accountable: crypto
     )
 
     assert account.tax_advantaged?
     assert_not account.taxable?
   end
 
-  test "tax_advantaged? returns false for taxable accounts" do
-    investment = Investment.new(subtype: "brokerage")
+  test "tax_advantaged? returns false for taxable crypto accounts" do
+    crypto = Crypto.new(tax_treatment: :taxable)
     account = @family.accounts.create!(
-      name: "Test Brokerage",
+      name: "Test Taxable",
       balance: 1000,
       currency: "USD",
-      accountable: investment
+      accountable: crypto
     )
 
     assert_not account.tax_advantaged?
     assert account.taxable?
-  end
-
-  test "taxable? returns true for accounts without tax_treatment" do
-    # Depository accounts
-    assert @account.taxable?
-    assert_not @account.tax_advantaged?
   end
 
   test "destroying account purges attached logo" do

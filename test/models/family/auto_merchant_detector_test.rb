@@ -5,7 +5,7 @@ class Family::AutoMerchantDetectorTest < ActiveSupport::TestCase
 
   setup do
     @family = families(:dylan_family)
-    @account = @family.accounts.create!(name: "Rule test", balance: 100, currency: "USD", accountable: Depository.new)
+    @account = @family.accounts.create!(name: "Rule test", balance: 100, currency: "USD", accountable: Crypto.new)
     @llm_provider = mock
     Provider::Registry.stubs(:get_provider).with(:openai).returns(@llm_provider)
     Setting.stubs(:brand_fetch_client_id).returns("123")

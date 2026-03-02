@@ -8,9 +8,9 @@ class BalanceSheetTest < ActiveSupport::TestCase
   test "calculates total assets" do
     assert_equal 0, BalanceSheet.new(@family).assets.total
 
-    create_account(balance: 1000, accountable: Depository.new)
-    create_account(balance: 5000, accountable: OtherAsset.new)
-    create_account(balance: 10000, accountable: CreditCard.new) # ignored
+    create_account(balance: 1000, accountable: Crypto.new)
+    create_account(balance: 5000, accountable: Crypto.new)
+    create_account(balance: 10000, accountable: Crypto.new) # ignored
 
     assert_equal 1000 + 5000, BalanceSheet.new(@family).assets.total
   end
@@ -18,9 +18,9 @@ class BalanceSheetTest < ActiveSupport::TestCase
   test "calculates total liabilities" do
     assert_equal 0, BalanceSheet.new(@family).liabilities.total
 
-    create_account(balance: 1000, accountable: CreditCard.new)
-    create_account(balance: 5000, accountable: OtherLiability.new)
-    create_account(balance: 10000, accountable: Depository.new) # ignored
+    create_account(balance: 1000, accountable: Crypto.new)
+    create_account(balance: 5000, accountable: Crypto.new)
+    create_account(balance: 10000, accountable: Crypto.new) # ignored
 
     assert_equal 1000 + 5000, BalanceSheet.new(@family).liabilities.total
   end
@@ -28,17 +28,17 @@ class BalanceSheetTest < ActiveSupport::TestCase
   test "calculates net worth" do
     assert_equal 0, BalanceSheet.new(@family).net_worth
 
-    create_account(balance: 1000, accountable: CreditCard.new)
-    create_account(balance: 50000, accountable: Depository.new)
+    create_account(balance: 1000, accountable: Crypto.new)
+    create_account(balance: 50000, accountable: Crypto.new)
 
     assert_equal 50000 - 1000, BalanceSheet.new(@family).net_worth
   end
 
   test "disabled accounts do not affect totals" do
-    create_account(balance: 1000, accountable: CreditCard.new)
-    create_account(balance: 10000, accountable: Depository.new)
+    create_account(balance: 1000, accountable: Crypto.new)
+    create_account(balance: 10000, accountable: Crypto.new)
 
-    other_liability = create_account(balance: 5000, accountable: OtherLiability.new)
+    other_liability = create_account(balance: 5000, accountable: Crypto.new)
     other_liability.disable!
 
     assert_equal 10000 - 1000, BalanceSheet.new(@family).net_worth
@@ -47,11 +47,11 @@ class BalanceSheetTest < ActiveSupport::TestCase
   end
 
   test "calculates asset group totals" do
-    create_account(balance: 1000, accountable: Depository.new)
-    create_account(balance: 2000, accountable: Depository.new)
-    create_account(balance: 3000, accountable: Investment.new)
-    create_account(balance: 5000, accountable: OtherAsset.new)
-    create_account(balance: 10000, accountable: CreditCard.new) # ignored
+    create_account(balance: 1000, accountable: Crypto.new)
+    create_account(balance: 2000, accountable: Crypto.new)
+    create_account(balance: 3000, accountable: Crypto.new)
+    create_account(balance: 5000, accountable: Crypto.new)
+    create_account(balance: 10000, accountable: Crypto.new) # ignored
 
     asset_groups = BalanceSheet.new(@family).assets.account_groups
 
@@ -62,11 +62,11 @@ class BalanceSheetTest < ActiveSupport::TestCase
   end
 
   test "calculates liability group totals" do
-    create_account(balance: 1000, accountable: CreditCard.new)
-    create_account(balance: 2000, accountable: CreditCard.new)
-    create_account(balance: 3000, accountable: OtherLiability.new)
-    create_account(balance: 5000, accountable: OtherLiability.new)
-    create_account(balance: 10000, accountable: Depository.new) # ignored
+    create_account(balance: 1000, accountable: Crypto.new)
+    create_account(balance: 2000, accountable: Crypto.new)
+    create_account(balance: 3000, accountable: Crypto.new)
+    create_account(balance: 5000, accountable: Crypto.new)
+    create_account(balance: 10000, accountable: Crypto.new) # ignored
 
     liability_groups = BalanceSheet.new(@family).liabilities.account_groups
 

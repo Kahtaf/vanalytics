@@ -4,7 +4,7 @@ module EntriesTestHelper
     transaction_attributes = attributes.slice(:category, :tags, :merchant, :kind)
 
     entry_defaults = {
-      account: accounts(:depository),
+      account: accounts(:crypto),
       name: "Transaction",
       date: Date.current,
       currency: "USD",
@@ -19,7 +19,7 @@ module EntriesTestHelper
     entry_attributes = attributes.except(:kind)
     valuation_attributes = attributes.slice(:kind)
 
-    account = attributes[:account] || accounts(:depository)
+    account = attributes[:account] || accounts(:crypto)
     amount = attributes[:amount] || 5000
 
     entry_defaults = {

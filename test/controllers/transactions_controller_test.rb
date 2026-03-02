@@ -77,7 +77,7 @@ class TransactionsControllerTest < ActionDispatch::IntegrationTest
   test "transaction count represents filtered total" do
     family = families(:empty)
     sign_in users(:empty)
-    account = family.accounts.create! name: "Test", balance: 0, currency: "USD", accountable: Depository.new
+    account = family.accounts.create! name: "Test", balance: 0, currency: "USD", accountable: Crypto.new
 
     3.times do
       create_transaction(account: account)
@@ -103,7 +103,7 @@ class TransactionsControllerTest < ActionDispatch::IntegrationTest
   # Clean up any existing entries to ensure clean test
   family.accounts.each { |account| account.entries.delete_all }
 
-  account = family.accounts.create! name: "Test", balance: 0, currency: "USD", accountable: Depository.new
+  account = family.accounts.create! name: "Test", balance: 0, currency: "USD", accountable: Crypto.new
 
   # Create multiple transactions for pagination
   25.times do |i|
@@ -151,7 +151,7 @@ end
   test "calls Transaction::Search totals method with correct search parameters" do
     family = families(:empty)
     sign_in users(:empty)
-    account = family.accounts.create! name: "Test", balance: 0, currency: "USD", accountable: Depository.new
+    account = family.accounts.create! name: "Test", balance: 0, currency: "USD", accountable: Crypto.new
 
     create_transaction(account: account, amount: 100)
 
@@ -172,7 +172,7 @@ end
   test "calls Transaction::Search totals method with filtered search parameters" do
     family = families(:empty)
     sign_in users(:empty)
-    account = family.accounts.create! name: "Test", balance: 0, currency: "USD", accountable: Depository.new
+    account = family.accounts.create! name: "Test", balance: 0, currency: "USD", accountable: Crypto.new
     category = family.categories.create! name: "Food", color: "#ff0000"
 
     create_transaction(account: account, amount: 100, category: category)
@@ -194,7 +194,7 @@ end
   test "mark_as_recurring creates a manual recurring transaction" do
     family = families(:empty)
     sign_in users(:empty)
-    account = family.accounts.create! name: "Test", balance: 0, currency: "USD", accountable: Depository.new
+    account = family.accounts.create! name: "Test", balance: 0, currency: "USD", accountable: Crypto.new
     merchant = family.merchants.create! name: "Test Merchant"
     entry = create_transaction(account: account, amount: 100, merchant: merchant)
     transaction = entry.entryable
@@ -216,7 +216,7 @@ end
   test "mark_as_recurring shows alert if recurring transaction already exists" do
     family = families(:empty)
     sign_in users(:empty)
-    account = family.accounts.create! name: "Test", balance: 0, currency: "USD", accountable: Depository.new
+    account = family.accounts.create! name: "Test", balance: 0, currency: "USD", accountable: Crypto.new
     merchant = family.merchants.create! name: "Test Merchant"
     entry = create_transaction(account: account, amount: 100, merchant: merchant)
     transaction = entry.entryable
@@ -245,7 +245,7 @@ end
   test "mark_as_recurring handles validation errors gracefully" do
     family = families(:empty)
     sign_in users(:empty)
-    account = family.accounts.create! name: "Test", balance: 0, currency: "USD", accountable: Depository.new
+    account = family.accounts.create! name: "Test", balance: 0, currency: "USD", accountable: Crypto.new
     merchant = family.merchants.create! name: "Test Merchant"
     entry = create_transaction(account: account, amount: 100, merchant: merchant)
     transaction = entry.entryable
@@ -268,7 +268,7 @@ end
   test "mark_as_recurring handles unexpected errors gracefully" do
     family = families(:empty)
     sign_in users(:empty)
-    account = family.accounts.create! name: "Test", balance: 0, currency: "USD", accountable: Depository.new
+    account = family.accounts.create! name: "Test", balance: 0, currency: "USD", accountable: Crypto.new
     merchant = family.merchants.create! name: "Test Merchant"
     entry = create_transaction(account: account, amount: 100, merchant: merchant)
     transaction = entry.entryable
@@ -287,7 +287,7 @@ end
   test "unlock clears protection flags on user-modified entry" do
     family = families(:empty)
     sign_in users(:empty)
-    account = family.accounts.create! name: "Test", balance: 0, currency: "USD", accountable: Depository.new
+    account = family.accounts.create! name: "Test", balance: 0, currency: "USD", accountable: Crypto.new
     entry = create_transaction(account: account, amount: 100)
     transaction = entry.entryable
 
@@ -312,7 +312,7 @@ end
   test "unlock clears import_locked flag" do
     family = families(:empty)
     sign_in users(:empty)
-    account = family.accounts.create! name: "Test", balance: 0, currency: "USD", accountable: Depository.new
+    account = family.accounts.create! name: "Test", balance: 0, currency: "USD", accountable: Crypto.new
     entry = create_transaction(account: account, amount: 100)
     transaction = entry.entryable
 

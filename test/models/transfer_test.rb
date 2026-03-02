@@ -15,8 +15,8 @@ class TransferTest < ActiveSupport::TestCase
   end
 
   test "transfer has different accounts, opposing amounts, and within 4 days of each other" do
-    outflow_entry = create_transaction(date: 1.day.ago.to_date, account: accounts(:depository), amount: 500)
-    inflow_entry = create_transaction(date: Date.current, account: accounts(:credit_card), amount: -500)
+    outflow_entry = create_transaction(date: 1.day.ago.to_date, account: accounts(:crypto), amount: 500)
+    inflow_entry = create_transaction(date: Date.current, account: accounts(:crypto), amount: -500)
 
     assert_difference -> { Transfer.count } => 1 do
       Transfer.create!(
@@ -27,8 +27,8 @@ class TransferTest < ActiveSupport::TestCase
   end
 
   test "transfer cannot have 2 transactions from the same account" do
-    outflow_entry = create_transaction(date: Date.current, account: accounts(:depository), amount: 500)
-    inflow_entry = create_transaction(date: 1.day.ago.to_date, account: accounts(:depository), amount: -500)
+    outflow_entry = create_transaction(date: Date.current, account: accounts(:crypto), amount: 500)
+    inflow_entry = create_transaction(date: 1.day.ago.to_date, account: accounts(:crypto), amount: -500)
 
     transfer = Transfer.new(
       inflow_transaction: inflow_entry.transaction,
@@ -43,8 +43,8 @@ class TransferTest < ActiveSupport::TestCase
   end
 
   test "Transfer transactions must have opposite amounts" do
-    outflow_entry = create_transaction(date: Date.current, account: accounts(:depository), amount: 500)
-    inflow_entry = create_transaction(date: Date.current, account: accounts(:credit_card), amount: -400)
+    outflow_entry = create_transaction(date: Date.current, account: accounts(:crypto), amount: 500)
+    inflow_entry = create_transaction(date: Date.current, account: accounts(:crypto), amount: -400)
 
     transfer = Transfer.new(
       inflow_transaction: inflow_entry.transaction,
@@ -59,8 +59,8 @@ class TransferTest < ActiveSupport::TestCase
   end
 
   test "transfer dates must be within 4 days of each other" do
-    outflow_entry = create_transaction(date: Date.current, account: accounts(:depository), amount: 500)
-    inflow_entry = create_transaction(date: 5.days.ago.to_date, account: accounts(:credit_card), amount: -500)
+    outflow_entry = create_transaction(date: Date.current, account: accounts(:crypto), amount: 500)
+    inflow_entry = create_transaction(date: 5.days.ago.to_date, account: accounts(:crypto), amount: -500)
 
     transfer = Transfer.new(
       inflow_transaction: inflow_entry.transaction,
@@ -78,8 +78,8 @@ class TransferTest < ActiveSupport::TestCase
     family1 = families(:empty)
     family2 = families(:dylan_family)
 
-    family1_account = family1.accounts.create!(name: "Family 1 Account", balance: 5000, currency: "USD", accountable: Depository.new)
-    family2_account = family2.accounts.create!(name: "Family 2 Account", balance: 5000, currency: "USD", accountable: Depository.new)
+    family1_account = family1.accounts.create!(name: "Family 1 Account", balance: 5000, currency: "USD", accountable: Crypto.new)
+    family2_account = family2.accounts.create!(name: "Family 2 Account", balance: 5000, currency: "USD", accountable: Crypto.new)
 
     outflow_txn = create_transaction(date: Date.current, account: family1_account, amount: 500)
     inflow_txn = create_transaction(date: Date.current, account: family2_account, amount: -500)
@@ -94,9 +94,9 @@ class TransferTest < ActiveSupport::TestCase
   end
 
   test "transaction can only belong to one transfer" do
-    outflow_entry = create_transaction(date: Date.current, account: accounts(:depository), amount: 500)
-    inflow_entry1 = create_transaction(date: Date.current, account: accounts(:credit_card), amount: -500)
-    inflow_entry2 = create_transaction(date: Date.current, account: accounts(:credit_card), amount: -500)
+    outflow_entry = create_transaction(date: Date.current, account: accounts(:crypto), amount: 500)
+    inflow_entry1 = create_transaction(date: Date.current, account: accounts(:crypto), amount: -500)
+    inflow_entry2 = create_transaction(date: Date.current, account: accounts(:crypto), amount: -500)
 
     Transfer.create!(inflow_transaction: inflow_entry1.transaction, outflow_transaction: outflow_entry.transaction)
 
@@ -106,7 +106,7 @@ class TransferTest < ActiveSupport::TestCase
   end
 
   test "kind_for_account returns investment_contribution for investment accounts" do
-    assert_equal "investment_contribution", Transfer.kind_for_account(accounts(:investment))
+    assert_equal "investment_contribution", Transfer.kind_for_account(accounts(:crypto))
   end
 
   test "kind_for_account returns investment_contribution for crypto accounts" do
@@ -114,14 +114,14 @@ class TransferTest < ActiveSupport::TestCase
   end
 
   test "kind_for_account returns loan_payment for loan accounts" do
-    assert_equal "loan_payment", Transfer.kind_for_account(accounts(:loan))
+    assert_equal "loan_payment", Transfer.kind_for_account(accounts(:crypto))
   end
 
   test "kind_for_account returns cc_payment for credit card accounts" do
-    assert_equal "cc_payment", Transfer.kind_for_account(accounts(:credit_card))
+    assert_equal "cc_payment", Transfer.kind_for_account(accounts(:crypto))
   end
 
   test "kind_for_account returns funds_movement for depository accounts" do
-    assert_equal "funds_movement", Transfer.kind_for_account(accounts(:depository))
+    assert_equal "funds_movement", Transfer.kind_for_account(accounts(:crypto))
   end
 end
