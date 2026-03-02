@@ -1,15 +1,10 @@
 class Transaction < ApplicationRecord
-  include Entryable, Transferable, Ruleable
-
-  belongs_to :category, optional: true
-  belongs_to :merchant, optional: true
+  include Entryable, Transferable
 
   has_many :taggings, as: :taggable, dependent: :destroy
   has_many :tags, through: :taggings
 
   accepts_nested_attributes_for :taggings, allow_destroy: true
-
-  after_save :clear_merchant_unlinked_association, if: :merchant_id_previously_changed?
 
   enum :kind, {
     standard: "standard", # A regular transaction, included in budget analytics
@@ -24,9 +19,6 @@ class Transaction < ApplicationRecord
   # Used for search filters, rule conditions, and UI display.
   TRANSFER_KINDS = %w[funds_movement cc_payment loan_payment investment_contribution].freeze
 
-  # Kinds excluded from budget/income-statement analytics.
-  # loan_payment and investment_contribution are intentionally NOT here —
-  # they represent real cash outflow from a budgeting perspective.
   BUDGET_EXCLUDED_KINDS = %w[funds_movement one_time cc_payment].freeze
 
   # All valid investment activity labels (for UI dropdown)
@@ -64,16 +56,6 @@ class Transaction < ApplicationRecord
   # Overarching grouping method for all transfer-type transactions
   def transfer?
     TRANSFER_KINDS.include?(kind)
-  end
-
-  def set_category!(category)
-    if category.is_a?(String)
-      category = entry.account.family.categories.find_or_create_by!(
-        name: category
-      )
-    end
-
-    update!(category: category)
   end
 
   def pending?
@@ -164,12 +146,4 @@ class Transaction < ApplicationRecord
       extra["potential_posted_match"]
     end
 
-    def clear_merchant_unlinked_association
-      return unless merchant_id.present? && merchant.is_a?(ProviderMerchant)
-
-      family = entry&.account&.family
-      return unless family
-
-      FamilyMerchantAssociation.where(family: family, merchant: merchant).delete_all
-    end
 end

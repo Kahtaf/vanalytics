@@ -338,11 +338,7 @@ class Entry < ApplicationRecord
     def bulk_update!(bulk_update_params, update_tags: false)
       bulk_attributes = {
         date: bulk_update_params[:date],
-        notes: bulk_update_params[:notes],
-        entryable_attributes: {
-          category_id: bulk_update_params[:category_id],
-          merchant_id: bulk_update_params[:merchant_id]
-        }.compact_blank
+        notes: bulk_update_params[:notes]
       }.compact_blank
 
       tag_ids = Array.wrap(bulk_update_params[:tag_ids]).reject(&:blank?)
@@ -354,7 +350,6 @@ class Entry < ApplicationRecord
         all.each do |entry|
           # Update standard attributes
           if bulk_attributes.present?
-            bulk_attributes[:entryable_attributes][:id] = entry.entryable_id if bulk_attributes[:entryable_attributes].present?
             entry.update! bulk_attributes
           end
 

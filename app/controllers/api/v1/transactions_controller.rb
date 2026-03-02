@@ -190,26 +190,6 @@ end
         query = query.joins(:entry).where(entries: { account_id: account_ids })
       end
 
-      # Category filtering
-      if params[:category_id].present?
-        query = query.where(category_id: params[:category_id])
-      end
-
-      if params[:category_ids].present?
-        category_ids = Array(params[:category_ids])
-        query = query.where(category_id: category_ids)
-      end
-
-      # Merchant filtering
-      if params[:merchant_id].present?
-        query = query.where(merchant_id: params[:merchant_id])
-      end
-
-      if params[:merchant_ids].present?
-        merchant_ids = Array(params[:merchant_ids])
-        query = query.where(merchant_id: merchant_ids)
-      end
-
       # Date range filtering
       if params[:start_date].present?
         query = query.joins(:entry).where("entries.date >= ?", Date.parse(params[:start_date]))
@@ -253,17 +233,16 @@ end
       search_term = "%#{params[:search]}%"
 
       query.joins(:entry)
-           .left_joins(:merchant)
            .where(
-             "entries.name ILIKE ? OR entries.notes ILIKE ? OR merchants.name ILIKE ?",
-             search_term, search_term, search_term
+             "entries.name ILIKE ? OR entries.notes ILIKE ?",
+             search_term, search_term
            )
 end
 
     def transaction_params
       params.require(:transaction).permit(
         :account_id, :date, :amount, :name, :description, :notes, :currency,
-        :category_id, :merchant_id, :nature, tag_ids: []
+        :nature, tag_ids: []
       )
     end
 
@@ -276,8 +255,6 @@ end
         notes: transaction_params[:notes],
         entryable_type: "Transaction",
         entryable_attributes: {
-          category_id: transaction_params[:category_id],
-          merchant_id: transaction_params[:merchant_id],
           tag_ids: transaction_params[:tag_ids] || []
         }
       }
@@ -291,11 +268,7 @@ end
         date: transaction_params[:date],
         notes: transaction_params[:notes],
         entryable_attributes: {
-          id: @entry.entryable_id,
-          category_id: transaction_params[:category_id],
-          merchant_id: transaction_params[:merchant_id]
-          # Note: tag_ids handled separately in update action to distinguish
-          # "not provided" from "explicitly set to empty"
+          id: @entry.entryable_id
         }.compact_blank
       }
 

@@ -26,29 +26,6 @@ json.account do
   json.account_type transaction.entry.account.accountable_type.underscore
 end
 
-# Category information
-if transaction.category.present?
-  json.category do
-    json.id transaction.category.id
-    json.name transaction.category.name
-    json.classification transaction.category.classification
-    json.color transaction.category.color
-    json.icon transaction.category.lucide_icon
-  end
-else
-  json.category nil
-end
-
-# Merchant information
-if transaction.merchant.present?
-  json.merchant do
-    json.id transaction.merchant.id
-    json.name transaction.merchant.name
-  end
-else
-  json.merchant nil
-end
-
 # Tags
 json.tags transaction.tags do |tag|
   json.id tag.id

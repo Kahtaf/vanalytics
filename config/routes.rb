@@ -47,7 +47,6 @@ Rails.application.routes.draw do
   resources :users, only: %i[update destroy] do
     delete :reset, on: :member
     delete :reset_with_sample_data, on: :member
-    patch :rule_prompt_settings, on: :member
     get :resend_confirmation_email, on: :member
   end
 
@@ -86,16 +85,6 @@ Rails.application.routes.draw do
     delete :destroy_all, on: :collection
   end
 
-  namespace :category do
-    resource :dropdown, only: :show
-  end
-
-  resources :categories, except: :show do
-    resources :deletions, only: %i[new create], module: :category
-
-    post :bootstrap, on: :collection
-    delete :destroy_all, on: :collection
-  end
 
   resources :reports, only: %i[index] do
     patch :update_preferences, on: :collection
@@ -104,18 +93,6 @@ Rails.application.routes.draw do
     get :print, on: :collection
   end
 
-  resources :budgets, only: %i[index show edit update], param: :month_year do
-    get :picker, on: :collection
-
-    resources :budget_categories, only: %i[index show update]
-  end
-
-  resources :family_merchants, only: %i[index new create edit update destroy] do
-    collection do
-      get :merge
-      post :perform_merge
-    end
-  end
 
   resources :transfers, only: %i[new create destroy show update]
 
@@ -159,7 +136,6 @@ Rails.application.routes.draw do
 
   resources :transactions, only: %i[index new create show update destroy] do
     resource :transfer_match, only: %i[new create]
-    resource :category, only: :update, controller: :transaction_categories
 
     collection do
       delete :clear_filter
@@ -169,24 +145,12 @@ Rails.application.routes.draw do
     member do
       get :convert_to_trade
       post :create_trade_from_transaction
-      post :mark_as_recurring
       post :merge_duplicate
       post :dismiss_duplicate
       post :unlock
     end
   end
 
-  resources :recurring_transactions, only: %i[index destroy] do
-    collection do
-      match :identify, via: [ :get, :post ]
-      match :cleanup, via: [ :get, :post ]
-      patch :update_settings
-    end
-
-    member do
-      match :toggle_status, via: [ :get, :post ]
-    end
-  end
 
   resources :accountable_sparklines, only: :show, param: :accountable_type
 
@@ -198,19 +162,6 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :rules, except: :show do
-    member do
-      get :confirm
-      post :apply
-    end
-
-    collection do
-      delete :destroy_all
-      get :confirm_all
-      post :apply_all
-      post :clear_ai_cache
-    end
-  end
 
   resources :accounts, only: %i[index new show destroy], shallow: true do
     member do
@@ -254,8 +205,6 @@ Rails.application.routes.draw do
 
       # Production API endpoints
       resources :accounts, only: [ :index, :show ]
-      resources :categories, only: [ :index, :show ]
-      resources :merchants, only: %i[index show]
       resources :tags, only: %i[index show create update destroy]
 
       resources :transactions, only: [ :index, :show, :create, :update, :destroy ]

@@ -10,7 +10,7 @@
 | P1-01 | Remove AI assistant (models, controllers, views, tests, layout sidebar) | — | `[x]` |
 | P1-02 | Remove banking providers (Plaid, SimpleFIN, EnableBanking, Lunchflow, Mercury, Snaptrade, IndexaCapital, Coinbase, CoinStats) | — | `[x]` |
 | P1-03 | Remove non-crypto account types (Depository, Investment, Property, Vehicle, CreditCard, Loan, OtherAsset, OtherLiability) | — | `[x]` |
-| P1-04 | Remove budgets, categories, merchants, rules, recurring transactions | — | `[ ]` |
+| P1-04 | Remove budgets, categories, merchants, rules, recurring transactions | — | `[x]` |
 | P1-05 | Remove transactions UI, transfers, imports/exports, reports (keep Entry/Valuation/Trade) | — | `[ ]` |
 | P1-06 | Remove misc features (subscriptions, invites, impersonation, OAuth/Doorkeeper, eval, SSO, mobile devices, data enrichments) | — | `[ ]` |
 | P1-07 | Clean up Gemfile — remove unused gems, bundle install | P1-01..P1-06 | `[ ]` |

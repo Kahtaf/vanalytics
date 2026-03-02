@@ -34,11 +34,8 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
 
   test "admin can reset family data" do
     account = accounts(:crypto)
-    category = categories(:income)
     tag = tags(:one)
-    merchant = merchants(:netflix)
     import = imports(:transaction)
-    budget = budgets(:one)
 
     perform_enqueued_jobs(only: FamilyResetJob) do
       delete reset_user_url(@user)
@@ -48,20 +45,14 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     assert_equal I18n.t("users.reset.success"), flash[:notice]
 
     assert_not Account.exists?(account.id)
-    assert_not Category.exists?(category.id)
     assert_not Tag.exists?(tag.id)
-    assert_not Merchant.exists?(merchant.id)
     assert_not Import.exists?(import.id)
-    assert_not Budget.exists?(budget.id)
   end
 
   test "admin can reset family data and load sample data" do
     account = accounts(:crypto)
-    category = categories(:income)
     tag = tags(:one)
-    merchant = merchants(:netflix)
     import = imports(:transaction)
-    budget = budgets(:one)
 
     Demo::Generator.any_instance.expects(:generate_new_user_data_for!).with(@user.family, email: @user.email)
 
@@ -73,11 +64,8 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     assert_equal I18n.t("users.reset_with_sample_data.success"), flash[:notice]
 
     assert_not Account.exists?(account.id)
-    assert_not Category.exists?(category.id)
     assert_not Tag.exists?(tag.id)
-    assert_not Merchant.exists?(merchant.id)
     assert_not Import.exists?(import.id)
-    assert_not Budget.exists?(budget.id)
   end
 
   test "non-admin cannot reset family data" do

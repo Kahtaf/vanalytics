@@ -6,11 +6,8 @@ class FamilyResetJob < ApplicationJob
     ActiveRecord::Base.transaction do
       # Delete accounts and related data
       family.accounts.destroy_all
-      family.categories.destroy_all
       family.tags.destroy_all
-      family.merchants.destroy_all
       family.imports.destroy_all
-      family.budgets.destroy_all
     end
 
     if load_sample_data_for_email.present?
