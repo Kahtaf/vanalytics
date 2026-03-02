@@ -13,7 +13,7 @@
 | P1-04 | Remove budgets, categories, merchants, rules, recurring transactions | — | `[x]` |
 | P1-05 | Remove transactions UI, transfers, imports/exports, reports (keep Entry/Valuation/Trade) | — | `[x]` |
 | P1-06 | Remove misc features (subscriptions, invites, impersonation, OAuth/Doorkeeper, eval, SSO, mobile devices, data enrichments) | — | `[x]` |
-| P1-07 | Clean up Gemfile — remove unused gems, bundle install | P1-01..P1-06 | `[partial]` — Gemfile cleaned; run `bundle install` in Docker to update lock file |
+| P1-07 | Clean up Gemfile — remove unused gems, bundle install | P1-01..P1-06 | `[x]` |
 | P1-08 | Database migration — drop ~40 removed tables | P1-01..P1-06 | `[partial]` — Migration created (66 tables + orphaned columns); run `bin/rails db:migrate && bin/rails test` to verify |
 | P1-09 | Clean routes.rb and navigation (remove dead routes, simplify nav) | P1-01..P1-06 | `[x]` |
 | P1-10 | Verify clean build (rails test, rubocop, brakeman all pass) | P1-07..P1-09 | `[ ]` |
