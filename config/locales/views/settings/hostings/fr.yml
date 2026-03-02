@@ -2,22 +2,10 @@
 fr:
   settings:
     hostings:
-      invite_code_settings:
-        description: Contrôlez comment les nouvelles personnes s'inscrivent à votre instance de %{product}.
-        email_confirmation_description: Lorsque cette option est activée, les utilisateurs doivent confirmer leur adresse e-mail lors du changement.
-        email_confirmation_title: Exiger la confirmation de l'e-mail
-        generate_tokens: Générer un nouveau code
-        generated_tokens: Codes générés
-        title: Inscription
-        states:
-          open: Ouvert
-          closed: Fermé
-          invite_only: Sur invitation uniquement
       show:
         general: Paramètres généraux
         financial_data_providers: Fournisseurs de données financières
         sync_settings: Paramètres de synchronisation
-        invites: Codes d'invitation
         title: Auto-hébergement
         danger_zone: Zone dangereuse
         clear_cache: Effacer le cache de données

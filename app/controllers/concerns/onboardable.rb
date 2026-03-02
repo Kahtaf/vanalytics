@@ -13,16 +13,11 @@ module Onboardable
 
       if Current.user.needs_onboarding?
         redirect_to onboarding_path
-      elsif Current.family.needs_subscription?
-        redirect_to trial_onboarding_path
-      elsif Current.family.upgrade_required?
-        redirect_to upgrade_subscription_path
       end
     end
 
     def redirectable_path?(path)
       return false if path.starts_with?("/settings")
-      return false if path.starts_with?("/subscription")
       return false if path.starts_with?("/onboarding")
       return false if path.starts_with?("/users")
       return false if path.starts_with?("/api")  # Exclude API endpoints from onboarding redirects

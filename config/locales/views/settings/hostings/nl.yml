@@ -2,22 +2,10 @@
 nl:
   settings:
     hostings:
-      invite_code_settings:
-        description: Bepaal hoe nieuwe mensen zich aanmelden voor uw instantie van %{product}.
-        email_confirmation_description: Wanneer ingeschakeld, moeten gebruikers hun e-mailadres bevestigen bij het wijzigen ervan.
-        email_confirmation_title: E-mailbevestiging vereisen
-        generate_tokens: Nieuwe code genereren
-        generated_tokens: Gegenereerde codes
-        title: Onboarding
-        states:
-          open: Open
-          closed: Gesloten
-          invite_only: Alleen op uitnodiging
       show:
         general: Algemene instellingen
         financial_data_providers: Financiële gegevensproviders
         sync_settings: Synchronisatie-instellingen
-        invites: Uitnodigingscodes
         title: Zelfhosting
         danger_zone: Gevarenzone
         clear_cache: Datacache wissen

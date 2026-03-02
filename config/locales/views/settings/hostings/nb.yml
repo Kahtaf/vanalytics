@@ -2,22 +2,9 @@
 nb:
   settings:
     hostings:
-      invite_code_settings:
-        description: Kontroller hvordan nye personer registrerer seg for din instans av %{product}.
-        email_confirmation_description: Når aktivert, må brukere bekrefte e-postadressen
-          sin når de endrer den.
-        email_confirmation_title: Krev e-postbekreftelse
-        generate_tokens: Generer ny kode
-        generated_tokens: Genererte koder
-        title: Onboarding
-        states:
-          open: Åpen
-          closed: Stengt
-          invite_only: Kun invitasjon
       show:
         general: Generelle innstillinger
         financial_data_providers: Finansdata-leverandører
-        invites: Invitasjonskoder
         title: Selvhosting
         danger_zone: Fareområde
         clear_cache: Tøm cache

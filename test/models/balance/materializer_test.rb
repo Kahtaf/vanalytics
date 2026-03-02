@@ -10,7 +10,7 @@ class Balance::MaterializerTest < ActiveSupport::TestCase
       balance: 20000,
       cash_balance: 20000,
       currency: "USD",
-      accountable: Investment.new
+      accountable: Crypto.new
     )
   end
 

@@ -1,9 +1,6 @@
 ---
 es:
   helpers:
-    label:
-      user:
-        invite_code: Código de invitación
     submit:
       user:
         create: Continuar
@@ -11,13 +8,8 @@ es:
     closed: Las inscripciones están actualmente cerradas.
     create:
       failure: Hubo un problema al registrarse.
-      invalid_invite_code: Código de invitación inválido, por favor inténtalo de nuevo.
       success: Te has registrado con éxito.
     new:
-      invitation_message: "%{inviter} te ha invitado a unirte como %{role}"
-      join_family_title: Únete a %{family}
-      role_admin: administrador
-      role_member: miembro
       submit: Crear cuenta
       title: Crea tu cuenta
       welcome_body: Para comenzar, debes registrarte para obtener una nueva cuenta. Luego podrás

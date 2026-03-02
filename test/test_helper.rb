@@ -9,10 +9,6 @@ require_relative "../config/environment"
 
 ENV["RAILS_ENV"] ||= "test"
 
-# Set Plaid to sandbox mode for tests
-ENV["PLAID_ENV"] = "sandbox"
-ENV["PLAID_CLIENT_ID"] ||= "test_client_id"
-ENV["PLAID_SECRET"] ||= "test_secret"
 
 # Fixes Segfaults on M1 Macs when running tests in parallel (temporary workaround)
 ENV["PGGSSENCMODE"] = "disable"
@@ -29,18 +25,7 @@ VCR.configure do |config|
   config.hook_into :webmock
   config.ignore_localhost = true
   config.default_cassette_options = { erb: true }
-  config.filter_sensitive_data("<OPENAI_ACCESS_TOKEN>") { ENV["OPENAI_ACCESS_TOKEN"] }
-  config.filter_sensitive_data("<OPENAI_ORGANIZATION_ID>") { ENV["OPENAI_ORGANIZATION_ID"] }
-  config.filter_sensitive_data("<STRIPE_SECRET_KEY>") { ENV["STRIPE_SECRET_KEY"] }
-  config.filter_sensitive_data("<STRIPE_WEBHOOK_SECRET>") { ENV["STRIPE_WEBHOOK_SECRET"] }
-  config.filter_sensitive_data("<PLAID_CLIENT_ID>") { ENV["PLAID_CLIENT_ID"] }
-  config.filter_sensitive_data("<PLAID_SECRET>") { ENV["PLAID_SECRET"] }
 end
-
-# Configure OmniAuth for testing
-OmniAuth.config.test_mode = true
-# Allow both GET and POST for OIDC callbacks in tests
-OmniAuth.config.allowed_request_methods = [ :get, :post ]
 
 module ActiveSupport
   class TestCase
@@ -77,19 +62,6 @@ module ActiveSupport
 
     def user_password_test
       "maybetestpassword817983172"
-    end
-
-    # Ensures the Investment Contributions category exists for a family
-    # Used in transfer tests where this bootstrapped category is required
-    # Uses family locale to ensure consistent naming
-    def ensure_investment_contributions_category(family)
-      I18n.with_locale(family.locale) do
-        family.categories.find_or_create_by!(name: Category.investment_contributions_name) do |c|
-          c.color = "#0d9488"
-          c.lucide_icon = "trending-up"
-          c.classification = "expense"
-        end
-      end
     end
   end
 end

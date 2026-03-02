@@ -1,14 +1,11 @@
 class Account < ApplicationRecord
-  include AASM, Syncable, Monetizable, Chartable, Linkable, Enrichable, Anchorable, Reconcileable, TaxTreatable
+  include AASM, Syncable, Monetizable, Chartable, Linkable, Anchorable, Reconcileable, TaxTreatable
 
   validates :name, :balance, :currency, presence: true
 
   belongs_to :family
-  belongs_to :import, optional: true
 
-  has_many :import_mappings, as: :mappable, dependent: :destroy, class_name: "Import::Mapping"
   has_many :entries, dependent: :destroy
-  has_many :transactions, through: :entries, source: :entryable, source_type: "Transaction"
   has_many :valuations, through: :entries, source: :entryable, source_type: "Valuation"
   has_many :trades, through: :entries, source: :entryable, source_type: "Trade"
   has_many :holdings, dependent: :destroy
@@ -25,7 +22,6 @@ class Account < ApplicationRecord
   scope :manual, -> {
     left_joins(:account_providers)
       .where(account_providers: { id: nil })
-      .where(plaid_account_id: nil, simplefin_account_id: nil)
   }
 
   scope :visible_manual, -> {
@@ -100,136 +96,6 @@ class Account < ApplicationRecord
       account.sync_later unless skip_initial_sync
       account
     end
-
-
-    def create_from_simplefin_account(simplefin_account, account_type, subtype = nil)
-      # Respect user choice when provided; otherwise infer a sensible default
-      # Require an explicit account_type; do not infer on the backend
-      if account_type.blank? || account_type.to_s == "unknown"
-        raise ArgumentError, "account_type is required when creating an account from SimpleFIN"
-      end
-
-      # Get the balance from SimpleFin
-      balance = simplefin_account.current_balance || simplefin_account.available_balance || 0
-
-      # SimpleFin returns negative balances for credit cards (liabilities)
-      # But Sure expects positive balances for liabilities
-      if account_type == "CreditCard" || account_type == "Loan"
-        balance = balance.abs
-      end
-
-      # Calculate cash balance correctly for investment accounts
-      cash_balance = balance
-      if account_type == "Investment"
-        begin
-          calculator = SimplefinAccount::Investments::BalanceCalculator.new(simplefin_account)
-          calculated = calculator.cash_balance
-          cash_balance = calculated unless calculated.nil?
-        rescue => e
-          Rails.logger.warn(
-            "Investment cash_balance calculation failed for " \
-            "SimpleFin account #{simplefin_account.id}: #{e.class} - #{e.message}"
-          )
-          # Fallback to zero as suggested
-          cash_balance = 0
-        end
-      end
-
-      attributes = {
-        family: simplefin_account.simplefin_item.family,
-        name: simplefin_account.name,
-        balance: balance,
-        cash_balance: cash_balance,
-        currency: simplefin_account.currency,
-        accountable_type: account_type,
-        accountable_attributes: build_simplefin_accountable_attributes(simplefin_account, account_type, subtype),
-        simplefin_account_id: simplefin_account.id
-      }
-
-      # Skip initial sync - provider sync will handle balance creation with correct currency
-      create_and_sync(attributes, skip_initial_sync: true)
-    end
-
-    def create_from_enable_banking_account(enable_banking_account, account_type, subtype = nil)
-      # Get the balance from Enable Banking
-      balance = enable_banking_account.current_balance || 0
-
-      # Enable Banking may return negative balances for liabilities
-      # Sure expects positive balances for liabilities
-      if account_type == "CreditCard" || account_type == "Loan"
-        balance = balance.abs
-      end
-
-      cash_balance = balance
-
-      attributes = {
-        family: enable_banking_account.enable_banking_item.family,
-        name: enable_banking_account.name,
-        balance: balance,
-        cash_balance: cash_balance,
-        currency: enable_banking_account.currency || "EUR"
-      }
-
-      accountable_attributes = {}
-      accountable_attributes[:subtype] = subtype if subtype.present?
-
-      # Skip initial sync - provider sync will handle balance creation with correct currency
-      create_and_sync(
-        attributes.merge(
-          accountable_type: account_type,
-          accountable_attributes: accountable_attributes
-        ),
-        skip_initial_sync: true
-      )
-    end
-
-    def create_from_coinbase_account(coinbase_account)
-      # All Coinbase accounts are crypto exchange accounts
-      family = coinbase_account.coinbase_item.family
-
-      # Extract native balance and currency from Coinbase (e.g., USD, EUR, GBP)
-      native_balance = coinbase_account.raw_payload&.dig("native_balance", "amount").to_d
-      native_currency = coinbase_account.raw_payload&.dig("native_balance", "currency") || family.currency
-
-      attributes = {
-        family: family,
-        name: coinbase_account.name,
-        balance: native_balance,
-        cash_balance: 0, # No cash - all value is in holdings
-        currency: native_currency,
-        accountable_type: "Crypto",
-        accountable_attributes: {
-          subtype: "exchange",
-          tax_treatment: "taxable"
-        }
-      }
-
-      # Skip initial sync - provider sync will handle balance/holdings creation
-      create_and_sync(attributes, skip_initial_sync: true)
-    end
-
-
-    private
-
-      def build_simplefin_accountable_attributes(simplefin_account, account_type, subtype)
-        attributes = {}
-        attributes[:subtype] = subtype if subtype.present?
-
-        # Set account-type-specific attributes from SimpleFin data
-        case account_type
-        when "CreditCard"
-          # For credit cards, available_balance often represents available credit
-          if simplefin_account.available_balance.present? && simplefin_account.available_balance > 0
-            attributes[:available_credit] = simplefin_account.available_balance
-          end
-        when "Loan"
-          # For loans, we might get additional data from the raw_payload
-          # This is where loan-specific information could be extracted if available
-          # Currently we don't have specific loan fields from SimpleFin protocol
-        end
-
-        attributes
-      end
   end
 
   def institution_name
@@ -299,30 +165,12 @@ class Account < ApplicationRecord
     accountable_class.long_subtype_label_for(subtype) || accountable_class.display_name
   end
 
-  # Determines if this account supports manual trade entry
-  # Investment accounts always support trades; Crypto only if subtype is "exchange"
   def supports_trades?
-    return true if investment?
     return accountable.supports_trades? if crypto? && accountable.respond_to?(:supports_trades?)
     false
   end
 
-  # The balance type determines which "component" of balance is being tracked.
-  # This is primarily used for balance related calculations and updates.
-  #
-  # "Cash" = "Liquid"
-  # "Non-cash" = "Illiquid"
-  # "Investment" = A mix of both, including brokerage cash (liquid) and holdings (illiquid)
   def balance_type
-    case accountable_type
-    when "Depository", "CreditCard"
-      :cash
-    when "Property", "Vehicle", "OtherAsset", "Loan", "OtherLiability"
-      :non_cash
-    when "Investment", "Crypto"
-      :investment
-    else
-      raise "Unknown account type: #{accountable_type}"
-    end
+    :investment
   end
 end

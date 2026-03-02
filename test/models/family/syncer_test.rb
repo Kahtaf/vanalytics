@@ -5,11 +5,10 @@ class Family::SyncerTest < ActiveSupport::TestCase
     @family = families(:dylan_family)
   end
 
-  test "syncs plaid items and manual accounts" do
+  test "syncs manual accounts" do
     family_sync = syncs(:family)
 
     manual_accounts_count = @family.accounts.manual.count
-    items_count = @family.plaid_items.count
 
     syncer = Family::Syncer.new(@family)
 
@@ -17,11 +16,6 @@ class Family::SyncerTest < ActiveSupport::TestCase
            .expects(:sync_later)
            .with(parent_sync: family_sync, window_start_date: nil, window_end_date: nil)
            .times(manual_accounts_count)
-
-    PlaidItem.any_instance
-             .expects(:sync_later)
-             .with(parent_sync: family_sync, window_start_date: nil, window_end_date: nil)
-             .times(items_count)
 
     syncer.perform_sync(family_sync)
 
@@ -54,12 +48,8 @@ class Family::SyncerTest < ActiveSupport::TestCase
     active_rule.expects(:apply_later).once
     disabled_rule.expects(:apply_later).never
 
-    # Mock the account and plaid item syncs to avoid side effects
+    # Mock account syncs to avoid side effects
     Account.any_instance.stubs(:sync_later)
-    PlaidItem.any_instance.stubs(:sync_later)
-    SimplefinItem.any_instance.stubs(:sync_later)
-    LunchflowItem.any_instance.stubs(:sync_later)
-    EnableBankingItem.any_instance.stubs(:sync_later)
 
     syncer.perform_sync(family_sync)
     syncer.perform_post_sync

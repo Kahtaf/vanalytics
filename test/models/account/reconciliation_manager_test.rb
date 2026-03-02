@@ -4,7 +4,7 @@ class Account::ReconciliationManagerTest < ActiveSupport::TestCase
   include BalanceTestHelper
 
   setup do
-    @account = accounts(:investment)
+    @account = accounts(:crypto)
     @manager = Account::ReconciliationManager.new(@account)
   end
 

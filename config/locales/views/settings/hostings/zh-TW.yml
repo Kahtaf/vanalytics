@@ -2,21 +2,9 @@
 zh-TW:
   settings:
     hostings:
-      invite_code_settings:
-        description: 控制新使用者註冊您的 %{product} 實例 (Instance) 的方式。
-        email_confirmation_description: 啟用後，使用者在更改電子郵件地址時必須進行驗證。
-        email_confirmation_title: 需要電子郵件驗證
-        generate_tokens: 產生新代碼
-        generated_tokens: 已產生的代碼
-        title: 加入流程
-        states:
-          open: 開放註冊
-          closed: 關閉註冊
-          invite_only: 僅限邀請
       show:
         general: 一般設定
         financial_data_providers: 金融資料提供商
-        invites: 邀請碼
         title: 自行代管 (Self-Hosting)
         danger_zone: 危險區域
         clear_cache: 清除資料快取

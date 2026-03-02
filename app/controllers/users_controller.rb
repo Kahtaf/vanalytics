@@ -26,18 +26,10 @@ class UsersController < ApplicationController
         redirect_to settings_profile_path, alert: error_message
       end
     else
-      was_ai_enabled = @user.ai_enabled
       @user.update!(user_params.except(:redirect_to, :delete_profile_image))
       @user.profile_image.purge if should_purge_profile_image?
 
-      # Add a special notice if AI was just enabled or disabled
-      notice = if !was_ai_enabled && @user.ai_enabled
-        "AI Assistant has been enabled successfully."
-      elsif was_ai_enabled && !@user.ai_enabled
-        "AI Assistant has been disabled."
-      else
-        t(".success")
-      end
+      notice = t(".success")
 
       respond_to do |format|
         format.html { handle_redirect(notice) }
@@ -65,11 +57,6 @@ class UsersController < ApplicationController
     end
   end
 
-  def rule_prompt_settings
-    @user.update!(rule_prompt_settings_params)
-    redirect_back_or_to settings_profile_path
-  end
-
   private
     def handle_redirect(notice)
       case user_params[:redirect_to]
@@ -81,10 +68,6 @@ class UsersController < ApplicationController
         redirect_to settings_preferences_path, notice: notice
       when "goals"
         redirect_to goals_onboarding_path
-      when "trial"
-        redirect_to trial_onboarding_path
-      when "ai_prompts"
-        redirect_to settings_ai_prompts_path, notice: notice
       else
         redirect_to settings_profile_path, notice: notice
       end
@@ -99,14 +82,10 @@ class UsersController < ApplicationController
       user_params[:email].present? && user_params[:email] != @user.email
     end
 
-    def rule_prompt_settings_params
-      params.require(:user).permit(:rule_prompt_dismissed_at, :rule_prompts_disabled)
-    end
-
     def user_params
       params.require(:user).permit(
         :first_name, :last_name, :email, :profile_image, :redirect_to, :delete_profile_image, :onboarded_at,
-        :show_sidebar, :default_period, :default_account_order, :show_ai_sidebar, :ai_enabled, :theme, :set_onboarding_preferences_at, :set_onboarding_goals_at, :locale,
+        :show_sidebar, :default_period, :default_account_order, :theme, :set_onboarding_preferences_at, :set_onboarding_goals_at, :locale,
         family_attributes: [ :name, :currency, :country, :date_format, :timezone, :locale, :month_start_day, :moniker, :id ],
         goals: []
       )

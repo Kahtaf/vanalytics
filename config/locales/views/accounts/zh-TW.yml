@@ -2,9 +2,6 @@
 zh-TW:
   accounts:
     account:
-      link_lunchflow: 連結 Lunch Flow
-      link_provider: 連結服務提供商
-      unlink_provider: 解除服務提供商連結
       troubleshoot: 疑難排解
     chart:
       data_not_available: 所選時段內無資料
@@ -94,25 +91,6 @@ zh-TW:
       credit_card: 信用卡
       loan: 貸款
       other_liability: 其他負債
-    confirm_unlink:
-      title: 解除帳戶與提供商的連結？
-      description_html: "您即將解除 <strong>%{account_name}</strong> 與 <strong>%{provider_name}</strong> 的連結。這會將其轉換為手動管理的帳戶。"
-      warning_title: 這代表什麼
-      warning_no_sync: 帳戶將不再與您的銀行自動同步
-      warning_manual_updates: 您將需要手動新增交易並更新餘額
-      warning_transactions_kept: 所有現有的交易和餘額紀錄將會保留
-      warning_can_delete: 解除連結後，您將可以根據需要刪除該帳戶
-      confirm_button: 確認並解除連結
-    unlink:
-      success: "帳戶連結已成功解除。現在這是一個手動管理的帳戶。"
-      not_linked: "帳戶未與任何提供商連結"
-      error: "解除連結失敗：%{error}"
-      generic_error: "發生預期之外的錯誤。請再試一次。"
-    select_provider:
-      title: 選擇要連結的提供商
-      description: "選擇您想用來連結 %{account_name} 的提供商"
-      already_linked: "帳戶已經與提供商連結"
-      no_providers: "目前未設定任何提供商"
 
   email_confirmations:
     new:

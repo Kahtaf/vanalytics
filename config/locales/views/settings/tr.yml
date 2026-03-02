@@ -1,15 +1,6 @@
 ---
 tr:
-  views:
-    settings:
-      payments:
-        renewal: "Katkınız %{date} tarihinde devam edecek."
   settings:
-    payments:
-      show:
-        page_title: Ödeme
-        subscription_subtitle: Abonelik ve ödeme bilgilerinizi güncelleyin
-        subscription_title: Aboneliği yönet
     preferences:
       show:
         country: Ülke
@@ -43,9 +34,6 @@ tr:
         confirm_reset_with_sample_data:
           body: Are you sure you want to reset your account and load sample data? This will delete your existing data and replace it with demo data so you can explore Sure safely.
           title: Reset account and load sample data?
-        confirm_remove_invitation:
-          body: "%{email} için daveti kaldırmak istediğinizden emin misiniz?"
-          title: "Daveti Kaldır"
         confirm_remove_member:
           body: "%{name} kişisini hesabınızdan kaldırmak istediğinizden emin misiniz?"
           title: "Üyeyi Kaldır"
@@ -62,14 +50,11 @@ tr:
         household_form_label: Hane adı
         household_subtitle: Aile üyelerini, partnerleri ve diğer kişileri davet edin. Davetliler hanenize giriş yapabilir ve paylaşılan hesaplarınıza erişebilir.
         household_title: Hane
-        invitation_link: Davet bağlantısı
-        invite_member: Üye ekle
         last_name: Soyad
         page_title: Hesap
         pending: Beklemede
         profile_subtitle: "%{product_name}'de nasıl göründüğünüzü özelleştirin"
         profile_title: Profil
-        remove_invitation: Daveti Kaldır
         remove_member: Üyeyi Kaldır
         save: Kaydet
     securities:
@@ -79,7 +64,6 @@ tr:
       accounts_label: Hesaplar
       api_key_label: API Anahtarı
       advanced_section_title: Gelişmiş
-      payment_label: Ödeme
       categories_label: Kategoriler
       feedback_label: Geri Bildirim
       general_section_title: Genel

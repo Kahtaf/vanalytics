@@ -9,7 +9,7 @@ class ValuationsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "can create reconciliation" do
-    account = accounts(:investment)
+    account = accounts(:crypto)
 
     assert_difference [ "Entry.count", "Valuation.count" ], 1 do
       post valuations_url, params: {

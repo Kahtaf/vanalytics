@@ -4,7 +4,7 @@ fr:
     users:
       index:
         title: "Gestion des utilisateurs"
-        description: "Gérez les rôles des utilisateurs pour votre instance. Les super administrateurs peuvent accéder aux paramètres des fournisseurs SSO et à la gestion des utilisateurs."
+        description: "Gérez les rôles des utilisateurs pour votre instance."
         section_title: "Utilisateurs"
         you: "(Vous)"
         trial_ends_at: "Fin de l'essai"

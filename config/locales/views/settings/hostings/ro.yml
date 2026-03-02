@@ -2,21 +2,9 @@
 ro:
   settings:
     hostings:
-      invite_code_settings:
-        description: Controlează cum se înscriu noii utilizatori pentru instanța ta de %{product}.
-        email_confirmation_description: Când este activată, utilizatorii trebuie să își confirme adresa de email atunci când o modifică.
-        email_confirmation_title: Solicită confirmarea emailului
-        generate_tokens: Generează cod nou
-        generated_tokens: Coduri generate
-        title: Integrare
-        states:
-          open: Deschis
-          closed: Închis
-          invite_only: Doar pe bază de invitație
       show:
         general: Setări Generale
         financial_data_providers: Furnizori de Date Financiare
-        invites: Coduri de Invitație
         title: Găzduire Proprie
         danger_zone: Zonă de Pericol
         clear_cache: Șterge cache-ul de date

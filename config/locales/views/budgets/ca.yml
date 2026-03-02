@@ -1,7 +1,0 @@
----
-ca:
-  budgets:
-    show:
-      tabs:
-        actual: Real
-        budgeted: Pressupostat

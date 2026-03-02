@@ -30,7 +30,7 @@ class Account::MarketDataImporterTest < ActiveSupport::TestCase
       name: "Chequing",
       currency: "CAD",
       balance: 100,
-      accountable: Depository.new
+      accountable: Crypto.new
     )
 
     # Seed a rate for the first required day so that the importer only needs the next day forward
@@ -73,7 +73,7 @@ class Account::MarketDataImporterTest < ActiveSupport::TestCase
       name: "Brokerage",
       currency: "USD",
       balance: 0,
-      accountable: Investment.new
+      accountable: Crypto.new
     )
 
     security = Security.create!(ticker: "AAPL", exchange_operating_mic: "XNAS")
@@ -123,7 +123,7 @@ class Account::MarketDataImporterTest < ActiveSupport::TestCase
       name: "Brokerage",
       currency: "USD",
       balance: 0,
-      accountable: Investment.new
+      accountable: Crypto.new
     )
 
     security = Security.create!(ticker: "INVALID", exchange_operating_mic: "XNAS")
@@ -174,7 +174,7 @@ class Account::MarketDataImporterTest < ActiveSupport::TestCase
       name: "Chequing",
       currency: "CAD",
       balance: 100,
-      accountable: Depository.new
+      accountable: Crypto.new
     )
 
     # Seed a rate for the first required day

@@ -2,22 +2,9 @@
 pt-BR:
   settings:
     hostings:
-      invite_code_settings:
-        description: Controle como novas pessoas se cadastram na sua instância do %{product}.
-        email_confirmation_description: Quando ativado, os usuários devem confirmar o endereço de
-          e-mail ao alterá-lo.
-        email_confirmation_title: Exigir confirmação de e-mail
-        generate_tokens: Gerar novo código
-        generated_tokens: Códigos gerados
-        title: Cadastro
-        states:
-          open: Aberto
-          closed: Fechado
-          invite_only: Apenas convidados
       show:
         general: Configurações Gerais
         financial_data_providers: Provedores de Dados Financeiros
-        invites: Códigos de Convite
         title: Self-Hosting
         danger_zone: Zona de Perigo
         clear_cache: Limpar cache de dados

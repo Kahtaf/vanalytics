@@ -33,19 +33,10 @@ module Notifiable
       items
     end
 
-    def resolve_cta(cta)
-      case cta[:type]
-      when "category_rule"
-        { partial: "rules/category_rule_cta", locals: { cta: } }
-      end
-    end
-
     def resolve_notifications(type, data)
       case type
       when "alert"
         [ { partial: "shared/notifications/alert", locals: { message: data } } ]
-      when "cta"
-        [ resolve_cta(data) ]
       when "notice"
         messages = Array(data)
         messages.map { |message| { partial: "shared/notifications/notice", locals: { message: message } } }

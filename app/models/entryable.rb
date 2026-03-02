@@ -1,15 +1,13 @@
 module Entryable
   extend ActiveSupport::Concern
 
-  TYPES = %w[Valuation Transaction Trade]
+  TYPES = %w[Valuation Trade]
 
   def self.from_type(entryable_type)
     entryable_type.presence_in(TYPES).constantize
   end
 
   included do
-    include Enrichable
-
     has_one :entry, as: :entryable, touch: true
 
     scope :with_entry, -> { joins(:entry) }

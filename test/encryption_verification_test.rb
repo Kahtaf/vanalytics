@@ -87,7 +87,6 @@ class EncryptionVerificationTest < ActiveSupport::TestCase
 
   test "user unconfirmed_email is encrypted" do
     user = users(:family_admin)
-    original_email = user.email
 
     # Set unconfirmed email
     user.update!(unconfirmed_email: "new-email@example.com")
@@ -97,77 +96,6 @@ class EncryptionVerificationTest < ActiveSupport::TestCase
 
     # Clean up
     user.update!(unconfirmed_email: nil)
-  end
-
-  # ============================================================================
-  # INVITATION MODEL TESTS
-  # ============================================================================
-
-  test "invitation token is encrypted and lookups work" do
-    invitation = Invitation.create!(
-      email: "invite-test@example.com",
-      role: "member",
-      inviter: users(:family_admin),
-      family: families(:dylan_family)
-    )
-
-    # Token should be present
-    assert invitation.token.present?
-    token_value = invitation.token
-
-    # Should be able to find by token
-    found = Invitation.find_by(token: token_value)
-    assert_equal invitation.id, found.id
-
-    invitation.destroy
-  end
-
-  test "invitation email is encrypted and scoped uniqueness works" do
-    invitation1 = Invitation.create!(
-      email: "scoped-invite@example.com",
-      role: "member",
-      inviter: users(:family_admin),
-      family: families(:dylan_family)
-    )
-
-    # Same email, same family should fail
-    invitation2 = Invitation.new(
-      email: "scoped-invite@example.com",
-      role: "member",
-      inviter: users(:family_admin),
-      family: families(:dylan_family)
-    )
-    assert_not invitation2.valid?
-
-    invitation1.destroy
-  end
-
-  # ============================================================================
-  # INVITE CODE MODEL TESTS
-  # ============================================================================
-
-  test "invite code token is encrypted and claim works" do
-    token = InviteCode.generate!
-    assert token.present?
-
-    # Should be able to claim
-    result = InviteCode.claim!(token)
-    assert result
-
-    # Should not be able to claim again (destroyed)
-    result2 = InviteCode.claim!(token)
-    assert_nil result2
-  end
-
-  test "invite code case-insensitive lookup works" do
-    invite_code = InviteCode.create!
-    token = invite_code.token
-
-    # Should find with lowercase
-    found = InviteCode.find_by(token: token.downcase)
-    assert_equal invite_code.id, found.id
-
-    invite_code.destroy
   end
 
   # ============================================================================
@@ -197,87 +125,6 @@ class EncryptionVerificationTest < ActiveSupport::TestCase
       Current.user_agent = nil
       Current.ip_address = nil
     end
-  end
-
-  # ============================================================================
-  # MOBILE DEVICE MODEL TESTS
-  # ============================================================================
-
-  test "mobile device device_id is encrypted and uniqueness works" do
-    device = MobileDevice.create!(
-      user: users(:family_admin),
-      device_id: "test-device-12345",
-      device_name: "Test iPhone",
-      device_type: "ios"
-    )
-
-    # Should be able to find by device_id
-    found = MobileDevice.find_by(device_id: "test-device-12345", user: users(:family_admin))
-    assert_equal device.id, found.id
-
-    # Same device_id for same user should fail
-    device2 = MobileDevice.new(
-      user: users(:family_admin),
-      device_id: "test-device-12345",
-      device_name: "Another iPhone",
-      device_type: "ios"
-    )
-    assert_not device2.valid?
-
-    # Same device_id for different user should work
-    device3 = MobileDevice.new(
-      user: users(:family_member),
-      device_id: "test-device-12345",
-      device_name: "Their iPhone",
-      device_type: "ios"
-    )
-    assert device3.valid?
-
-    device.destroy
-  end
-
-  # ============================================================================
-  # PROVIDER ITEM TESTS (if fixtures exist)
-  # ============================================================================
-
-  test "lunchflow item credentials and payloads are encrypted" do
-    skip "No lunchflow items in fixtures" unless LunchflowItem.any?
-
-    item = LunchflowItem.first
-    original_payload = item.raw_payload
-
-    # Should be able to read
-    assert item.api_key.present? || item.raw_payload.present?
-
-    # Update payload
-    item.update!(raw_payload: { test: "data" })
-    item.reload
-
-    assert_equal({ "test" => "data" }, item.raw_payload)
-
-    # Restore
-    item.update!(raw_payload: original_payload)
-  end
-
-  test "lunchflow account payloads are encrypted" do
-    skip "No lunchflow accounts in fixtures" unless LunchflowAccount.any?
-
-    account = LunchflowAccount.first
-    original_payload = account.raw_payload
-
-    # Should be able to read encrypted fields without error
-    account.reload
-    assert_nothing_raised { account.raw_payload }
-    assert_nothing_raised { account.raw_transactions_payload }
-
-    # Update and verify
-    account.update!(raw_payload: { account_test: "value" })
-    account.reload
-
-    assert_equal({ "account_test" => "value" }, account.raw_payload)
-
-    # Restore
-    account.update!(raw_payload: original_payload)
   end
 
   # ============================================================================

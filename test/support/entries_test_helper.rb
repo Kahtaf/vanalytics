@@ -1,25 +1,9 @@
 module EntriesTestHelper
-  def create_transaction(attributes = {})
-    entry_attributes = attributes.except(:category, :tags, :merchant, :kind)
-    transaction_attributes = attributes.slice(:category, :tags, :merchant, :kind)
-
-    entry_defaults = {
-      account: accounts(:depository),
-      name: "Transaction",
-      date: Date.current,
-      currency: "USD",
-      amount: 100,
-      entryable: Transaction.new(transaction_attributes)
-    }
-
-    Entry.create! entry_defaults.merge(entry_attributes)
-  end
-
   def create_valuation(attributes = {})
     entry_attributes = attributes.except(:kind)
     valuation_attributes = attributes.slice(:kind)
 
-    account = attributes[:account] || accounts(:depository)
+    account = attributes[:account] || accounts(:crypto)
     amount = attributes[:amount] || 5000
 
     entry_defaults = {
@@ -50,34 +34,5 @@ module EntriesTestHelper
       amount: qty * trade_price,
       currency: currency,
       entryable: trade
-  end
-
-  def create_transfer(from_account:, to_account:, amount:, date: Date.current, currency: "USD")
-    outflow_transaction = Transaction.create!(kind: "funds_movement")
-    inflow_transaction = Transaction.create!(kind: "funds_movement")
-
-    transfer = Transfer.create!(
-      outflow_transaction: outflow_transaction,
-      inflow_transaction: inflow_transaction
-    )
-
-    # Create entries for both accounts
-    from_account.entries.create!(
-      name: "Transfer to #{to_account.name}",
-      date: date,
-      amount: -amount.abs,
-      currency: currency,
-      entryable: outflow_transaction
-    )
-
-    to_account.entries.create!(
-      name: "Transfer from #{from_account.name}",
-      date: date,
-      amount: amount.abs,
-      currency: currency,
-      entryable: inflow_transaction
-    )
-
-    transfer
   end
 end

@@ -3,14 +3,7 @@ require "test_helper"
 class Account::CurrentBalanceManagerTest < ActiveSupport::TestCase
   setup do
     @family = families(:empty)
-    @linked_account = accounts(:connected)
-
-    # Create account_provider to make the account actually linked
-    # (The fixture has plaid_account but that's the legacy association)
-    @linked_account.account_providers.find_or_create_by!(
-      provider_type: "PlaidAccount",
-      provider_id: plaid_accounts(:one).id
-    )
+    @linked_account = accounts(:crypto)
   end
 
   # -------------------------------------------------------------------------------------------------
@@ -25,7 +18,7 @@ class Account::CurrentBalanceManagerTest < ActiveSupport::TestCase
       balance: 1000,
       cash_balance: 1000,
       currency: "USD",
-      accountable: Depository.new
+      accountable: Crypto.new
     )
 
     # A reconciliation tells us that the user is tracking this account's value with balance-only updates
@@ -53,7 +46,7 @@ class Account::CurrentBalanceManagerTest < ActiveSupport::TestCase
   end
 
   test "all manual non cash accounts append reconciliations for current balance updates" do
-    [ Property, Vehicle, OtherAsset, Loan, OtherLiability ].each do |account_type|
+    [ Crypto, Crypto, Crypto, Crypto, Crypto ].each do |account_type|
       account = @family.accounts.create!(
         name: "Test",
         balance: 1000,
@@ -77,7 +70,7 @@ class Account::CurrentBalanceManagerTest < ActiveSupport::TestCase
     end
   end
 
-  # Scope: Depository, CreditCard only (i.e. all-cash accounts)
+  # Scope: Crypto, Crypto only (i.e. all-cash accounts)
   #
   # If a user has an opening balance (valuation) for their manual *Depository* or *CreditCard* account and has 1+ transactions, the intent of
   # "updating current balance" typically means that their start balance is incorrect. We follow that user intent
@@ -94,7 +87,7 @@ class Account::CurrentBalanceManagerTest < ActiveSupport::TestCase
       balance: 900, # the balance after opening valuation + transaction have "synced" (1000 - 100 = 900)
       cash_balance: 900,
       currency: "USD",
-      accountable: Depository.new
+      accountable: Crypto.new
     )
 
     account.entries.create!(
@@ -110,7 +103,7 @@ class Account::CurrentBalanceManagerTest < ActiveSupport::TestCase
       name: "Test expense transaction",
       amount: 100,
       currency: "USD",
-      entryable: Transaction.new
+      entryable: Valuation.new(kind: "reconciliation")
     )
 
     # What we're asserting here:
@@ -142,7 +135,7 @@ class Account::CurrentBalanceManagerTest < ActiveSupport::TestCase
       balance: 1100, # the balance after opening valuation + transaction have "synced" (1000 + 100 = 1100) (expenses increase balance)
       cash_balance: 1100,
       currency: "USD",
-      accountable: CreditCard.new
+      accountable: Crypto.new
     )
 
     account.entries.create!(
@@ -158,7 +151,7 @@ class Account::CurrentBalanceManagerTest < ActiveSupport::TestCase
       name: "Test expense transaction",
       amount: 100,
       currency: "USD",
-      entryable: Transaction.new
+      entryable: Valuation.new(kind: "reconciliation")
     )
 
     assert_equal 1, account.valuations.count
@@ -203,7 +196,7 @@ class Account::CurrentBalanceManagerTest < ActiveSupport::TestCase
     entry = current_anchor.entry
     assert_equal 1000, entry.amount
     assert_equal Date.current, entry.date
-    assert_equal "Current balance", entry.name  # Depository type returns "Current balance"
+    assert_equal "Current balance", entry.name  # Crypto type returns "Current balance"
 
     assert_equal 1000, @linked_account.balance
   end

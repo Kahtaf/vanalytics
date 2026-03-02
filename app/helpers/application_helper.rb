@@ -100,19 +100,6 @@ module ApplicationHelper
               .join(separator)
   end
 
-  def show_super_admin_bar?
-    if params[:admin].present?
-      cookies.permanent[:admin] = params[:admin]
-    end
-
-    cookies[:admin] == "true"
-  end
-
-  def default_ai_model
-    # Always return a valid model, never nil or empty
-    # Delegates to Chat.default_model for consistency
-    Chat.default_model
-  end
 
   # Renders Markdown text using Redcarpet
   def markdown(text)
@@ -139,14 +126,6 @@ module ApplicationHelper
     markdown.render(text).html_safe
   end
 
-  # Generate the callback URL for Enable Banking OAuth (used in views and controller).
-  # In production, uses the standard Rails route.
-  # In development, uses DEV_WEBHOOKS_URL if set (e.g., ngrok URL).
-  def enable_banking_callback_url
-    return callback_enable_banking_items_url if Rails.env.production?
-
-    ENV.fetch("DEV_WEBHOOKS_URL", root_url).chomp("/") + "/enable_banking_items/callback"
-  end
 
   # Formats quantity with adaptive precision based on the value size.
   # Shows more decimal places for small quantities (common with crypto).
@@ -175,14 +154,7 @@ module ApplicationHelper
 
   private
     def calculate_total(item, money_method, negate)
-      # Filter out transfer-type transactions from entries
-      # Only Entry objects have entryable transactions, Account objects don't
-      items = item.reject do |i|
-        i.is_a?(Entry) &&
-        i.entryable.is_a?(Transaction) &&
-        i.entryable.transfer?
-      end
-      total = items.sum(&money_method)
+      total = item.sum(&money_method)
       negate ? -total : total
     end
 end

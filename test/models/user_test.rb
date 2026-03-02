@@ -146,21 +146,7 @@ class UserTest < ActiveSupport::TestCase
     assert_match %r{issuer=Sure}, user.provisioning_uri
   end
 
-  test "ai_available? returns true when openai access token set in settings" do
-    Rails.application.config.app_mode.stubs(:self_hosted?).returns(true)
-    previous = Setting.openai_access_token
-    with_env_overrides OPENAI_ACCESS_TOKEN: nil do
-      Setting.openai_access_token = nil
-      assert_not @user.ai_available?
-
-      Setting.openai_access_token = "token"
-      assert @user.ai_available?
-    end
-  ensure
-    Setting.openai_access_token = previous
-  end
-
-  test "intro layout collapses sidebars and enables ai" do
+  test "intro layout collapses sidebars" do
     user = User.new(
       family: families(:empty),
       email: "intro-new@example.com",
@@ -173,8 +159,6 @@ class UserTest < ActiveSupport::TestCase
     assert user.save, user.errors.full_messages.to_sentence
     assert user.ui_layout_intro?
     assert_not user.show_sidebar?
-    assert_not user.show_ai_sidebar?
-    assert user.ai_enabled?
   end
 
   test "non-guest role cannot persist intro layout" do
@@ -198,7 +182,6 @@ class UserTest < ActiveSupport::TestCase
 
     assert user.ui_layout_dashboard?
     assert user.show_sidebar?
-    assert user.show_ai_sidebar?
   end
 
   test "update_dashboard_preferences handles concurrent updates atomically" do
@@ -325,61 +308,6 @@ class UserTest < ActiveSupport::TestCase
       "Should return false when section key is missing from collapsed_sections"
   end
 
-  # SSO-only user security tests
-  test "sso_only? returns true for user with OIDC identity and no password" do
-    sso_user = users(:sso_only)
-    assert_nil sso_user.password_digest
-    assert sso_user.oidc_identities.exists?
-    assert sso_user.sso_only?
-  end
-
-  test "sso_only? returns false for user with password and OIDC identity" do
-    # family_admin has both password and OIDC identity
-    assert @user.password_digest.present?
-    assert @user.oidc_identities.exists?
-    assert_not @user.sso_only?
-  end
-
-  test "sso_only? returns false for user with password but no OIDC identity" do
-    user_without_oidc = users(:empty)
-    assert user_without_oidc.password_digest.present?
-    assert_not user_without_oidc.oidc_identities.exists?
-    assert_not user_without_oidc.sso_only?
-  end
-
-  test "has_local_password? returns true when password_digest is present" do
-    assert @user.has_local_password?
-  end
-
-  test "has_local_password? returns false when password_digest is nil" do
-    sso_user = users(:sso_only)
-    assert_not sso_user.has_local_password?
-  end
-
-  test "user can be created without password when skip_password_validation is true" do
-    user = User.new(
-      email: "newssuser@example.com",
-      first_name: "New",
-      last_name: "SSO User",
-      skip_password_validation: true,
-      family: families(:empty)
-    )
-    assert user.valid?, user.errors.full_messages.to_sentence
-    assert user.save
-    assert_nil user.password_digest
-  end
-
-  test "user requires password on create when skip_password_validation is false" do
-    user = User.new(
-      email: "needspassword@example.com",
-      first_name: "Needs",
-      last_name: "Password",
-      family: families(:empty)
-    )
-    assert_not user.valid?
-    assert_includes user.errors[:password], "can't be blank"
-  end
-
   # First user role assignment tests
   test "role_for_new_family_creator returns super_admin when no users exist" do
     # Delete all users to simulate fresh instance
@@ -417,24 +345,14 @@ class UserTest < ActiveSupport::TestCase
     assert_not ActiveStorage::Attachment.exists?(attachment_id)
   end
 
-  test "purging the last user cascades to remove family and its export attachments" do
+  test "purging the last user cascades to remove family" do
     family = Family.create!(name: "Solo Family", locale: "en", date_format: "%m-%d-%Y", currency: "USD")
     user = User.create!(family: family, email: "solo@example.com", password: "password123")
-    export = family.family_exports.create!
-    export.export_file.attach(
-      io: StringIO.new("export-data"),
-      filename: "export.zip",
-      content_type: "application/zip"
-    )
-
-    export_attachment_id = export.export_file.id
-    assert ActiveStorage::Attachment.exists?(export_attachment_id)
 
     perform_enqueued_jobs do
       user.purge
     end
 
     assert_not Family.exists?(family.id)
-    assert_not ActiveStorage::Attachment.exists?(export_attachment_id)
   end
 end

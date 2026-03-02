@@ -3,24 +3,6 @@
 <%= render DS::Menu.new(testid: "account-menu") do |menu| %>
   <% menu.with_item(variant: "link", text: "Edit", href: edit_account_path(account), icon: "pencil-line", data: { turbo_frame: :modal }) %>
 
-  <% if account.supports_trades? %>
-    <% menu.with_item(
-      variant: "link",
-      text: t(".import_trades"),
-      href: imports_path({ import: { type: "TradeImport", account_id: account.id } }),
-      icon: "download",
-      data: { turbo_frame: :_top }
-    ) %>
-  <% elsif !account.crypto? %>
-    <% menu.with_item(
-      variant: "link",
-      text: t(".import_transactions"),
-      href: imports_path({ import: { type: "TransactionImport", account_id: account.id } }),
-      icon: "download",
-      data: { turbo_frame: :_top }
-    ) %>
-  <% end %>
-
   <% unless account.linked? %>
     <% menu.with_item(
       variant: "button",

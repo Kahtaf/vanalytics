@@ -6,9 +6,7 @@ empty:
   password_digest: $2a$12$XoNBo/cMCyzpYtvhrPAhsubG21mELX48RAcjSVCRctW8dG8wrDIla
   onboarded_at: <%= 3.days.ago %>
   role: admin
-  ai_enabled: true
   show_sidebar: true
-  show_ai_sidebar: true
   ui_layout: dashboard
 
 sure_support_staff:
@@ -19,9 +17,7 @@ sure_support_staff:
   password_digest: $2a$12$XoNBo/cMCyzpYtvhrPAhsubG21mELX48RAcjSVCRctW8dG8wrDIla
   role: super_admin
   onboarded_at: <%= 3.days.ago %>
-  ai_enabled: true
   show_sidebar: true
-  show_ai_sidebar: true
   ui_layout: dashboard
 
 family_admin:
@@ -32,9 +28,7 @@ family_admin:
   password_digest: $2a$12$XoNBo/cMCyzpYtvhrPAhsubG21mELX48RAcjSVCRctW8dG8wrDIla
   role: admin
   onboarded_at: <%= 3.days.ago %>
-  ai_enabled: true
   show_sidebar: true
-  show_ai_sidebar: true
   ui_layout: dashboard
 
 family_member:
@@ -45,9 +39,7 @@ family_member:
   password_digest: $2a$12$XoNBo/cMCyzpYtvhrPAhsubG21mELX48RAcjSVCRctW8dG8wrDIla
   onboarded_at: <%= 3.days.ago %>
   role: member
-  ai_enabled: true
   show_sidebar: true
-  show_ai_sidebar: true
   ui_layout: dashboard
 
 new_email:
@@ -59,9 +51,7 @@ new_email:
   password_digest: $2a$12$XoNBo/cMCyzpYtvhrPAhsubG21mELX48RAcjSVCRctW8dG8wrDIla
   onboarded_at: <%= Time.current %>
   role: member
-  ai_enabled: true
   show_sidebar: true
-  show_ai_sidebar: true
   ui_layout: dashboard
 
 intro_user:
@@ -72,18 +62,5 @@ intro_user:
   password_digest: $2a$12$XoNBo/cMCyzpYtvhrPAhsubG21mELX48RAcjSVCRctW8dG8wrDIla
   onboarded_at: <%= 1.day.ago %>
   role: guest
-  ai_enabled: true
   show_sidebar: false
-  show_ai_sidebar: false
   ui_layout: intro
-
-# SSO-only user: created via JIT provisioning, no local password
-sso_only:
-  family: empty
-  first_name: SSO
-  last_name: User
-  email: sso-user@example.com
-  password_digest: ~
-  role: admin
-  onboarded_at: <%= 1.day.ago %>
-  ai_enabled: true

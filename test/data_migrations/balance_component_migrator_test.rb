@@ -4,9 +4,9 @@ class BalanceComponentMigratorTest < ActiveSupport::TestCase
   include EntriesTestHelper
 
   setup do
-    @depository = accounts(:depository)
-    @investment = accounts(:investment)
-    @loan = accounts(:loan)
+    @depository = accounts(:crypto)
+    @investment = accounts(:crypto)
+    @loan = accounts(:crypto)
 
     # Start fresh
     Balance.delete_all

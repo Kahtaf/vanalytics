@@ -3,7 +3,7 @@ require "test_helper"
 class Holding::PortfolioSnapshotTest < ActiveSupport::TestCase
   include EntriesTestHelper
   setup do
-    @account = accounts(:investment)
+    @account = accounts(:crypto)
     @aapl = securities(:aapl)
     @msft = securities(:msft)
   end

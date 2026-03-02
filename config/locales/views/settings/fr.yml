@@ -1,9 +1,5 @@
 ---
 fr:
-  views:
-    settings:
-      payments:
-        renewal: "Votre contribution se poursuit le %{date}."
   settings:
     ai_prompts:
       show:
@@ -20,11 +16,6 @@ fr:
         merchant_detector:
           title: Détection du vendeur
           subtitle: L'IA identifie et enrichit les données de transaction avec des informations sur le vendeur
-    payments:
-      show:
-        page_title: Paiement
-        subscription_subtitle: Mettez à jour votre abonnement et vos détails de paiement
-        subscription_title: Gérer l'abonnement
     preferences:
       show:
         country: Pays
@@ -59,9 +50,6 @@ fr:
         confirm_reset_with_sample_data:
           body: Êtes-vous sûr(e) de vouloir réinitialiser votre compte et charger des données d'exemple ? Cela supprimera vos données existantes et les remplacera par des données de démonstration afin que vous puissiez explorer Sure en toute sécurité.
           title: Réinitialiser le compte et charger des données d'exemple ?
-        confirm_remove_invitation:
-          body: Êtes-vous sûr(e) de vouloir supprimer l'invitation pour %{email}?
-          title: Supprimer l'invitation
         confirm_remove_member:
           body: Êtes-vous sûr(e) de vouloir supprimer %{name} de votre compte?
           title: Supprimer le membre
@@ -78,14 +66,11 @@ fr:
         household_form_label: Nom du foyer
         household_subtitle: Invitez des membres de la famille, des partenaires et d'autres personnes. Les personnes invitées peuvent se connecter à votre foyer et accéder aux comptes partagés.
         household_title: Foyer
-        invitation_link: Lien d'invitation
-        invite_member: Ajouter un membre
         last_name: Nom de famille
         page_title: Informations du profil
         pending: En attente
         profile_subtitle: Personnalisez l'apparence de votre profil sur %{product_name}
         profile_title: Personnel
-        remove_invitation: Supprimer l'invitation
         remove_member: Supprimer le membre
         save: Enregistrer
     securities:
@@ -96,24 +81,11 @@ fr:
         enable_mfa: Activer 2FA
         disable_mfa: Désactiver 2FA
         disable_mfa_confirm: Êtes-vous sûr(e) de vouloir désactiver l'authentification à deux facteurs ?
-        sso_title: Comptes connectés
-        sso_subtitle: Gérez vos connexions de compte à authentification unique
-        sso_disconnect: Déconnecter
-        sso_last_used: Dernière utilisation
-        sso_never: Jamais
-        sso_no_email: Pas d'email
-        sso_no_identities: Aucun compte SSO connecté
-        sso_connect_hint: Déconnectez-vous et connectez-vous avec un fournisseur SSO pour connecter un compte.
-        sso_confirm_title: Déconnecter le compte ?
-        sso_confirm_body: Êtes-vous sûr(e) de vouloir déconnecter votre compte %{provider} ? Vous pourrez le reconnecter ultérieurement en vous connectant avec ce fournisseur.
-        sso_confirm_button: Déconnecter
-        sso_warning_message: C'est votre seule méthode de connexion. Vous devriez définir un mot de passe dans vos paramètres de sécurité avant de déconnecter, sinon vous pourriez être bloqué(e) hors de votre compte.
     settings_nav:
       accounts_label: Comptes
       advanced_section_title: Avancé
       ai_prompts_label: Prompts IA
       api_key_label: Clé API
-      payment_label: Paiement
       categories_label: Catégories
       feedback_label: Retour d'information
       general_section_title: Général
@@ -132,7 +104,6 @@ fr:
       transactions_section_title: Transactions
       whats_new_label: Dernières nouvelles
       api_keys_label: Clés API
-      bank_sync_label: Synchronisation de la banque
     settings_nav_link_large:
       next: Suivant
       previous: Précédent

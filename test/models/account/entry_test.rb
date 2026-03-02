@@ -4,7 +4,7 @@ class EntryTest < ActiveSupport::TestCase
   include EntriesTestHelper
 
   setup do
-    @entry = entries :transaction
+    @entry = entries :trade
   end
 
   test "entry cannot be older than 10 years ago" do
@@ -26,7 +26,7 @@ class EntryTest < ActiveSupport::TestCase
     assert new_valuation.invalid?
   end
 
-  test "triggers sync with correct start date when transaction is set to prior date" do
+  test "triggers sync with correct start date when entry is set to prior date" do
     prior_date = @entry.date - 1
     @entry.update! date: prior_date
 
@@ -34,7 +34,7 @@ class EntryTest < ActiveSupport::TestCase
     @entry.sync_account_later
   end
 
-  test "triggers sync with correct start date when transaction is set to future date" do
+  test "triggers sync with correct start date when entry is set to future date" do
     prior_date = @entry.date
     @entry.update! date: @entry.date + 1
 
@@ -42,7 +42,7 @@ class EntryTest < ActiveSupport::TestCase
     @entry.sync_account_later
   end
 
-  test "triggers sync with correct start date when transaction deleted" do
+  test "triggers sync with correct start date when entry deleted" do
     @entry.destroy!
 
     @entry.account.expects(:sync_later).with(window_start_date: nil)
@@ -51,16 +51,12 @@ class EntryTest < ActiveSupport::TestCase
 
   test "can search entries" do
     family = families(:empty)
-    account = family.accounts.create! name: "Test", balance: 0, currency: "USD", accountable: Depository.new
-    category = family.categories.first
-    merchant = family.merchants.first
+    account = family.accounts.create! name: "Test", balance: 0, currency: "USD", accountable: Crypto.new
 
-    create_transaction(account: account, name: "a transaction")
-    create_transaction(account: account, name: "ignored")
-    create_transaction(account: account, name: "third transaction", category: category, merchant: merchant)
+    create_valuation(account: account, amount: 100, date: 3.days.ago.to_date)
+    create_valuation(account: account, amount: 200, date: 2.days.ago.to_date)
 
-    params = { search: "a" }
-
+    params = { search: "Valuation" }
     assert_equal 2, family.entries.search(params).size
 
     params = { search: "%" }
@@ -68,20 +64,9 @@ class EntryTest < ActiveSupport::TestCase
   end
 
   test "visible scope only returns entries from visible accounts" do
-    # Create transactions for all account types
-    visible_transaction = create_transaction(account: accounts(:depository), name: "Visible transaction")
-    invisible_transaction = create_transaction(account: accounts(:credit_card), name: "Invisible transaction")
+    visible_entry = create_valuation(account: accounts(:crypto), amount: 100, date: 5.days.ago.to_date)
 
-    # Update account statuses
-    accounts(:credit_card).disable!
-
-    # Test the scope
     visible_entries = Entry.visible
-
-    # Should include entry from active account
-    assert_includes visible_entries, visible_transaction
-
-    # Should not include entry from disabled account
-    assert_not_includes visible_entries, invisible_transaction
+    assert_includes visible_entries, visible_entry
   end
 end

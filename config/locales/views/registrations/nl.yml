@@ -1,9 +1,6 @@
 ---
 nl:
   helpers:
-    label:
-      user:
-        invite_code: Uitnodigingscode
     submit:
       user:
         create: Doorgaan
@@ -11,13 +8,8 @@ nl:
     closed: Aanmeldingen zijn momenteel gesloten.
     create:
       failure: Er was een probleem bij het aanmelden.
-      invalid_invite_code: Ongeldige uitnodigingscode, probeer het opnieuw.
       success: U bent succesvol aangemeld.
     new:
-      invitation_message: "%{inviter} heeft u uitgenodigd om lid te worden als %{role}"
-      join_family_title: Word lid van %{family}
-      role_admin: beheerder
-      role_member: lid
       submit: Account aanmaken
       title: Maak uw account aan
       welcome_body: Om te beginnen moet u zich aanmelden voor een nieuw account. U kunt daarna aanvullende instellingen binnen de app configureren.

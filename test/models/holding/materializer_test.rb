@@ -5,7 +5,7 @@ class Holding::MaterializerTest < ActiveSupport::TestCase
 
   setup do
     @family = families(:empty)
-    @account = @family.accounts.create!(name: "Test", balance: 20000, cash_balance: 20000, currency: "USD", accountable: Investment.new)
+    @account = @family.accounts.create!(name: "Test", balance: 20000, cash_balance: 20000, currency: "USD", accountable: Crypto.new)
     @aapl = securities(:aapl)
   end
 

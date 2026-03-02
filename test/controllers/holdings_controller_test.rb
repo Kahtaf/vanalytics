@@ -3,7 +3,7 @@ require "test_helper"
 class HoldingsControllerTest < ActionDispatch::IntegrationTest
   setup do
     sign_in users(:family_admin)
-    @account = accounts(:investment)
+    @account = accounts(:crypto)
     @holding = @account.holdings.first
   end
 

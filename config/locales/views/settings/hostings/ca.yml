@@ -10,19 +10,6 @@ ca:
       clear_cache:
         cache_cleared: La memòria cau de dades s'ha netejat. Això pot trigar uns instants
           a completar-se.
-      invite_code_settings:
-        description: Cada nou usuari que s'uneixi a la teva instància de %{product}
-          només ho podrà fer mitjançant un codi d'invitació
-        email_confirmation_description: Quan està activat, els usuaris hauran de confirmar
-          el seu correu electrònic quan el canviïn.
-        email_confirmation_title: Requereix confirmació de correu electrònic
-        generate_tokens: Genera nou codi
-        generated_tokens: Codis generats
-        states:
-          closed: Tancat
-          invite_only: Només per invitació
-          open: Obert
-        title: Requereix codi d'invitació per registrar-se
       not_authorized: No estàs autoritzat/da per realitzar aquesta acció
       openai_settings:
         access_token_label: Token d'accés
@@ -69,7 +56,6 @@ ca:
         danger_zone: Zona perillosa
         financial_data_providers: Proveïdors de Dades Financeres
         general: Serveis externs
-        invites: Codis d'invitació
         sync_settings: Configuració de Sincronització
         title: Autoallotjament
       sync_settings:

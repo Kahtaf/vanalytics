@@ -1,7 +1,0 @@
----
-fr:
-  other_assets:
-    edit:
-      edit: Modifier %{account}
-    new:
-      title: Saisir les détails de l'actif

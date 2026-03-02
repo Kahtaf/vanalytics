@@ -7,7 +7,7 @@ class Holding::CostBasisReconcilerTest < ActiveSupport::TestCase
       name: "Test Investment",
       balance: 20000,
       currency: "USD",
-      accountable: Investment.new
+      accountable: Crypto.new
     )
     @security = securities(:aapl)
   end

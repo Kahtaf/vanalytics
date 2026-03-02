@@ -27,24 +27,13 @@ class UI::Account::Chart < ApplicationComponent
   end
 
   def title
-    case account.accountable_type
-    when "Investment", "Crypto"
-      case view
-      when "balance"
-        "Total account value"
-      when "holdings_balance"
-        "Holdings value"
-      when "cash_balance"
-        "Cash value"
-      end
-    when "Property", "Vehicle"
-      "Estimated #{account.accountable_type.humanize.downcase} value"
-    when "CreditCard", "OtherLiability"
-      "Debt balance"
-    when "Loan"
-      "Remaining principal balance"
-    else
-      "Balance"
+    case view
+    when "balance"
+      "Total account value"
+    when "holdings_balance"
+      "Holdings value"
+    when "cash_balance"
+      "Cash value"
     end
   end
 

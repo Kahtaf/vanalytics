@@ -1,9 +1,5 @@
 ---
 nl:
-  views:
-    settings:
-      payments:
-        renewal: "Uw bijdrage wordt voortgezet op %{date}."
   settings:
     ai_prompts:
       show:
@@ -20,11 +16,6 @@ nl:
         merchant_detector:
           title: Handelaar Detectie
           subtitle: AI identificeert en verrijkt transactiegegevens met handelaarsinformatie
-    payments:
-      show:
-        page_title: Betaling
-        subscription_subtitle: Werk uw abonnement en betalingsgegevens bij
-        subscription_title: Abonnement beheren
     preferences:
       show:
         country: Land
@@ -60,9 +51,6 @@ nl:
         confirm_reset_with_sample_data:
           body: Weet u zeker dat u uw account wilt resetten en voorbeeldgegevens wilt laden? Dit zal uw bestaande gegevens verwijderen en vervangen door demogegevens zodat u %{product_name} veilig kunt verkennen.
           title: Account resetten en voorbeeldgegevens laden?
-        confirm_remove_invitation:
-          body: "Weet u zeker dat u de uitnodiging voor %{email} wilt verwijderen?"
-          title: Uitnodiging verwijderen
         confirm_remove_member:
           body: "Weet u zeker dat u %{name} van uw account wilt verwijderen?"
           title: Lid verwijderen
@@ -81,14 +69,11 @@ nl:
         household_subtitle: Nodig familieleden, partners en andere personen uit. Genodigden
           kunnen inloggen op uw huishouden en toegang krijgen tot uw gedeelde accounts.
         household_title: Huishouden
-        invitation_link: Uitnodigingslink
-        invite_member: Lid toevoegen
         last_name: Achternaam
         page_title: Profielinformatie
         pending: In behandeling
         profile_subtitle: "Personaliseer hoe u verschijnt op %{product_name}"
         profile_title: Persoonlijk
-        remove_invitation: Uitnodiging verwijderen
         remove_member: Lid verwijderen
         save: Opslaan
     securities:
@@ -99,24 +84,11 @@ nl:
         enable_mfa: 2FA inschakelen
         disable_mfa: 2FA uitschakelen
         disable_mfa_confirm: Weet u zeker dat u twee-factor authenticatie wilt uitschakelen?
-        sso_title: Gekoppelde Accounts
-        sso_subtitle: Beheer uw single sign-on accountverbindingen
-        sso_disconnect: Loskoppelen
-        sso_last_used: Laatst gebruikt
-        sso_never: Nooit
-        sso_no_email: Geen e-mail
-        sso_no_identities: Geen SSO-accounts verbonden
-        sso_connect_hint: Log uit en log in met een SSO-provider om een account te verbinden.
-        sso_confirm_title: Account loskoppelen?
-        sso_confirm_body: "Weet u zeker dat u uw %{provider} account wilt loskoppelen? U kunt het later opnieuw verbinden door in te loggen met die provider."
-        sso_confirm_button: Loskoppelen
-        sso_warning_message: Dit is uw enige inlogmethode. U zou een wachtwoord moeten instellen in uw beveiligingsinstellingen voordat u loskoppelt, anders kunt u worden buitengesloten van uw account.
     settings_nav:
       accounts_label: Accounts
       advanced_section_title: Geavanceerd
       ai_prompts_label: AI Prompts
       api_key_label: API Key
-      payment_label: Betaling
       categories_label: Categorieën
       feedback_label: Feedback
       general_section_title: Algemeen
@@ -135,7 +107,6 @@ nl:
       transactions_section_title: Transacties
       whats_new_label: Wat is nieuw
       api_keys_label: API Key
-      bank_sync_label: Bank Sync
     settings_nav_link_large:
       next: Volgende
       previous: Terug

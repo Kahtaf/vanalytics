@@ -8,17 +8,7 @@ class Family::Syncer
   #
   # To add a new provider: add its association name here.
   # The model handles its own "ready to sync" logic via the syncable scope.
-  SYNCABLE_ITEM_ASSOCIATIONS = %i[
-    plaid_items
-    simplefin_items
-    lunchflow_items
-    enable_banking_items
-    indexa_capital_items
-    coinbase_items
-    coinstats_items
-    mercury_items
-    snaptrade_items
-  ].freeze
+  SYNCABLE_ITEM_ASSOCIATIONS = %i[].freeze
 
   def initialize(family)
     @family = family
@@ -35,12 +25,6 @@ class Family::Syncer
   end
 
   def perform_post_sync
-    family.auto_match_transfers!
-
-    Rails.logger.info("Applying rules for family #{family.id}")
-    family.rules.where(active: true).each do |rule|
-      rule.apply_later
-    end
   end
 
   private

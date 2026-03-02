@@ -2,7 +2,7 @@ require "test_helper"
 
 class Account::ChartableTest < ActiveSupport::TestCase
   test "generates series and memoizes" do
-    account = accounts(:depository)
+    account = accounts(:crypto)
 
     test_series = mock
     builder1 = mock

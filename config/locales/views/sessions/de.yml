@@ -5,8 +5,6 @@ de:
       invalid_credentials: Ungültige E-Mail-Adresse oder falsches Passwort.
     destroy:
       logout_successful: Du hast dich erfolgreich abgemeldet.
-    openid_connect:
-      failed: Anmeldung über OpenID Connect fehlgeschlagen.
     failure:
       failed: Anmeldung fehlgeschlagen.
     new:
@@ -17,6 +15,3 @@ de:
       submit: Anmelden
       title: Melde dich bei deinem Konto an
       password_placeholder: Passwort eingeben
-      openid_connect: Mit OpenID Connect anmelden
-      oidc: Mit OpenID Connect anmelden
-      google_auth_connect: Mit Google anmelden

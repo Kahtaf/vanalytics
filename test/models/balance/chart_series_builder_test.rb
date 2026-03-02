@@ -7,7 +7,7 @@ class Balance::ChartSeriesBuilderTest < ActiveSupport::TestCase
   end
 
   test "balance series with fallbacks and gapfills" do
-    account = accounts(:depository)
+    account = accounts(:crypto)
     account.balances.destroy_all
 
     # With gaps
@@ -37,7 +37,7 @@ class Balance::ChartSeriesBuilderTest < ActiveSupport::TestCase
   end
 
   test "exchange rates apply locf when missing" do
-    account = accounts(:depository)
+    account = accounts(:crypto)
     account.balances.destroy_all
 
     create_balance(account: account, date: 2.days.ago.to_date, balance: 1000)
@@ -65,8 +65,8 @@ class Balance::ChartSeriesBuilderTest < ActiveSupport::TestCase
   end
 
   test "combines asset and liability accounts properly" do
-    asset_account = accounts(:depository)
-    liability_account = accounts(:credit_card)
+    asset_account = accounts(:crypto)
+    liability_account = accounts(:crypto)
 
     Balance.destroy_all
 
@@ -97,7 +97,7 @@ class Balance::ChartSeriesBuilderTest < ActiveSupport::TestCase
   end
 
   test "when favorable direction is down balance signage inverts" do
-    account = accounts(:credit_card)
+    account = accounts(:crypto)
     account.balances.destroy_all
 
     create_balance(account: account, date: 1.day.ago.to_date, balance: 1000)
@@ -133,7 +133,7 @@ class Balance::ChartSeriesBuilderTest < ActiveSupport::TestCase
     # Data integrity is maintained by:
     # 1. Account.create_and_sync with skip_initial_sync: true for linked accounts
     # 2. Migration cleanup_orphaned_currency_balances for existing data
-    account = accounts(:depository)
+    account = accounts(:crypto)
     account.balances.destroy_all
 
     # Account is in USD, create balances in USD
@@ -160,7 +160,7 @@ class Balance::ChartSeriesBuilderTest < ActiveSupport::TestCase
       name: "EUR Account",
       balance: 1000,
       currency: "EUR",
-      accountable: Depository.new
+      accountable: Crypto.new
     )
 
     account.balances.destroy_all
@@ -197,7 +197,7 @@ class Balance::ChartSeriesBuilderTest < ActiveSupport::TestCase
     # 2. Migration cleans up orphaned balances for existing linked accounts
 
     # Use the connected (linked) account fixture
-    linked_account = accounts(:connected)
+    linked_account = accounts(:crypto)
     linked_account.balances.destroy_all
 
     # Simulate the bug: account is now EUR but has old USD balances from initial sync
@@ -276,7 +276,7 @@ class Balance::ChartSeriesBuilderTest < ActiveSupport::TestCase
     # Bug scenario: Account currency changed from USD to EUR after initial sync,
     # leaving orphaned USD balances. Without the filter, charts would show wrong values.
 
-    linked_account = accounts(:connected)
+    linked_account = accounts(:crypto)
     linked_account.balances.destroy_all
 
     # Account is EUR but has orphaned USD balances (bug state)
