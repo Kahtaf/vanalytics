@@ -96,8 +96,6 @@ class Account < ApplicationRecord
       account.sync_later unless skip_initial_sync
       account
     end
-
-
   end
 
   def institution_name

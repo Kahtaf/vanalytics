@@ -16,5 +16,4 @@ class AccountProvider < ApplicationRecord
   def provider_name
     adapter&.provider_name || provider_type.underscore
   end
-
 end

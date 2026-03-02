@@ -28,6 +28,5 @@ class Family::SyncCompleteEvent
     rescue => e
       Rails.logger.error("Family::SyncCompleteEvent net_worth_chart broadcast failed: #{e.message}\n#{e.backtrace&.join("\n")}")
     end
-
   end
 end

@@ -14,7 +14,7 @@
 | P1-05 | Remove transactions UI, transfers, imports/exports, reports (keep Entry/Valuation/Trade) | — | `[x]` |
 | P1-06 | Remove misc features (subscriptions, invites, impersonation, OAuth/Doorkeeper, eval, SSO, mobile devices, data enrichments) | — | `[x]` |
 | P1-07 | Clean up Gemfile — remove unused gems, bundle install | P1-01..P1-06 | `[x]` |
-| P1-08 | Database migration — drop ~40 removed tables | P1-01..P1-06 | `[partial]` — Migration created (66 tables + orphaned columns); run `bin/rails db:migrate && bin/rails test` to verify |
+| P1-08 | Database migration — drop ~40 removed tables | P1-01..P1-06 | `[partial]` — Migration updated for FK-safe drop order (`transactions` before `categories`/`merchants`); still needs clean `bin/rails db:migrate && bin/rails test` verification in stable Ruby/toolchain env |
 | P1-09 | Clean routes.rb and navigation (remove dead routes, simplify nav) | P1-01..P1-06 | `[x]` |
 | P1-10 | Verify clean build (rails test, rubocop, brakeman all pass) | P1-07..P1-09 | `[ ]` |
 | **Phase 2: Wallet & Balance Tracking** | | | |

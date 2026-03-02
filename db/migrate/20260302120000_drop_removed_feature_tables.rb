@@ -58,6 +58,11 @@ class DropRemovedFeatureTables < ActiveRecord::Migration[7.2]
     drop_table :eval_runs, if_exists: true
     drop_table :eval_datasets, if_exists: true
 
+    # Transactions/Transfers (must drop before categories/merchants due to FKs)
+    drop_table :rejected_transfers, if_exists: true
+    drop_table :transfers, if_exists: true
+    drop_table :transactions, if_exists: true
+
     # Budgets/Categories/Merchants/Rules
     drop_table :budget_categories, if_exists: true
     drop_table :budgets, if_exists: true
@@ -69,11 +74,6 @@ class DropRemovedFeatureTables < ActiveRecord::Migration[7.2]
     drop_table :rules, if_exists: true
     drop_table :categories, if_exists: true
     drop_table :merchants, if_exists: true
-
-    # Transactions/Transfers
-    drop_table :rejected_transfers, if_exists: true
-    drop_table :transfers, if_exists: true
-    drop_table :transactions, if_exists: true
 
     # Imports/Exports
     drop_table :import_mappings, if_exists: true

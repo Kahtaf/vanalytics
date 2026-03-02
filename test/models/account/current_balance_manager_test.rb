@@ -4,7 +4,6 @@ class Account::CurrentBalanceManagerTest < ActiveSupport::TestCase
   setup do
     @family = families(:empty)
     @linked_account = accounts(:crypto)
-
   end
 
   # -------------------------------------------------------------------------------------------------

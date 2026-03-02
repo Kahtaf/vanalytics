@@ -14,7 +14,7 @@ class Api::V1::AccountsControllerTest < ActionDispatch::IntegrationTest
       user: @user,
       name: "Test API Key",
       display_key: @plain_api_key,
-      scopes: ["read"]
+      scopes: [ "read" ]
     )
   end
 
@@ -65,7 +65,7 @@ class Api::V1::AccountsControllerTest < ActionDispatch::IntegrationTest
       user: @other_family_user,
       name: "Other User API Key",
       display_key: "other_acct_#{SecureRandom.hex(8)}",
-      scopes: ["read"]
+      scopes: [ "read" ]
     )
 
     get "/api/v1/accounts", headers: { "X-Api-Key" => other_api_key.display_key }

@@ -8,8 +8,7 @@ class Family::Syncer
   #
   # To add a new provider: add its association name here.
   # The model handles its own "ready to sync" logic via the syncable scope.
-  SYNCABLE_ITEM_ASSOCIATIONS = %i[
-  ].freeze
+  SYNCABLE_ITEM_ASSOCIATIONS = %i[].freeze
 
   def initialize(family)
     @family = family
@@ -26,12 +25,6 @@ class Family::Syncer
   end
 
   def perform_post_sync
-    family.auto_match_transfers!
-
-    Rails.logger.info("Applying rules for family #{family.id}")
-    family.rules.where(active: true).each do |rule|
-      rule.apply_later
-    end
   end
 
   private

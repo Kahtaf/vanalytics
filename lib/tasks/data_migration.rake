@@ -147,5 +147,4 @@ namespace :data_migration do
 
     puts "✅  Balance component migration complete."
   end
-
 end

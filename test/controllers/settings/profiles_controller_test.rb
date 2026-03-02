@@ -58,5 +58,4 @@ class Settings::ProfilesControllerTest < ActionDispatch::IntegrationTest
     assert_equal I18n.t("settings.profiles.destroy.not_authorized"), flash[:alert]
     assert User.find(@admin.id)
   end
-
 end

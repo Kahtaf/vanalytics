@@ -13,7 +13,7 @@ class Api::V1::TagsControllerTest < ActionDispatch::IntegrationTest
       user: @user,
       name: "Read API Key",
       display_key: @plain_read_key,
-      scopes: ["read"]
+      scopes: [ "read" ]
     )
 
     @plain_rw_key = "tags_rw_#{SecureRandom.hex(8)}"
@@ -21,7 +21,7 @@ class Api::V1::TagsControllerTest < ActionDispatch::IntegrationTest
       user: @user,
       name: "Read Write API Key",
       display_key: @plain_rw_key,
-      scopes: ["read_write"]
+      scopes: [ "read_write" ]
     )
 
     @tag = @user.family.tags.create!(name: "Test Tag #{SecureRandom.hex(4)}", color: "#3b82f6")

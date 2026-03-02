@@ -90,5 +90,4 @@ class AccountsController < ApplicationController
     def set_account
       @account = family.accounts.find(params[:id])
     end
-
 end

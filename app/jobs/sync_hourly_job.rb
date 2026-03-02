@@ -3,8 +3,7 @@ class SyncHourlyJob < ApplicationJob
   sidekiq_options lock: :until_executed, on_conflict: :log
 
   # Provider item classes that opt-in to hourly syncing
-  HOURLY_SYNCABLES = [
-  ].freeze
+  HOURLY_SYNCABLES = [].freeze
 
   def perform
     Rails.logger.info("Starting hourly sync")

@@ -134,43 +134,43 @@ class Entry < ApplicationRecord
 
     private
 
-    def apply_search_filter(scope, search)
-      return scope if search.blank?
+      def apply_search_filter(scope, search)
+        return scope if search.blank?
 
-      scope.where("entries.name ILIKE :search OR entries.notes ILIKE :search",
-        search: "%#{ActiveRecord::Base.sanitize_sql_like(search)}%"
-      )
-    end
+        scope.where("entries.name ILIKE :search OR entries.notes ILIKE :search",
+          search: "%#{ActiveRecord::Base.sanitize_sql_like(search)}%"
+        )
+      end
 
-    def apply_date_filters(scope, start_date, end_date)
-      return scope if start_date.blank? && end_date.blank?
+      def apply_date_filters(scope, start_date, end_date)
+        return scope if start_date.blank? && end_date.blank?
 
-      scope = scope.where("entries.date >= ?", start_date) if start_date.present?
-      scope = scope.where("entries.date <= ?", end_date) if end_date.present?
-      scope
-    end
-
-    def apply_amount_filter(scope, amount, amount_operator)
-      return scope if amount.blank? || amount_operator.blank?
-
-      case amount_operator
-      when "equal"
-        scope.where("ABS(ABS(entries.amount) - ?) <= 0.01", amount.to_f.abs)
-      when "less"
-        scope.where("ABS(entries.amount) < ?", amount.to_f.abs)
-      when "greater"
-        scope.where("ABS(entries.amount) > ?", amount.to_f.abs)
-      else
+        scope = scope.where("entries.date >= ?", start_date) if start_date.present?
+        scope = scope.where("entries.date <= ?", end_date) if end_date.present?
         scope
       end
-    end
 
-    def apply_accounts_filter(scope, accounts, account_ids)
-      return scope if accounts.blank? && account_ids.blank?
+      def apply_amount_filter(scope, amount, amount_operator)
+        return scope if amount.blank? || amount_operator.blank?
 
-      scope = scope.where(accounts: { name: accounts }) if accounts.present?
-      scope = scope.where(accounts: { id: account_ids }) if account_ids.present?
-      scope
-    end
+        case amount_operator
+        when "equal"
+          scope.where("ABS(ABS(entries.amount) - ?) <= 0.01", amount.to_f.abs)
+        when "less"
+          scope.where("ABS(entries.amount) < ?", amount.to_f.abs)
+        when "greater"
+          scope.where("ABS(entries.amount) > ?", amount.to_f.abs)
+        else
+          scope
+        end
+      end
+
+      def apply_accounts_filter(scope, accounts, account_ids)
+        return scope if accounts.blank? && account_ids.blank?
+
+        scope = scope.where(accounts: { name: accounts }) if accounts.present?
+        scope = scope.where(accounts: { id: account_ids }) if account_ids.present?
+        scope
+      end
   end
 end

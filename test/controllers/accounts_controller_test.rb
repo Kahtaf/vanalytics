@@ -62,5 +62,4 @@ class AccountsControllerTest < ActionDispatch::IntegrationTest
     @account.reload
     assert @account.active?
   end
-
 end
