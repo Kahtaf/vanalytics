@@ -237,49 +237,6 @@ class EncryptionVerificationTest < ActiveSupport::TestCase
   end
 
   # ============================================================================
-  # PROVIDER ITEM TESTS (if fixtures exist)
-  # ============================================================================
-
-  test "lunchflow item credentials and payloads are encrypted" do
-    skip "No lunchflow items in fixtures" unless LunchflowItem.any?
-
-    item = LunchflowItem.first
-    original_payload = item.raw_payload
-
-    # Should be able to read
-    assert item.api_key.present? || item.raw_payload.present?
-
-    # Update payload
-    item.update!(raw_payload: { test: "data" })
-    item.reload
-
-    assert_equal({ "test" => "data" }, item.raw_payload)
-
-    # Restore
-    item.update!(raw_payload: original_payload)
-  end
-
-  test "lunchflow account payloads are encrypted" do
-    skip "No lunchflow accounts in fixtures" unless LunchflowAccount.any?
-
-    account = LunchflowAccount.first
-    original_payload = account.raw_payload
-
-    # Should be able to read encrypted fields without error
-    account.reload
-    assert_nothing_raised { account.raw_payload }
-    assert_nothing_raised { account.raw_transactions_payload }
-
-    # Update and verify
-    account.update!(raw_payload: { account_test: "value" })
-    account.reload
-
-    assert_equal({ "account_test" => "value" }, account.raw_payload)
-
-    # Restore
-    account.update!(raw_payload: original_payload)
-  end
-
   # ============================================================================
   # DATABASE VERIFICATION TESTS
   # ============================================================================

@@ -39,11 +39,6 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     merchant = merchants(:netflix)
     import = imports(:transaction)
     budget = budgets(:one)
-    plaid_item = plaid_items(:one)
-
-    provider = mock
-    provider.expects(:remove_item).with(plaid_item.access_token).once
-    PlaidItem.any_instance.stubs(:plaid_provider).returns(provider)
 
     perform_enqueued_jobs(only: FamilyResetJob) do
       delete reset_user_url(@user)
@@ -58,7 +53,6 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     assert_not Merchant.exists?(merchant.id)
     assert_not Import.exists?(import.id)
     assert_not Budget.exists?(budget.id)
-    assert_not PlaidItem.exists?(plaid_item.id)
   end
 
   test "admin can reset family data and load sample data" do
@@ -68,11 +62,7 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     merchant = merchants(:netflix)
     import = imports(:transaction)
     budget = budgets(:one)
-    plaid_item = plaid_items(:one)
 
-    provider = mock
-    provider.expects(:remove_item).with(plaid_item.access_token).once
-    PlaidItem.any_instance.stubs(:plaid_provider).returns(provider)
     Demo::Generator.any_instance.expects(:generate_new_user_data_for!).with(@user.family, email: @user.email)
 
     perform_enqueued_jobs(only: FamilyResetJob) do
@@ -88,7 +78,6 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     assert_not Merchant.exists?(merchant.id)
     assert_not Import.exists?(import.id)
     assert_not Budget.exists?(budget.id)
-    assert_not PlaidItem.exists?(plaid_item.id)
   end
 
   test "non-admin cannot reset family data" do

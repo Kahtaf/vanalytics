@@ -4,7 +4,6 @@ class SyncHourlyJob < ApplicationJob
 
   # Provider item classes that opt-in to hourly syncing
   HOURLY_SYNCABLES = [
-    CoinstatsItem # https://coinstats.app/api-docs/rate-limits#plan-limits
   ].freeze
 
   def perform

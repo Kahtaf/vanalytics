@@ -27,12 +27,11 @@ depository:
 
 connected:
   family: dylan_family
-  name: Plaid Depository Account
+  name: Connected Depository Account
   balance: 5000
   currency: USD
   accountable_type: Depository
   accountable: two
-  plaid_account: one
   status: active
 
 credit_card:

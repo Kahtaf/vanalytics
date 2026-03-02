@@ -18,44 +18,13 @@ class Provider::Registry
       raise Error.new("Provider '#{name}' not found in registry")
     end
 
-    def plaid_provider_for_region(region)
-      region.to_sym == :us ? plaid_us : plaid_eu
-    end
-
     private
-      def stripe
-        secret_key = ENV["STRIPE_SECRET_KEY"]
-        webhook_secret = ENV["STRIPE_WEBHOOK_SECRET"]
-
-        return nil unless secret_key.present? && webhook_secret.present?
-
-        Provider::Stripe.new(secret_key:, webhook_secret:)
-      end
-
       def twelve_data
         api_key = ENV["TWELVE_DATA_API_KEY"].presence || Setting.twelve_data_api_key
 
         return nil unless api_key.present?
 
         Provider::TwelveData.new(api_key)
-      end
-
-      def plaid_us
-        Provider::PlaidAdapter.ensure_configuration_loaded
-        config = Rails.application.config.plaid
-
-        return nil unless config.present?
-
-        Provider::Plaid.new(config, region: :us)
-      end
-
-      def plaid_eu
-        Provider::PlaidEuAdapter.ensure_configuration_loaded
-        config = Rails.application.config.plaid_eu
-
-        return nil unless config.present?
-
-        Provider::Plaid.new(config, region: :eu)
       end
 
       def github
@@ -94,7 +63,7 @@ class Provider::Registry
       when :securities
         %i[twelve_data yahoo_finance]
       else
-        %i[plaid_us plaid_eu github]
+        %i[github]
       end
     end
 end

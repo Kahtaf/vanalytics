@@ -8,7 +8,7 @@
 |----|------|------|--------|
 | **Phase 1: Strip & Clean** | | | |
 | P1-01 | Remove AI assistant (models, controllers, views, tests, layout sidebar) | — | `[x]` |
-| P1-02 | Remove banking providers (Plaid, SimpleFIN, EnableBanking, Lunchflow, Mercury, Snaptrade, IndexaCapital, Coinbase, CoinStats) | — | `[ ]` |
+| P1-02 | Remove banking providers (Plaid, SimpleFIN, EnableBanking, Lunchflow, Mercury, Snaptrade, IndexaCapital, Coinbase, CoinStats) | — | `[x]` |
 | P1-03 | Remove non-crypto account types (Depository, Investment, Property, Vehicle, CreditCard, Loan, OtherAsset, OtherLiability) | — | `[ ]` |
 | P1-04 | Remove budgets, categories, merchants, rules, recurring transactions | — | `[ ]` |
 | P1-05 | Remove transactions UI, transfers, imports/exports, reports (keep Entry/Valuation/Trade) | — | `[ ]` |
