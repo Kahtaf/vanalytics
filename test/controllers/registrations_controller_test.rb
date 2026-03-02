@@ -84,7 +84,5 @@ class RegistrationsControllerTest < ActionDispatch::IntegrationTest
     assert_equal "guest", created_user.role
     assert created_user.ui_layout_intro?
     assert_not created_user.show_sidebar?
-    assert_not created_user.show_ai_sidebar?
-    assert created_user.ai_enabled?
   end
 end

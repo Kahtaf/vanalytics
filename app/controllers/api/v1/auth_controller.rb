@@ -6,10 +6,6 @@ module Api
       skip_before_action :authenticate_request!
       skip_before_action :check_api_key_rate_limit
       skip_before_action :log_api_access
-      before_action :authenticate_request!, only: :enable_ai
-      before_action :ensure_write_scope, only: :enable_ai
-      before_action :check_api_key_rate_limit, only: :enable_ai
-      before_action :log_api_access, only: :enable_ai
 
       def signup
         # Check if invite code is required
@@ -134,25 +130,9 @@ module Api
             email: cached[:user_email],
             first_name: cached[:user_first_name],
             last_name: cached[:user_last_name],
-            ui_layout: cached[:user_ui_layout],
-            ai_enabled: cached[:user_ai_enabled]
+            ui_layout: cached[:user_ui_layout]
           }
         }
-      end
-
-      def enable_ai
-        user = current_resource_owner
-
-        unless user.ai_available?
-          render json: { error: "AI is not available for your account" }, status: :forbidden
-          return
-        end
-
-        if user.update(ai_enabled: true)
-          render json: { user: mobile_user_payload(user) }
-        else
-          render json: { errors: user.errors.full_messages }, status: :unprocessable_entity
-        end
       end
 
       def refresh
@@ -243,14 +223,10 @@ module Api
             email: user.email,
             first_name: user.first_name,
             last_name: user.last_name,
-            ui_layout: user.ui_layout,
-            ai_enabled: user.ai_enabled?
+            ui_layout: user.ui_layout
           }
         end
 
-        def ensure_write_scope
-          authorize_scope!(:write)
-        end
     end
   end
 end

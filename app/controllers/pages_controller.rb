@@ -5,9 +5,6 @@ class PagesController < ApplicationController
   before_action :ensure_intro_guest!, only: :intro
 
   def dashboard
-    if Current.user&.ui_layout_intro?
-      redirect_to chats_path and return
-    end
 
     @balance_sheet = Current.family.balance_sheet
     @investment_statement = Current.family.investment_statement
@@ -28,7 +25,7 @@ class PagesController < ApplicationController
   end
 
   def intro
-    @breadcrumbs = [ [ "Home", chats_path ], [ "Intro", nil ] ]
+    @breadcrumbs = [ [ "Home", root_path ], [ "Intro", nil ] ]
   end
 
   def update_preferences

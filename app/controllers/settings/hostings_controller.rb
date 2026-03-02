@@ -90,34 +90,6 @@ class Settings::HostingsController < ApplicationController
       sync_auto_sync_scheduler!
     end
 
-    if hosting_params.key?(:openai_access_token)
-      token_param = hosting_params[:openai_access_token].to_s.strip
-      # Ignore blanks and redaction placeholders to prevent accidental overwrite
-      unless token_param.blank? || token_param == "********"
-        Setting.openai_access_token = token_param
-      end
-    end
-
-    # Validate OpenAI configuration before updating
-    if hosting_params.key?(:openai_uri_base) || hosting_params.key?(:openai_model)
-      Setting.validate_openai_config!(
-        uri_base: hosting_params[:openai_uri_base],
-        model: hosting_params[:openai_model]
-      )
-    end
-
-    if hosting_params.key?(:openai_uri_base)
-      Setting.openai_uri_base = hosting_params[:openai_uri_base]
-    end
-
-    if hosting_params.key?(:openai_model)
-      Setting.openai_model = hosting_params[:openai_model]
-    end
-
-    if hosting_params.key?(:openai_json_mode)
-      Setting.openai_json_mode = hosting_params[:openai_json_mode].presence
-    end
-
     redirect_to settings_hosting_path, notice: t(".success")
   rescue Setting::ValidationError => error
     flash.now[:alert] = error.message
@@ -131,7 +103,7 @@ class Settings::HostingsController < ApplicationController
 
   private
     def hosting_params
-      params.require(:setting).permit(:onboarding_state, :require_email_confirmation, :brand_fetch_client_id, :brand_fetch_high_res_logos, :twelve_data_api_key, :openai_access_token, :openai_uri_base, :openai_model, :openai_json_mode, :exchange_rate_provider, :securities_provider, :syncs_include_pending, :auto_sync_enabled, :auto_sync_time)
+      params.require(:setting).permit(:onboarding_state, :require_email_confirmation, :brand_fetch_client_id, :brand_fetch_high_res_logos, :twelve_data_api_key, :exchange_rate_provider, :securities_provider, :syncs_include_pending, :auto_sync_enabled, :auto_sync_time)
     end
 
     def ensure_admin

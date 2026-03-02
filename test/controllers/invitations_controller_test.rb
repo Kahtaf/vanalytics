@@ -112,9 +112,7 @@ class InvitationsControllerTest < ActionDispatch::IntegrationTest
     existing_user.update!(
       role: :member,
       ui_layout: :dashboard,
-      show_sidebar: true,
-      show_ai_sidebar: true,
-      ai_enabled: false
+      show_sidebar: true
     )
 
     assert_difference("Invitation.count") do
@@ -130,8 +128,6 @@ class InvitationsControllerTest < ActionDispatch::IntegrationTest
     assert_equal "guest", existing_user.role
     assert existing_user.ui_layout_intro?
     assert_not existing_user.show_sidebar?
-    assert_not existing_user.show_ai_sidebar?
-    assert existing_user.ai_enabled?
   end
 
   test "should handle invalid invitation creation" do

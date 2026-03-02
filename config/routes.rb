@@ -110,14 +110,6 @@ Rails.application.routes.draw do
   # Uses basic auth - see config/initializers/sidekiq.rb
   mount Sidekiq::Web => "/sidekiq"
 
-  # AI chats
-  resources :chats do
-    resources :messages, only: :create
-
-    member do
-      post :retry
-    end
-  end
 
   resources :family_exports, only: %i[new create index destroy] do
     member do
@@ -172,8 +164,6 @@ Rails.application.routes.draw do
     resource :security, only: :show
     resources :sso_identities, only: :destroy
     resource :api_key, only: [ :show, :new, :create, :destroy ]
-    resource :ai_prompts, only: :show
-    resource :llm_usage, only: :show
     resource :guides, only: :show
     resource :bank_sync, only: :show, controller: "bank_sync"
     resource :providers, only: %i[show update]
@@ -372,7 +362,6 @@ Rails.application.routes.draw do
       post "auth/login", to: "auth#login"
       post "auth/refresh", to: "auth#refresh"
       post "auth/sso_exchange", to: "auth#sso_exchange"
-      patch "auth/enable_ai", to: "auth#enable_ai"
 
       # Production API endpoints
       resources :accounts, only: [ :index, :show ]
@@ -388,11 +377,6 @@ Rails.application.routes.draw do
       resource :usage, only: [ :show ], controller: :usage
       post :sync, to: "sync#create"
 
-      resources :chats, only: [ :index, :show, :create, :update, :destroy ] do
-        resources :messages, only: [ :create ] do
-          post :retry, on: :collection
-        end
-      end
 
       delete "users/reset", to: "users#reset"
       delete "users/me", to: "users#destroy"
@@ -471,9 +455,6 @@ Rails.application.routes.draw do
   end
 
   get "redis-configuration-error", to: "pages#redis_configuration_error"
-
-  # MCP server endpoint for external AI assistants (JSON-RPC 2.0)
-  post "mcp", to: "mcp#handle"
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.

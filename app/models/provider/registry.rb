@@ -3,7 +3,7 @@ class Provider::Registry
 
   Error = Class.new(StandardError)
 
-  CONCEPTS = %i[exchange_rates securities llm]
+  CONCEPTS = %i[exchange_rates securities]
 
   validates :concept, inclusion: { in: CONCEPTS }
 
@@ -62,22 +62,6 @@ class Provider::Registry
         Provider::Github.new
       end
 
-      def openai
-        access_token = ENV["OPENAI_ACCESS_TOKEN"].presence || Setting.openai_access_token
-
-        return nil unless access_token.present?
-
-        uri_base = ENV["OPENAI_URI_BASE"].presence || Setting.openai_uri_base
-        model = ENV["OPENAI_MODEL"].presence || Setting.openai_model
-
-        if uri_base.present? && model.blank?
-          Rails.logger.error("Custom OpenAI provider configured without a model; please set OPENAI_MODEL or Setting.openai_model")
-          return nil
-        end
-
-        Provider::Openai.new(access_token, uri_base: uri_base, model: model)
-      end
-
       def yahoo_finance
         Provider::YahooFinance.new
       end
@@ -109,10 +93,8 @@ class Provider::Registry
         %i[twelve_data yahoo_finance]
       when :securities
         %i[twelve_data yahoo_finance]
-      when :llm
-        %i[openai]
       else
-        %i[plaid_us plaid_eu github openai]
+        %i[plaid_us plaid_eu github]
       end
     end
 end

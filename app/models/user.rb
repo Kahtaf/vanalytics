@@ -23,9 +23,7 @@ class User < ApplicationRecord
   end
 
   belongs_to :family
-  belongs_to :last_viewed_chat, class_name: "Chat", optional: true
   has_many :sessions, dependent: :destroy
-  has_many :chats, dependent: :destroy
   has_many :api_keys, dependent: :destroy
   has_many :mobile_devices, dependent: :destroy
   has_many :invitations, foreign_key: :inviter_id, dependent: :destroy
@@ -129,18 +127,6 @@ class User < ApplicationRecord
     else
       initial
     end
-  end
-
-  def show_ai_sidebar?
-    show_ai_sidebar
-  end
-
-  def ai_available?
-    !Rails.application.config.app_mode.self_hosted? || ENV["OPENAI_ACCESS_TOKEN"].present? || Setting.openai_access_token.present?
-  end
-
-  def ai_enabled?
-    ai_enabled && ai_available?
   end
 
   def self.default_ui_layout
@@ -324,21 +310,16 @@ class User < ApplicationRecord
       if ui_layout_intro?
         if guest?
           self.show_sidebar = false
-          self.show_ai_sidebar = false
-          self.ai_enabled = true
         else
           self.ui_layout = "dashboard"
         end
       elsif guest?
         self.ui_layout = "intro"
         self.show_sidebar = false
-        self.show_ai_sidebar = false
-        self.ai_enabled = true
       end
 
       if leaving_guest_role?
         self.show_sidebar = true unless show_sidebar
-        self.show_ai_sidebar = true unless show_ai_sidebar
       end
     end
 

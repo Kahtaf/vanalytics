@@ -67,7 +67,7 @@ class RulesController < ApplicationController
     # Compute provider, model, and cost estimation for auto-categorize actions
     if @rule.actions.any? { |a| a.action_type == "auto_categorize" }
       # Use the same provider determination logic as Family::AutoCategorizer
-      llm_provider = Provider::Registry.get_provider(:openai)
+      llm_provider = Provider::Registry.get_provider(:openai) rescue nil
 
       if llm_provider
         @selected_model = Provider::Openai.effective_model
@@ -110,7 +110,7 @@ class RulesController < ApplicationController
 
     # Compute AI cost estimation if any rule has auto_categorize action
     if @rules.any? { |r| r.actions.any? { |a| a.action_type == "auto_categorize" } }
-      llm_provider = Provider::Registry.get_provider(:openai)
+      llm_provider = Provider::Registry.get_provider(:openai) rescue nil
 
       if llm_provider
         @selected_model = Provider::Openai.effective_model

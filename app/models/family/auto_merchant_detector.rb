@@ -63,7 +63,7 @@ class Family::AutoMerchantDetector
 
     # For now, OpenAI only, but this should work with any LLM concept provider
     def llm_provider
-      Provider::Registry.get_provider(:openai)
+      Provider::Registry.get_provider(:openai) rescue nil
     end
 
     def default_logo_provider_url

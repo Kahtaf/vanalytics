@@ -4,7 +4,7 @@ class Rule::ActionExecutor::AutoCategorize < Rule::ActionExecutor
 
     if rule.family.self_hoster?
       # Use the same provider determination logic as Family::AutoCategorizer
-      llm_provider = Provider::Registry.get_provider(:openai)
+      llm_provider = Provider::Registry.get_provider(:openai) rescue nil
 
       if llm_provider
         # Estimate cost for typical batch of 20 transactions

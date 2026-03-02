@@ -173,8 +173,6 @@ class UserTest < ActiveSupport::TestCase
     assert user.save, user.errors.full_messages.to_sentence
     assert user.ui_layout_intro?
     assert_not user.show_sidebar?
-    assert_not user.show_ai_sidebar?
-    assert user.ai_enabled?
   end
 
   test "non-guest role cannot persist intro layout" do
@@ -198,7 +196,6 @@ class UserTest < ActiveSupport::TestCase
 
     assert user.ui_layout_dashboard?
     assert user.show_sidebar?
-    assert user.show_ai_sidebar?
   end
 
   test "update_dashboard_preferences handles concurrent updates atomically" do

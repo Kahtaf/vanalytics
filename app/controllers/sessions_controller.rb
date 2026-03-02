@@ -261,8 +261,7 @@ class SessionsController < ApplicationController
           user_email: user.email,
           user_first_name: user.first_name,
           user_last_name: user.last_name,
-          user_ui_layout: user.ui_layout,
-          user_ai_enabled: user.ai_enabled?
+          user_ui_layout: user.ui_layout
         ),
         expires_in: 5.minutes
       )
