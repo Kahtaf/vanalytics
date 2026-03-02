@@ -57,14 +57,13 @@ class Setting < RailsSettings::Base
   # This prevents race conditions and ensures each field is independently managed
 
   # Onboarding and app settings
-  ONBOARDING_STATES = %w[open closed invite_only].freeze
+  ONBOARDING_STATES = %w[open closed].freeze
   DEFAULT_ONBOARDING_STATE = begin
     env_value = ENV["ONBOARDING_STATE"].to_s.presence || "open"
     ONBOARDING_STATES.include?(env_value) ? env_value : "open"
   end
 
   field :onboarding_state, type: :string, default: DEFAULT_ONBOARDING_STATE
-  field :require_invite_for_signup, type: :boolean, default: false
   field :require_email_confirmation, type: :boolean, default: ENV.fetch("REQUIRE_EMAIL_CONFIRMATION", "true") == "true"
 
   def self.validate_onboarding_state!(state)
@@ -81,14 +80,11 @@ class Setting < RailsSettings::Base
 
     def onboarding_state
       value = raw_onboarding_state
-      return "invite_only" if value.blank? && require_invite_for_signup
-
       value.presence || DEFAULT_ONBOARDING_STATE
     end
 
     def onboarding_state=(state)
       validate_onboarding_state!(state)
-      self.require_invite_for_signup = state == "invite_only"
       self.raw_onboarding_state = state
     end
 

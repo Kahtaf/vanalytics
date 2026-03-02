@@ -1,8 +1,6 @@
 class User < ApplicationRecord
   include Encryptable
 
-  # Allow nil password for SSO-only users (JIT provisioning).
-  # Custom validation ensures password is present for non-SSO registration.
   has_secure_password validations: false
 
   # Encrypt sensitive fields if ActiveRecord encryption is configured
@@ -25,12 +23,6 @@ class User < ApplicationRecord
   belongs_to :family
   has_many :sessions, dependent: :destroy
   has_many :api_keys, dependent: :destroy
-  has_many :mobile_devices, dependent: :destroy
-  has_many :invitations, foreign_key: :inviter_id, dependent: :destroy
-  has_many :impersonator_support_sessions, class_name: "ImpersonationSession", foreign_key: :impersonator_id, dependent: :destroy
-  has_many :impersonated_support_sessions, class_name: "ImpersonationSession", foreign_key: :impersonated_id, dependent: :destroy
-  has_many :oidc_identities, dependent: :destroy
-  has_many :sso_audit_logs, dependent: :nullify
   accepts_nested_attributes_for :family, update_only: true
 
   validates :email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
@@ -39,9 +31,7 @@ class User < ApplicationRecord
   validates :default_account_order, inclusion: { in: AccountOrder::ORDERS.keys }
   validates :locale, inclusion: { in: I18n.available_locales.map(&:to_s) }, allow_nil: true
 
-  # Password is required on create unless the user is being created via SSO JIT.
-  # SSO JIT users have password_digest = nil and authenticate via OIDC only.
-  validates :password, presence: true, on: :create, unless: :skip_password_validation?
+  validates :password, presence: true, on: :create
   validates :password, length: { minimum: 8 }, allow_nil: true
   normalizes :email, with: ->(email) { email.strip.downcase }
   normalizes :unconfirmed_email, with: ->(email) { email&.strip&.downcase }
@@ -104,11 +94,6 @@ class User < ApplicationRecord
     end
   end
 
-  def request_impersonation_for(user_id)
-    impersonated = User.find(user_id)
-    impersonator_support_sessions.create!(impersonated: impersonated)
-  end
-
   def admin?
     super_admin? || role == "admin"
   end
@@ -133,20 +118,6 @@ class User < ApplicationRecord
     layout = Rails.application.config.x.ui&.default_layout || "dashboard"
     layout.in?(%w[intro dashboard]) ? layout : "dashboard"
   end
-
-  # SSO-only users have OIDC identities but no local password.
-  # They cannot use password reset or local login.
-  def sso_only?
-    password_digest.nil? && oidc_identities.exists?
-  end
-
-  # Check if user has a local password set (can authenticate locally)
-  def has_local_password?
-    password_digest.present?
-  end
-
-  # Attribute to skip password validation during SSO JIT provisioning
-  attr_accessor :skip_password_validation
 
   # Deactivation
   validate :can_deactivate, if: -> { active_changed? && !active }
@@ -328,10 +299,6 @@ class User < ApplicationRecord
 
       previous_role, new_role = role_change_to_be_saved
       previous_role == "guest" && new_role != "guest"
-    end
-
-    def skip_password_validation?
-      skip_password_validation == true
     end
 
     def default_dashboard_section_order

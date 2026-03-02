@@ -2,21 +2,9 @@
 es:
   settings:
     hostings:
-      invite_code_settings:
-        description: Controla cómo se registran nuevas personas en tu instancia de %{product}.
-        email_confirmation_description: Cuando está habilitado, los usuarios deben confirmar su dirección de correo electrónico al cambiarla.
-        email_confirmation_title: Requerir confirmación de correo electrónico
-        generate_tokens: Generar nuevo código
-        generated_tokens: Códigos generados
-        title: Incorporación
-        states:
-          open: Abierto
-          closed: Cerrado
-          invite_only: Solo con invitación
       show:
         general: Configuración General
         financial_data_providers: Proveedores de Datos Financieros
-        invites: Códigos de Invitación
         title: Autoalojamiento
         danger_zone: Zona de Peligro
         clear_cache: Limpiar caché de datos

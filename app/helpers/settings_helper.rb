@@ -2,25 +2,14 @@ module SettingsHelper
   SETTINGS_ORDER = [
     # General section
     { name: "Accounts", path: :accounts_path },
-    { name: "Bank Sync", path: :settings_bank_sync_path },
     { name: "Preferences", path: :settings_preferences_path },
     { name: "Profile Info", path: :settings_profile_path },
     { name: "Security", path: :settings_security_path },
-    { name: "Payment", path: :settings_payment_path, condition: :not_self_hosted? },
-    # Transactions section
-    { name: "Categories", path: :categories_path },
-    { name: "Tags", path: :tags_path },
-    { name: "Rules", path: :rules_path },
-    { name: "Merchants", path: :family_merchants_path },
-    { name: "Recurring", path: :recurring_transactions_path },
     # Advanced section
-    { name: "AI Prompts", path: :settings_ai_prompts_path, condition: :admin_user? },
-    { name: "LLM Usage", path: :settings_llm_usage_path, condition: :admin_user? },
+    { name: "Tags", path: :tags_path },
     { name: "API Key", path: :settings_api_key_path, condition: :admin_user? },
     { name: "Self-Hosting", path: :settings_hosting_path, condition: :self_hosted_and_admin? },
     { name: "Providers", path: :settings_providers_path, condition: :admin_user? },
-    { name: "Imports", path: :imports_path, condition: :admin_user? },
-    { name: "Exports", path: :family_exports_path, condition: :admin_user? },
     # More section
     { name: "Guides", path: :settings_guides_path },
     { name: "What's new", path: :changelog_path },

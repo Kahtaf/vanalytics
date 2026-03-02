@@ -1,9 +1,5 @@
 ---
 pt-BR:
-  views:
-    settings:
-      payments:
-        renewal: "Sua contribuição continua em %{date}."
   settings:
     ai_prompts:
       show:
@@ -20,11 +16,6 @@ pt-BR:
         merchant_detector:
           title: Detector de Estabelecimentos
           subtitle: A IA identifica e enriquece dados de transações com informações do estabelecimento
-    payments:
-      show:
-        page_title: Pagamento
-        subscription_subtitle: Atualize sua assinatura e detalhes de pagamento
-        subscription_title: Gerenciar assinatura
     preferences:
       show:
         country: País
@@ -56,9 +47,6 @@ pt-BR:
         confirm_reset:
           body: Tem certeza de que deseja resetar sua conta? Isso excluirá todas as suas contas, categorias, comerciantes, tags e outros dados. Esta ação não pode ser desfeita.
           title: Resetar conta?
-        confirm_remove_invitation:
-          body: Tem certeza de que deseja remover o convite para %{email}?
-          title: Remover Convite
         confirm_remove_member:
           body: Tem certeza de que deseja remover %{name} da sua conta?
           title: Remover Membro
@@ -75,14 +63,11 @@ pt-BR:
         household_subtitle: Convide membros da família, parceiros e outros indivíduos. Os convidados
           podem fazer login na sua família e acessar suas contas compartilhadas.
         household_title: Família
-        invitation_link: Link de convite
-        invite_member: Adicionar membro
         last_name: Sobrenome
         page_title: Conta
         pending: Pendente
         profile_subtitle: Personalize como você aparece no %{product_name}
         profile_title: Perfil
-        remove_invitation: Remover Convite
         remove_member: Remover Membro
         save: Salvar
     securities:
@@ -91,7 +76,6 @@ pt-BR:
     settings_nav:
       accounts_label: Contas
       api_key_label: Chave da API
-      payment_label: Pagamento
       categories_label: Categorias
       feedback_label: Feedback
       general_section_title: Geral

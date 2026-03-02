@@ -4,11 +4,9 @@
 
 You are transforming a forked personal finance app ([we-promise/sure](https://github.com/we-promise/sure)) into **Vanalytics** — a Vana L1 crypto tracking app.
 
-**REQUIRED**: Before doing anything, study these documents:
-
-- `docs/vana-migration-plan.md` — Full codebase analysis, architecture decisions, Vana blockchain details, testing strategy
-- `docs/implementation-guide.md` — **The implementation plan (source of truth for tasks)**
-- `CLAUDE.md` — Development commands, project conventions, testing philosophy
+**REQUIRED**: Read `docs/implementation-guide.md` to find the next eligible task.
+Do NOT read `docs/vana-migration-plan.md` or `CLAUDE.md` — they are already loaded into your context automatically.
+Only read additional files when needed during implementation.
 
 This is a Rails 7.2 app with Hotwire (Turbo + Stimulus), PostgreSQL, Sidekiq, Tailwind CSS v4, and Minitest. The app tracks crypto wallets on the Vana L1 blockchain (Chain ID 1480, RPC: `https://rpc.vana.org`).
 
@@ -61,7 +59,8 @@ Both must pass with zero errors. If they fail, fix the issues before proceeding.
 For Phase 1 tasks (removal), also verify no dangling references:
 ```bash
 # Check for references to removed features (adapt grep pattern per task)
-grep -r "ClassName" app/ config/ test/ --include="*.rb" --include="*.erb" -l
+# Use -l (files-with-matches only) to keep output short — do NOT cat matched files
+grep -rl "ClassName" app/ config/ test/ --include="*.rb" --include="*.erb"
 ```
 
 For Phase 2+ tasks, also run:

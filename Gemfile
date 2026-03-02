@@ -56,8 +56,6 @@ gem "jwt"
 gem "jbuilder"
 gem "countries"
 
-# OAuth & API Security
-gem "doorkeeper"
 gem "rack-attack", "~> 6.6"
 gem "rack-cors"
 gem "pundit"
@@ -66,7 +64,7 @@ gem "faraday-retry"
 gem "faraday-multipart"
 gem "inline_svg"
 gem "octokit"
-gem "pagy"
+gem "pagy", "~> 9.3"
 gem "rails-settings-cached"
 gem "tzinfo-data", platforms: %i[windows jruby]
 gem "csv"
@@ -79,13 +77,6 @@ gem "activerecord-import"
 gem "rubyzip", "~> 2.3"
 gem "pdf-reader", "~> 2.12"
 
-# OpenID Connect, OAuth & SAML authentication
-gem "omniauth", "~> 2.1"
-gem "omniauth-rails_csrf_protection"
-gem "omniauth_openid_connect"
-gem "omniauth-google-oauth2"
-gem "omniauth-github"
-gem "omniauth-saml", "~> 2.1"
 
 # State machines
 gem "aasm"
@@ -118,6 +109,8 @@ group :development do
 end
 
 group :test do
+  gem "minitest"
+  gem "minitest-mock"
   gem "capybara"
   gem "selenium-webdriver"
   gem "mocha"

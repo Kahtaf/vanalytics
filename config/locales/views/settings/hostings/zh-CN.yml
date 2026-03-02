@@ -9,17 +9,6 @@ zh-CN:
         title: Brand Fetch 设置
       clear_cache:
         cache_cleared: 数据缓存已清除，此操作可能需要一些时间完成。
-      invite_code_settings:
-        description: 控制新用户如何注册您的 %{product} 实例。
-        email_confirmation_description: 启用后，用户在更改邮箱地址时必须进行邮箱确认。
-        email_confirmation_title: 要求邮箱确认
-        generate_tokens: 生成新代码
-        generated_tokens: 已生成的代码
-        states:
-          closed: 关闭注册
-          invite_only: 仅限邀请注册
-          open: 开放注册
-        title: 新用户注册设置
       not_authorized: 您没有执行此操作的权限
       openai_settings:
         access_token_label: 访问令牌
@@ -56,7 +45,6 @@ zh-CN:
         danger_zone: 高风险操作
         financial_data_providers: 金融数据提供商
         general: 通用设置
-        invites: 邀请码设置
         title: 自托管配置
       twelve_data_settings:
         api_calls_used: 已使用 %{used} / %{limit} 次每日 API 调用（%{percentage}）

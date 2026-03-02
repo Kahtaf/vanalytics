@@ -55,7 +55,7 @@ STREAM_TEXT='select(.type == "assistant").message.content[]? | select(.type == "
 FINAL_RESULT='select(.type == "result").result // empty'
 
 # --- Agent command configuration ---------------------------------------------
-AGENT_CMD_DEFAULT=(claude -p --dangerously-skip-permissions --output-format stream-json --verbose)
+AGENT_CMD_DEFAULT=(claude -p --dangerously-skip-permissions --output-format stream-json --verbose --max-turns 50)
 if [[ -n "${RALPH_AGENT_CMD:-}" ]]; then
   # shellcheck disable=SC2206
   AGENT_CMD=($RALPH_AGENT_CMD)
@@ -116,6 +116,12 @@ while true; do
       echo "ITERATION_NOTE: agent exited 143 after a clean commit; treating as success."
       AGENT_EXIT_CODE_EFFECTIVE="0"
     fi
+  fi
+
+  # Handle context overflow (exit 1) as success if a clean commit was made
+  if [[ "$AGENT_EXIT_CODE_RAW" -eq 1 && "$COMMIT_MADE" -eq 1 && "$DIRTY_COUNT" -eq 0 ]]; then
+    echo "ITERATION_NOTE: agent exited 1 after a clean commit; treating as success."
+    AGENT_EXIT_CODE_EFFECTIVE="0"
   fi
 
   COMMIT_STR="NO"

@@ -4,7 +4,6 @@ class Settings::ProfilesController < ApplicationController
   def show
     @user = Current.user
     @users = Current.family.users.order(:created_at)
-    @pending_invitations = Current.family.invitations.pending
     @breadcrumbs = [
       [ "Home", root_path ],
       [ "Profile Info", nil ]
@@ -27,8 +26,6 @@ class Settings::ProfilesController < ApplicationController
     end
 
     if @user.destroy
-      # Also destroy the invitation associated with this user for this family
-      Current.family.invitations.find_by(email: @user.email)&.destroy
       flash[:notice] = "Member removed successfully."
     else
       flash[:alert] = "Failed to remove member."

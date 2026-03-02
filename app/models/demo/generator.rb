@@ -17,7 +17,7 @@ class Demo::Generator
       end
 
       puts "Creating empty family..."
-      create_family_and_users!("Demo Family", "user@example.com", onboarded: true, subscribed: true)
+      create_family_and_users!("Demo Family", "user@example.com", onboarded: true)
 
       puts "Empty demo data loaded successfully!"
     end
@@ -31,7 +31,7 @@ class Demo::Generator
       end
 
       puts "Creating new user family..."
-      create_family_and_users!("Demo Family", "user@example.com", onboarded: false, subscribed: false)
+      create_family_and_users!("Demo Family", "user@example.com", onboarded: false)
 
       puts "New user demo data loaded successfully!"
     end
@@ -63,7 +63,7 @@ class Demo::Generator
 
     with_timing(__method__, max_seconds: 1000) do
       puts "Creating demo family..."
-      family = create_family_and_users!("Demo Family", email, onboarded: true, subscribed: true)
+      family = create_family_and_users!("Demo Family", email, onboarded: true)
 
       puts "Creating monitoring API key..."
       create_monitoring_api_key!(family)
@@ -109,7 +109,7 @@ class Demo::Generator
       raise ActiveRecord::RecordNotFound, "No admin user with email #{email} found in family ##{family.id}"
     end
 
-    def create_family_and_users!(family_name, email, onboarded:, subscribed:)
+    def create_family_and_users!(family_name, email, onboarded:)
       family = Family.create!(
         name: family_name,
         currency: "USD",
@@ -118,8 +118,6 @@ class Demo::Generator
         timezone: "America/New_York",
         date_format: "%m-%d-%Y"
       )
-
-      family.start_subscription!("sub_demo_123") if subscribed
 
       family.users.create!(
         email: email,

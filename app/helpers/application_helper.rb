@@ -100,13 +100,6 @@ module ApplicationHelper
               .join(separator)
   end
 
-  def show_super_admin_bar?
-    if params[:admin].present?
-      cookies.permanent[:admin] = params[:admin]
-    end
-
-    cookies[:admin] == "true"
-  end
 
   # Renders Markdown text using Redcarpet
   def markdown(text)

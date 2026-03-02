@@ -1,8 +1,4 @@
 de:
-  views:
-    settings:
-      payments:
-        renewal: "Ihr Beitrag wird fortgesetzt am %{date}."
   settings:
     ai_prompts:
       show:
@@ -19,11 +15,6 @@ de:
         merchant_detector:
           title: Händlererkennung
           subtitle: Die KI identifiziert und ergänzt Transaktionsdaten mit Händlerinformationen
-    payments:
-      show:
-        page_title: Zahlung
-        subscription_subtitle: Aktualisiere dein Abonnement und deine Zahlungsdetails
-        subscription_title: Abonnement verwalten
     preferences:
       show:
         country: Land
@@ -58,9 +49,6 @@ de:
         confirm_reset_with_sample_data:
           body: Bist du sicher, dass du dein Konto zurücksetzen und Beispieldaten laden möchtest? Dadurch werden deine vorhandenen Daten gelöscht und durch Demo-Daten ersetzt, sodass du Sure sicher erkunden kannst.
           title: Konto zurücksetzen und Beispieldaten laden?
-        confirm_remove_invitation:
-          body: Bist du sicher, dass du die Einladung für %{email} entfernen möchtest?
-          title: Einladung entfernen
         confirm_remove_member:
           body: Bist du sicher, dass du %{name} aus deinem Konto entfernen möchtest?
           title: Mitglied entfernen
@@ -77,14 +65,11 @@ de:
         household_form_label: Haushaltsname
         household_subtitle: Lade Familienmitglieder, Partner oder andere Personen ein. Eingeladene können sich in deinen Haushalt einloggen und auf gemeinsame Konten zugreifen.
         household_title: Haushalt
-        invitation_link: Einladungslink
-        invite_member: Mitglied hinzufügen
         last_name: Nachname
         page_title: Profilinformationen
         pending: Ausstehend
         profile_subtitle: Passe an, wie du in %{product_name} erscheinst.
         profile_title: Persönlich
-        remove_invitation: Einladung entfernen
         remove_member: Mitglied entfernen
         save: Speichern
     securities:
@@ -95,7 +80,6 @@ de:
       advanced_section_title: Erweitert
       ai_prompts_label: KI-Eingabeaufforderungen
       api_key_label: API-Schlüssel
-      payment_label: Zahlung
       categories_label: Kategorien
       feedback_label: Feedback
       general_section_title: Allgemein

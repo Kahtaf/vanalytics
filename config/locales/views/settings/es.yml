@@ -1,9 +1,5 @@
 ---
 es:
-  views:
-    settings:
-      payments:
-        renewal: "Tu contribución continúa el %{date}."
   settings:
     ai_prompts:
       show:
@@ -20,11 +16,6 @@ es:
         merchant_detector:
           title: Detector de Comerciantes
           subtitle: La IA identifica y enriquece los datos de transacciones con información de comerciantes
-    payments:
-      show:
-        page_title: Pago
-        subscription_subtitle: Actualiza tu suscripción y detalles de pago
-        subscription_title: Gestionar suscripción
     preferences:
       show:
         country: País
@@ -59,9 +50,6 @@ es:
         confirm_reset_with_sample_data:
           body: ¿Estás seguro de que deseas restablecer tu cuenta y cargar datos de ejemplo? Esto eliminará tus datos existentes y los reemplazará con datos de demostración para que puedas explorar Sure de forma segura.
           title: ¿Restablecer cuenta y cargar datos de ejemplo?
-        confirm_remove_invitation:
-          body: ¿Estás seguro de que deseas eliminar la invitación para %{email}?
-          title: Eliminar Invitación
         confirm_remove_member:
           body: ¿Estás seguro de que deseas eliminar a %{name} de tu cuenta?
           title: Eliminar Miembro
@@ -78,14 +66,11 @@ es:
         household_form_label: Nombre del grupo familiar
         household_subtitle: Invita a miembros de la familia, socios y otras personas. Los invitados pueden entrar en la cuenta y acceder a las cuentas compartidas.
         household_title: Grupo Familiar
-        invitation_link: Enlace de invitación
-        invite_member: Añadir miembro
         last_name: Apellido
         page_title: Información del Perfil
         pending: Pendiente
         profile_subtitle: Personaliza cómo apareces en %{product_name}
         profile_title: Personal
-        remove_invitation: Eliminar Invitación
         remove_member: Eliminar Miembro
         save: Guardar
     securities:
@@ -96,7 +81,6 @@ es:
       advanced_section_title: Avanzado
       ai_prompts_label: Indicaciones de IA
       api_key_label: Clave API
-      payment_label: Pago
       categories_label: Categorías
       feedback_label: Comentarios
       general_section_title: General

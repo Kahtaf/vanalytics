@@ -7,10 +7,6 @@ class Session < ApplicationRecord
   end
 
   belongs_to :user
-  belongs_to :active_impersonator_session,
-    -> { where(status: :in_progress) },
-    class_name: "ImpersonationSession",
-    optional: true
 
   before_create :capture_session_info
 

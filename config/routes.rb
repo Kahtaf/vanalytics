@@ -2,7 +2,6 @@ require "sidekiq/web"
 require "sidekiq/cron/web"
 
 Rails.application.routes.draw do
-  use_doorkeeper
   # MFA routes
   resource :mfa, controller: "mfa", only: [ :new, :create ] do
     get :verify
@@ -24,16 +23,6 @@ Rails.application.routes.draw do
 
   resource :registration, only: %i[new create]
   resources :sessions, only: %i[index new create destroy]
-  get "/auth/mobile/:provider", to: "sessions#mobile_sso_start"
-  match "/auth/:provider/callback", to: "sessions#openid_connect", via: %i[get post]
-  match "/auth/failure", to: "sessions#failure", via: %i[get post]
-  get "/auth/logout/callback", to: "sessions#post_logout"
-  resource :oidc_account, only: [] do
-    get :link, on: :collection
-    post :create_link, on: :collection
-    get :new_user, on: :collection
-    post :create_user, on: :collection
-  end
   resource :password_reset, only: %i[new create edit update]
   resource :password, only: %i[edit update]
   resource :email_confirmation, only: :new
@@ -48,7 +37,6 @@ Rails.application.routes.draw do
     collection do
       get :preferences
       get :goals
-      get :trial
     end
   end
 
@@ -58,20 +46,11 @@ Rails.application.routes.draw do
     resource :hosting, only: %i[show update] do
       delete :clear_cache, on: :collection
     end
-    resource :payment, only: :show
     resource :security, only: :show
-    resources :sso_identities, only: :destroy
     resource :api_key, only: [ :show, :new, :create, :destroy ]
     resource :guides, only: :show
     resource :bank_sync, only: :show, controller: "bank_sync"
     resource :providers, only: %i[show update]
-  end
-
-  resource :subscription, only: %i[new show create] do
-    collection do
-      get :upgrade
-      get :success
-    end
   end
 
   resources :tags, except: :show do
@@ -133,21 +112,9 @@ Rails.application.routes.draw do
 
   resources :securities, only: :index
 
-  resources :invite_codes, only: %i[index create destroy]
-
-  resources :invitations, only: [ :new, :create, :destroy ] do
-    get :accept, on: :member
-  end
-
   # API routes
   namespace :api do
     namespace :v1 do
-      # Authentication endpoints
-      post "auth/signup", to: "auth#signup"
-      post "auth/login", to: "auth#login"
-      post "auth/refresh", to: "auth#refresh"
-      post "auth/sso_exchange", to: "auth#sso_exchange"
-
       # Production API endpoints
       resources :accounts, only: [ :index, :show ]
       resources :tags, only: %i[index show create update destroy]
@@ -177,17 +144,6 @@ Rails.application.routes.draw do
 
   resources :currencies, only: %i[show]
 
-  resources :impersonation_sessions, only: [ :create ] do
-    post :join, on: :collection
-    delete :leave, on: :collection
-
-    member do
-      put :approve
-      put :reject
-      put :complete
-    end
-  end
-
 
   get "redis-configuration-error", to: "pages#redis_configuration_error"
 
@@ -207,12 +163,6 @@ Rails.application.routes.draw do
 
   # Admin namespace for super admin functionality
   namespace :admin do
-    resources :sso_providers do
-      member do
-        patch :toggle
-        post :test_connection
-      end
-    end
     resources :users, only: [ :index, :update ]
   end
 

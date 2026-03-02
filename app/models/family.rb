@@ -1,5 +1,5 @@
 class Family < ApplicationRecord
-  include Syncable, Subscribeable
+  include Syncable
 
   DATE_FORMATS = [
     [ "MM-DD-YYYY", "%m-%d-%Y" ],
@@ -19,7 +19,6 @@ class Family < ApplicationRecord
 
   has_many :users, dependent: :destroy
   has_many :accounts, dependent: :destroy
-  has_many :invitations, dependent: :destroy
 
   has_many :entries, through: :accounts
   has_many :trades, through: :accounts

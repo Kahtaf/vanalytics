@@ -4,7 +4,7 @@ en:
     users:
       index:
         title: "User Management"
-        description: "Manage user roles for your instance. Super admins can access SSO provider settings and user management."
+        description: "Manage user roles for your instance."
         section_title: "Users"
         you: "(You)"
         trial_ends_at: "Trial ends"
@@ -39,7 +39,7 @@ en:
           guest: "Assistant-first experience with intentionally restricted permissions for intro workflows."
           member: "Basic user access. Can manage their own accounts, transactions, and settings."
           admin: "Family administrator. Can access advanced settings like API keys, imports, and AI prompts."
-          super_admin: "Instance administrator. Can manage SSO providers, user roles, and impersonate users for support."
+          super_admin: "Instance administrator. Can manage user roles and system settings."
       update:
         success: "User role updated successfully."
         failure: "Failed to update user role."

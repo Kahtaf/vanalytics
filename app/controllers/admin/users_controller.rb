@@ -7,21 +7,10 @@ module Admin
     def index
       authorize User
       scope = policy_scope(User)
-        .left_joins(family: :subscription)
-        .includes(family: :subscription)
 
       scope = scope.where(role: params[:role]) if params[:role].present?
-      scope = apply_trial_filter(scope) if params[:trial_status].present?
 
-      @users = scope.order(
-        Arel.sql(
-          "CASE " \
-          "WHEN subscriptions.status = 'trialing' THEN 0 " \
-          "WHEN subscriptions.id IS NULL THEN 1 " \
-          "ELSE 2 END, " \
-          "subscriptions.trial_ends_at ASC NULLS LAST, users.email ASC"
-        )
-      )
+      @users = scope.order(email: :asc)
 
       family_ids = @users.map(&:family_id).uniq
       @accounts_count_by_family = Account.where(family_id: family_ids).group(:family_id).count
@@ -30,11 +19,6 @@ module Admin
       user_ids = @users.map(&:id).uniq
       @last_login_by_user = Session.where(user_id: user_ids).group(:user_id).maximum(:created_at)
       @sessions_count_by_user = Session.where(user_id: user_ids).group(:user_id).count
-
-      @trials_expiring_in_7_days = Subscription
-        .where(status: :trialing)
-        .where(trial_ends_at: Time.current..7.days.from_now)
-        .count
     end
 
     def update
@@ -61,18 +45,6 @@ module Admin
 
       def user_params
         params.require(:user).permit(:role)
-      end
-
-      def apply_trial_filter(scope)
-        case params[:trial_status]
-        when "expiring_soon"
-          scope.where(subscriptions: { status: :trialing })
-            .where(subscriptions: { trial_ends_at: Time.current..7.days.from_now })
-        when "trialing"
-          scope.where(subscriptions: { status: :trialing })
-        else
-          scope
-        end
       end
   end
 end

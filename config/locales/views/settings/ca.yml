@@ -1,9 +1,5 @@
 ---
 ca:
-  views:
-    settings:
-      payments:
-        renewal: "La teva contribució continua el %{date}."
   settings:
     ai_prompts:
       show:
@@ -23,11 +19,6 @@ ca:
           subtitle: La IA categoritza automàticament les teves transaccions segons
             les categories definides
           title: Categoritzador de transaccions
-    payments:
-      show:
-        page_title: Pagament
-        subscription_subtitle: Actualitza la teva subscripció i dades de pagament
-        subscription_title: Gestiona la subscripció
     hostings:
       ensure_admin:
         not_authorized: No autoritzat
@@ -60,9 +51,6 @@ ca:
           body: Segur que vols eliminar definitivament el teu compte? Aquesta acció
             és irreversible.
           title: Eliminar el compte?
-        confirm_remove_invitation:
-          body: Segur que vols eliminar la invitació per a %{email}?
-          title: Eliminar invitació
         confirm_remove_member:
           body: Segur que vols eliminar %{name} del teu compte?
           title: Eliminar membre
@@ -87,14 +75,11 @@ ca:
         household_subtitle: Convida membres de la família, parelles i altres persones.
           Els convidats podran accedir al teu compte familiar i als comptes compartits.
         household_title: Llar
-        invitation_link: Enllaç d'invitació
-        invite_member: Afegeix membre
         last_name: Cognom
         page_title: Informació del perfil
         pending: Pendent
         profile_subtitle: Personalitza com apareixes a %{product_name}
         profile_title: Personal
-        remove_invitation: Elimina invitació
         remove_member: Elimina membre
         reset_account: Restableix el compte
         reset_account_warning: Restablir el teu compte eliminarà tots els teus comptes,
@@ -106,21 +91,6 @@ ca:
     securities:
       show:
         page_title: Valor
-        sso_confirm_body: Segur que vols desconnectar el teu compte de %{provider}?
-          Pots tornar-lo a connectar més tard iniciant sessió amb aquest proveïdor una altra vegada.
-        sso_confirm_button: Desconnecta
-        sso_confirm_title: Desconnectar compte?
-        sso_connect_hint: Tanca sessió i inicia amb un proveïdor SSO per connectar un compte.
-        sso_disconnect: Desconnecta
-        sso_last_used: Darrer ús
-        sso_never: Mai
-        sso_no_email: Sense correu electrònic
-        sso_no_identities: No hi ha comptes SSO connectats
-        sso_subtitle: Gestiona les teves connexions de compte amb inici de sessió únic
-        sso_title: Comptes connectats
-        sso_warning_message: Aquesta és la teva única mètode d'inici de sessió. Hauries de configurar una contrasenya
-          a la teva configuració de seguretat abans de desconnectar-te, altrament podries quedar blocat
-          fora del teu compte.
     settings_nav:
       accounts_label: Comptes
       advanced_section_title: Avançat
@@ -128,7 +98,6 @@ ca:
       api_key_label: Clau API
       api_keys_label: Clau API
       bank_sync_label: Sincronització bancària
-      payment_label: Pagament
       categories_label: Categories
       feedback_label: Feedback
       general_section_title: General

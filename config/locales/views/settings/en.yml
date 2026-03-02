@@ -1,10 +1,5 @@
 ---
 en:
-  views:
-    settings:
-      payments:
-        renewal: "Your contribution continues on %{date}."
-        cancellation: "Your contribution ends on %{date}."
   settings:
     ai_prompts:
       show:
@@ -21,11 +16,6 @@ en:
         merchant_detector:
           title: Merchant Detector
           subtitle: AI identifies and enriches transaction data with merchant information
-    payments:
-      show:
-        page_title: Payments
-        subscription_subtitle: Update your credit card details
-        subscription_title: Manage contributions
     preferences:
       show:
         country: Country
@@ -64,9 +54,6 @@ en:
         confirm_reset_with_sample_data:
           body: Are you sure you want to reset your account and load sample data? This will delete your existing data and replace it with demo data so you can explore Sure safely.
           title: Reset account and load sample data?
-        confirm_remove_invitation:
-          body: Are you sure you want to remove the invitation for %{email}?
-          title: Remove Invitation
         confirm_remove_member:
           body: Are you sure you want to remove %{name} from your account?
           title: Remove Member
@@ -85,16 +72,12 @@ en:
         group_title: Group Members
         household_form_input_placeholder: Enter household name
         household_form_label: Household name
-        household_subtitle: Invitees can login to your %{moniker} account and access shared resources.
         household_title: Household
-        invitation_link: Invitation link
-        invite_member: Add member
         last_name: Last Name
         page_title: Profile Info
         pending: Pending
         profile_subtitle: Customize how you appear on %{product_name}
         profile_title: Personal
-        remove_invitation: Remove Invitation
         remove_member: Remove Member
         save: Save
     securities:
@@ -105,26 +88,14 @@ en:
         enable_mfa: Enable 2FA
         disable_mfa: Disable 2FA
         disable_mfa_confirm: Are you sure you want to disable two-factor authentication?
-        sso_title: Connected Accounts
-        sso_subtitle: Manage your single sign-on account connections
-        sso_disconnect: Disconnect
-        sso_last_used: Last used
-        sso_never: Never
-        sso_no_email: No email
-        sso_no_identities: No SSO accounts connected
-        sso_connect_hint: Log out and sign in with an SSO provider to connect an account.
-        sso_confirm_title: Disconnect Account?
-        sso_confirm_body: Are you sure you want to disconnect your %{provider} account? You can reconnect it later by signing in with that provider again.
-        sso_confirm_button: Disconnect
-        sso_warning_message: This is your only login method. You should set a password in your security settings before disconnecting, otherwise you may be locked out of your account.
     settings_nav:
       accounts_label: Accounts
       advanced_section_title: Advanced
       ai_prompts_label: AI Prompts
       api_key_label: API Key
-      payment_label: Payment
       categories_label: Categories
       feedback_label: Feedback
+      data_section_title: Data
       general_section_title: General
       imports_label: Imports
       exports_label: Exports

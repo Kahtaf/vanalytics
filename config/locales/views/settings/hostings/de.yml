@@ -2,21 +2,9 @@
 de:
   settings:
     hostings:
-      invite_code_settings:
-        description: Lege fest, wie sich neue Benutzer für deine %{product}-Instanz registrieren können.
-        email_confirmation_description: Wenn aktiviert, müssen Benutzer ihre E-Mail-Adresse bestätigen, wenn sie diese ändern.
-        email_confirmation_title: E-Mail-Bestätigung erforderlich
-        generate_tokens: Neue Codes generieren
-        generated_tokens: Generierte Codes
-        title: Onboarding
-        states:
-          open: Offen
-          closed: Geschlossen
-          invite_only: Nur mit Einladung
       show:
         general: Allgemeine Einstellungen
         financial_data_providers: Finanzdatenanbieter
-        invites: Einladungscodes
         title: Self-Hosting
         danger_zone: Gefahrenbereich
         clear_cache: Daten-Cache leeren

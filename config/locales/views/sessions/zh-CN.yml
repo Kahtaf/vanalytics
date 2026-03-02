@@ -13,12 +13,7 @@ zh-CN:
       email: 邮箱地址
       email_placeholder: you@example.com
       forgot_password: 忘记密码？
-      google_auth_connect: 使用 Google 登录
-      openid_connect: 使用 OpenID Connect 登录
-      oidc: 使用 OpenID Connect 登录
       password: 密码
       password_placeholder: 请输入密码
       submit: 登录
       title: 登录您的账户
-    openid_connect:
-      failed: 无法通过 OpenID Connect 认证。

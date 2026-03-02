@@ -25,14 +25,7 @@ VCR.configure do |config|
   config.hook_into :webmock
   config.ignore_localhost = true
   config.default_cassette_options = { erb: true }
-  config.filter_sensitive_data("<OPENAI_ACCESS_TOKEN>") { ENV["OPENAI_ACCESS_TOKEN"] }
-  config.filter_sensitive_data("<OPENAI_ORGANIZATION_ID>") { ENV["OPENAI_ORGANIZATION_ID"] }
 end
-
-# Configure OmniAuth for testing
-OmniAuth.config.test_mode = true
-# Allow both GET and POST for OIDC callbacks in tests
-OmniAuth.config.allowed_request_methods = [ :get, :post ]
 
 module ActiveSupport
   class TestCase
@@ -69,19 +62,6 @@ module ActiveSupport
 
     def user_password_test
       "maybetestpassword817983172"
-    end
-
-    # Ensures the Investment Contributions category exists for a family
-    # Used in transfer tests where this bootstrapped category is required
-    # Uses family locale to ensure consistent naming
-    def ensure_investment_contributions_category(family)
-      I18n.with_locale(family.locale) do
-        family.categories.find_or_create_by!(name: Category.investment_contributions_name) do |c|
-          c.color = "#0d9488"
-          c.lucide_icon = "trending-up"
-          c.classification = "expense"
-        end
-      end
     end
   end
 end

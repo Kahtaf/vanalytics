@@ -7,22 +7,21 @@ class Api::V1::TagsControllerTest < ActionDispatch::IntegrationTest
     @user = users(:family_admin)
     @other_family_user = users(:empty)
 
-    @oauth_app = Doorkeeper::Application.create!(
-      name: "Test App",
-      redirect_uri: "https://example.com/callback",
-      scopes: "read read_write"
+    @user.api_keys.destroy_all
+    @plain_read_key = "tags_read_#{SecureRandom.hex(8)}"
+    @read_api_key = ApiKey.create!(
+      user: @user,
+      name: "Read API Key",
+      display_key: @plain_read_key,
+      scopes: ["read"]
     )
 
-    @read_token = Doorkeeper::AccessToken.create!(
-      application: @oauth_app,
-      resource_owner_id: @user.id,
-      scopes: "read"
-    )
-
-    @read_write_token = Doorkeeper::AccessToken.create!(
-      application: @oauth_app,
-      resource_owner_id: @user.id,
-      scopes: "read_write"
+    @plain_rw_key = "tags_rw_#{SecureRandom.hex(8)}"
+    @rw_api_key = ApiKey.create!(
+      user: @user,
+      name: "Read Write API Key",
+      display_key: @plain_rw_key,
+      scopes: ["read_write"]
     )
 
     @tag = @user.family.tags.create!(name: "Test Tag #{SecureRandom.hex(4)}", color: "#3b82f6")
@@ -253,10 +252,10 @@ class Api::V1::TagsControllerTest < ActionDispatch::IntegrationTest
   private
 
     def read_headers
-      { "Authorization" => "Bearer #{@read_token.token}" }
+      { "X-Api-Key" => @plain_read_key }
     end
 
     def read_write_headers
-      { "Authorization" => "Bearer #{@read_write_token.token}" }
+      { "X-Api-Key" => @plain_rw_key }
     end
 end

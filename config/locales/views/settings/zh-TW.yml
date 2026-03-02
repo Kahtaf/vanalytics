@@ -1,9 +1,5 @@
 ---
 zh-TW:
-  views:
-    settings:
-      payments:
-        renewal: "您的貢獻將於 %{date} 繼續。"
   settings:
     ai_prompts:
       show:
@@ -20,11 +16,6 @@ zh-TW:
         merchant_detector:
           title: 商家偵測器
           subtitle: AI 會辨識交易資料並自動補全商家資訊
-    payments:
-      show:
-        page_title: 付款
-        subscription_subtitle: 更新您的訂閱方案與付款詳情
-        subscription_title: 管理訂閱
     preferences:
       show:
         country: 國家
@@ -59,9 +50,6 @@ zh-TW:
         confirm_reset_with_sample_data:
           body: 您確定要重設帳號並載入範例資料嗎？這將刪除您現有的資料，並替換為示範資料，讓您可以安全地探索 Sure 的功能。
           title: 重設帳號並載入範例資料？
-        confirm_remove_invitation:
-          body: 您確定要移除對 %{email} 的邀請嗎？
-          title: 移除邀請
         confirm_remove_member:
           body: 您確定要將 %{name} 從您的帳號中移除嗎？
           title: 移除成員
@@ -78,14 +66,11 @@ zh-TW:
         household_form_label: 家戶名稱
         household_subtitle: 邀請家庭成員、伴侶或其他成員加入。受邀者可以登入您的家戶並存取共享帳戶。
         household_title: 家戶
-        invitation_link: 邀請連結
-        invite_member: 新增成員
         last_name: 姓氏
         page_title: 個人資料
         pending: 待處理
         profile_subtitle: 自訂您在 %{product_name} 上的顯示方式
         profile_title: 個人資訊
-        remove_invitation: 移除邀請
         remove_member: 移除成員
         save: 儲存
     securities:
@@ -96,7 +81,6 @@ zh-TW:
       advanced_section_title: 進階設定
       ai_prompts_label: AI 提示詞
       api_key_label: API 金鑰
-      payment_label: 付款
       categories_label: 類別
       feedback_label: 意見回饋
       general_section_title: 一般

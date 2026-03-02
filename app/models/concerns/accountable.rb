@@ -12,8 +12,6 @@ module Accountable
   end
 
   included do
-    include Enrichable
-
     has_one :account, as: :accountable, touch: true
   end
 
