@@ -16,12 +16,6 @@ Rails.application.routes.draw do
   mount Sidekiq::Web => "/sidekiq"
 
 
-  resources :family_exports, only: %i[new create index destroy] do
-    member do
-      get :download
-    end
-  end
-
   get "changelog", to: "pages#changelog"
   get "feedback", to: "pages#feedback"
   patch "dashboard/preferences", to: "pages#update_preferences"
@@ -86,32 +80,6 @@ Rails.application.routes.draw do
   end
 
 
-  resources :reports, only: %i[index] do
-    patch :update_preferences, on: :collection
-    get :export_transactions, on: :collection
-    get :google_sheets_instructions, on: :collection
-    get :print, on: :collection
-  end
-
-
-  resources :transfers, only: %i[new create destroy show update]
-
-  resources :imports, only: %i[index new show create update destroy] do
-    member do
-      post :publish
-      put :revert
-      put :apply_template
-    end
-
-    resource :upload, only: %i[show update], module: :import
-    resource :configuration, only: %i[show update], module: :import
-    resource :clean, only: :show, module: :import
-    resource :confirm, only: :show, module: :import
-
-    resources :rows, only: %i[show update], module: :import
-    resources :mappings, only: :update, module: :import
-  end
-
   resources :holdings, only: %i[index new show update destroy] do
     member do
       post :unlock_cost_basis
@@ -128,29 +96,6 @@ Rails.application.routes.draw do
     post :confirm_create, on: :collection
     post :confirm_update, on: :member
   end
-
-  namespace :transactions do
-    resource :bulk_deletion, only: :create
-    resource :bulk_update, only: %i[new create]
-  end
-
-  resources :transactions, only: %i[index new create show update destroy] do
-    resource :transfer_match, only: %i[new create]
-
-    collection do
-      delete :clear_filter
-      patch :update_preferences
-    end
-
-    member do
-      get :convert_to_trade
-      post :create_trade_from_transaction
-      post :merge_duplicate
-      post :dismiss_duplicate
-      post :unlock
-    end
-  end
-
 
   resources :accountable_sparklines, only: :show, param: :accountable_type
 
@@ -207,11 +152,9 @@ Rails.application.routes.draw do
       resources :accounts, only: [ :index, :show ]
       resources :tags, only: %i[index show create update destroy]
 
-      resources :transactions, only: [ :index, :show, :create, :update, :destroy ]
       resources :trades, only: [ :index, :show, :create, :update, :destroy ]
       resources :holdings, only: [ :index, :show ]
       resources :valuations, only: [ :create, :update, :show ]
-      resources :imports, only: [ :index, :show, :create ]
       resource :usage, only: [ :show ], controller: :usage
       post :sync, to: "sync#create"
 
@@ -255,8 +198,6 @@ Rails.application.routes.draw do
   # Render dynamic PWA files from app/views/pwa/*
   get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
   get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
-
-  get "imports/:import_id/upload/sample_csv", to: "import/uploads#sample_csv", as: :import_upload_sample_csv
 
   privacy_url = ENV["LEGAL_PRIVACY_URL"].presence
   terms_url = ENV["LEGAL_TERMS_URL"].presence

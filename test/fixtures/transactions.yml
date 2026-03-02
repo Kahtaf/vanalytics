@@ -1,6 +1,0 @@
-one: {}
-
-transfer_out:
-  kind: payment
-transfer_in:
-  kind: transfer

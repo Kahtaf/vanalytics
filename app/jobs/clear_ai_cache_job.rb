@@ -9,14 +9,6 @@ class ClearAiCacheJob < ApplicationJob
 
     Rails.logger.info("Clearing AI cache for family #{family.id}")
 
-    # Clear AI enrichment data for transactions
-    begin
-      count = Transaction.clear_ai_cache(family)
-      Rails.logger.info("Cleared AI cache for #{count} transactions")
-    rescue => e
-      Rails.logger.error("Failed to clear AI cache for transactions: #{e.message}")
-    end
-
     # Clear AI enrichment data for entries
     begin
       count = Entry.clear_ai_cache(family)

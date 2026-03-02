@@ -53,17 +53,6 @@ module LedgerTestingHelper
           currency: entry_data[:currency] || created_account.currency,
           entryable: Valuation.new(kind: entry_data[:type])
         )
-      when "transaction"
-        # Use account currency if not specified
-        currency = entry_data[:currency] || created_account.currency
-
-        created_account.entries.create!(
-          name: "Transaction",
-          date: entry_data[:date],
-          amount: entry_data[:amount],
-          currency: currency,
-          entryable: Transaction.new
-        )
       when "trade"
         # Find or create security
         security = Security.find_or_create_by!(ticker: entry_data[:ticker]) do |s|

@@ -54,14 +54,11 @@ class Balance::BaseCalculator
       non_cash_inflows = 0
       non_cash_outflows = 0
 
-      txn_inflow_sum = entries.select { |e| e.amount < 0 && e.transaction? }.sum(&:amount)
-      txn_outflow_sum = entries.select { |e| e.amount >= 0 && e.transaction? }.sum(&:amount)
-
       trade_cash_inflow_sum = entries.select { |e| e.amount < 0 && e.trade? }.sum(&:amount)
       trade_cash_outflow_sum = entries.select { |e| e.amount >= 0 && e.trade? }.sum(&:amount)
 
-      cash_inflows = txn_inflow_sum.abs + trade_cash_inflow_sum.abs
-      cash_outflows = txn_outflow_sum + trade_cash_outflow_sum
+      cash_inflows = trade_cash_inflow_sum.abs
+      cash_outflows = trade_cash_outflow_sum
 
       # Trades are inverse (a "buy" is outflow of cash, but "inflow" of non-cash, aka "holdings")
       non_cash_outflows = trade_cash_inflow_sum.abs

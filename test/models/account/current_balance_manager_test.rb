@@ -104,7 +104,7 @@ class Account::CurrentBalanceManagerTest < ActiveSupport::TestCase
       name: "Test expense transaction",
       amount: 100,
       currency: "USD",
-      entryable: Transaction.new
+      entryable: Valuation.new(kind: "reconciliation")
     )
 
     # What we're asserting here:
@@ -152,7 +152,7 @@ class Account::CurrentBalanceManagerTest < ActiveSupport::TestCase
       name: "Test expense transaction",
       amount: 100,
       currency: "USD",
-      entryable: Transaction.new
+      entryable: Valuation.new(kind: "reconciliation")
     )
 
     assert_equal 1, account.valuations.count

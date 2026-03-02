@@ -1,5 +1,5 @@
 class Family < ApplicationRecord
-  include Syncable, AutoTransferMatchable, Subscribeable
+  include Syncable, Subscribeable
 
   DATE_FORMATS = [
     [ "MM-DD-YYYY", "%m-%d-%Y" ],
@@ -21,11 +21,7 @@ class Family < ApplicationRecord
   has_many :accounts, dependent: :destroy
   has_many :invitations, dependent: :destroy
 
-  has_many :imports, dependent: :destroy
-  has_many :family_exports, dependent: :destroy
-
   has_many :entries, through: :accounts
-  has_many :transactions, through: :accounts
   has_many :trades, through: :accounts
   has_many :holdings, through: :accounts
 
@@ -74,20 +70,12 @@ class Family < ApplicationRecord
     @balance_sheet ||= BalanceSheet.new(self)
   end
 
-  def income_statement
-    @income_statement ||= IncomeStatement.new(self)
-  end
-
   # Returns account IDs for tax-advantaged crypto accounts.
   def tax_advantaged_account_ids
     @tax_advantaged_account_ids ||= accounts
       .joins("INNER JOIN cryptos ON cryptos.id = accounts.accountable_id AND accounts.accountable_type = 'Crypto'")
       .where(cryptos: { tax_treatment: %w[tax_deferred tax_exempt] })
       .pluck(:id)
-  end
-
-  def investment_statement
-    @investment_statement ||= InvestmentStatement.new(self)
   end
 
   def eu?

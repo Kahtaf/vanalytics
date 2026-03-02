@@ -71,7 +71,7 @@ module SyncStats
       window_start ||= sync.created_at || 30.minutes.ago
       window_end ||= Time.current
 
-      tx_scope = Entry.where(account_id: account_ids, source: source, entryable_type: "Transaction")
+      tx_scope = Entry.where(account_id: account_ids, source: source, entryable_type: "Trade")
       tx_imported = tx_scope.where(created_at: window_start..window_end).count
       tx_updated = tx_scope.where(updated_at: window_start..window_end)
                           .where.not(created_at: window_start..window_end).count

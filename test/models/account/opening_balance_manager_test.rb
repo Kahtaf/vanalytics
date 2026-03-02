@@ -65,7 +65,7 @@ class Account::OpeningBalanceManagerTest < ActiveSupport::TestCase
       name: "Test transaction",
       amount: 100,
       currency: "USD",
-      entryable: Transaction.new
+      entryable: Valuation.new(kind: "reconciliation")
     )
 
     manager = Account::OpeningBalanceManager.new(@depository_account)
@@ -87,7 +87,7 @@ class Account::OpeningBalanceManagerTest < ActiveSupport::TestCase
       name: "Old transaction",
       amount: 100,
       currency: "USD",
-      entryable: Transaction.new
+      entryable: Valuation.new(kind: "reconciliation")
     )
 
     loan_manager = Account::OpeningBalanceManager.new(loan_account)
@@ -200,7 +200,7 @@ class Account::OpeningBalanceManagerTest < ActiveSupport::TestCase
       name: "Test transaction",
       amount: 100,
       currency: "USD",
-      entryable: Transaction.new
+      entryable: Valuation.new(kind: "reconciliation")
     )
 
     manager = Account::OpeningBalanceManager.new(@depository_account)

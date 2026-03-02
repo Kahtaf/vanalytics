@@ -5,8 +5,10 @@ class Trade < ApplicationRecord
 
   belongs_to :security
 
-  # Use the same activity labels as Transaction
-  ACTIVITY_LABELS = Transaction::ACTIVITY_LABELS.dup.freeze
+  ACTIVITY_LABELS = [
+    "Buy", "Sell", "Sweep In", "Sweep Out", "Dividend", "Reinvestment",
+    "Interest", "Fee", "Transfer", "Contribution", "Withdrawal", "Exchange", "Other"
+  ].freeze
 
   validates :qty, presence: true
   validates :price, :currency, presence: true

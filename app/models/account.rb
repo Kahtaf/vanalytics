@@ -4,11 +4,8 @@ class Account < ApplicationRecord
   validates :name, :balance, :currency, presence: true
 
   belongs_to :family
-  belongs_to :import, optional: true
 
-  has_many :import_mappings, as: :mappable, dependent: :destroy, class_name: "Import::Mapping"
   has_many :entries, dependent: :destroy
-  has_many :transactions, through: :entries, source: :entryable, source_type: "Transaction"
   has_many :valuations, through: :entries, source: :entryable, source_type: "Valuation"
   has_many :trades, through: :entries, source: :entryable, source_type: "Trade"
   has_many :holdings, dependent: :destroy

@@ -53,7 +53,7 @@ class ProviderSyncSummary < ViewComponent::Base
     stats["unlinked_accounts"].to_i
   end
 
-  # Transaction statistics
+  # Entry statistics
   def tx_seen
     stats["tx_seen"].to_i
   end
