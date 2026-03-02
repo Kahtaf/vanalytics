@@ -138,6 +138,19 @@ while true; do
     exit "$AGENT_EXIT_CODE_RAW"
   fi
 
+  # Enforce one-task-per-iteration contract:
+  # - no commit + dirty tree => fail hard (agent changed files but didn't finish)
+  # - commit + dirty tree => fail hard (agent committed but left leftovers)
+  if [[ "$COMMIT_MADE" -eq 0 && "$DIRTY_COUNT" -gt 0 ]]; then
+    echo "Contract violation: no commit and dirty tree ($DIRTY_COUNT files). Stopping loop."
+    exit 2
+  fi
+
+  if [[ "$COMMIT_MADE" -eq 1 && "$DIRTY_COUNT" -gt 0 ]]; then
+    echo "Contract violation: commit made but tree still dirty ($DIRTY_COUNT files). Stopping loop."
+    exit 3
+  fi
+
   if [[ "$COMMIT_MADE" -eq 0 && "$DIRTY_COUNT" -eq 0 ]]; then
     echo "Agent exited cleanly with no changes. Nothing left to do. Stopping loop."
     break
